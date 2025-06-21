@@ -233,7 +233,7 @@ exports.createArticle = async (req, res) => {
 
 
         // After saving article in DB
-        pingSearchEngines('https://www.dramaspots.com/sitemap.xml');
+        //pingSearchEngines('https://www.dramaspots.com/sitemap.xml');
         // You could now save to DB, validate, etc.
         res.status(200).json({ message: 'Article created successfully', href: `/articles/${article.id}` });
 
