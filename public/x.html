@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Celebrity Gossip Club - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: #212529;
+            color: #fff;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            color: #fff;
+            background: #343a40;
+        }
+        .sidebar .nav-link i {
+            margin-right: 8px;
+        }
+        .profile-img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        .table-avatar {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .content-area {
+            padding: 2rem;
+        }
+        .card {
+            margin-bottom: 2rem;
+        }
+        .modal-img-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #495057;
+        }
+        .badge-status {
+            font-size: 0.9em;
+        }
+        .dropdown-toggle::after {
+            margin-left: 0.5em;
+        }
+        .table-responsive {
+            margin-bottom: 2rem;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+        }
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 1rem;
+            background: #212529;
+            color: #adb5bd;
+            font-size: 0.9em;
+            text-align: center;
+        }
+        @media (max-width: 991.98px) {
+            .sidebar {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar -->
+            <nav class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar d-flex flex-column position-relative">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-4 d-none d-sm-inline"><i class="bi bi-stars"></i> Celebrity Admin</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-auto w-100">
+                        <li class="nav-item">
+                            <a href="#dashboard" class="nav-link active" data-bs-toggle="pill">
+                                <i class="bi bi-speedometer2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#posts" class="nav-link" data-bs-toggle="pill">
+                                <i class="bi bi-file-earmark-text"></i> Posts
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#categories" class="nav-link" data-bs-toggle="pill">
+                                <i class="bi bi-tags"></i> Categories
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#comments" class="nav-link" data-bs-toggle="pill">
+                                <i class="bi bi-chat-dots"></i> Comments
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#users" class="nav-link" data-bs-toggle="pill">
+                                <i class="bi bi-people"></i> Users
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#settings" class="nav-link" data-bs-toggle="pill">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="dropdown pb-4 w-100">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="profile" class="profile-img me-2">
+                            <span class="d-none d-sm-inline mx-1">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#profile" data-bs-toggle="pill">Profile</a></li>
+                            <li><a class="dropdown-item" href="#settings" data-bs-toggle="pill">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-footer">
+                        &copy; 2024 Celebrity Gossip Club
+                    </div>
+                </div>
+            </nav>
+            <!-- Main Content -->
+            <main class="col py-3 content-area">
+                <div class="tab-content" id="adminTabContent">
+                    <!-- Dashboard -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-file-earmark-text fs-2 text-primary"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title mb-0">Posts</h5>
+                                            <span class="fs-4 fw-bold" id="dashboardPostsCount">128</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-chat-dots fs-2 text-success"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title mb-0">Comments</h5>
+                                            <span class="fs-4 fw-bold" id="dashboardCommentsCount">542</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-people fs-2 text-warning"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title mb-0">Users</h5>
+                                            <span class="fs-4 fw-bold" id="dashboardUsersCount">24</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-eye fs-2 text-danger"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title mb-0">Views</h5>
+                                            <span class="fs-4 fw-bold" id="dashboardViewsCount">12,345</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recent Posts Table -->
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Recent Posts</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Author</th>
+                                                <th>Category</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dashboardRecentPosts">
+                                            <tr>
+                                                <td>Celebrity X Spotted at Gala</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="table-avatar me-2" alt="author">
+                                                    Jane Doe
+                                                </td>
+                                                <td>Events</td>
+                                                <td><span class="badge bg-success badge-status">Published</span></td>
+                                                <td>2024-06-01</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Rumor: Celebrity Y's New Project</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" class="table-avatar me-2" alt="author">
+                                                    John Smith
+                                                </td>
+                                                <td>Rumors</td>
+                                                <td><span class="badge bg-warning text-dark badge-status">Draft</span></td>
+                                                <td>2024-05-29</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Exclusive: Interview with Celebrity Z</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/women/46.jpg" class="table-avatar me-2" alt="author">
+                                                    Alice Lee
+                                                </td>
+                                                <td>Interviews</td>
+                                                <td><span class="badge bg-success badge-status">Published</span></td>
+                                                <td>2024-05-27</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Celebrity Couple Breakup?</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/men/47.jpg" class="table-avatar me-2" alt="author">
+                                                    Bob Brown
+                                                </td>
+                                                <td>Rumors</td>
+                                                <td><span class="badge bg-danger badge-status">Rejected</span></td>
+                                                <td>2024-05-25</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Red Carpet Highlights</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/women/48.jpg" class="table-avatar me-2" alt="author">
+                                                    Clara White
+                                                </td>
+                                                <td>Events</td>
+                                                <td><span class="badge bg-success badge-status">Published</span></td>
+                                                <td>2024-05-22</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
+                                                    <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <a href="#posts" class="btn btn-link p-0" data-bs-toggle="pill">View all posts <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Posts -->
+                    <div class="tab-pane fade" id="posts">
+
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                    <!-- Categories -->
+                    <div class="tab-pane fade" id="categories">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3>Categories</h3>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                                <i class="bi bi-plus-lg"></i> New Category
+                            </button>
+                        </div>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Posts</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="categoriesTableBody">
+                                            <!-- Categories will be dynamically loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Comments -->
+                    <div class="tab-pane fade" id="comments">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3>Comments</h3>
+                            <button class="btn btn-outline-secondary" id="refreshCommentsBtn">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Post</th>
+                                                <th>User</th>
+                                                <th>Comment</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="commentsTableBody">
+                                            <!-- Comments will be dynamically loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Users -->
+                    <div class="tab-pane fade" id="users">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3>Users</h3>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                <i class="bi bi-plus-lg"></i> New User
+                            </button>
+                        </div>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Avatar</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="usersTableBody">
+                                            <!-- Users will be dynamically loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Settings -->
+                    <div class="tab-pane fade" id="settings">
+                        <h3>Settings</h3>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="siteTitle" class="form-label">Site Title</label>
+                                        <input type="text" class="form-control" id="siteTitle" value="Celebrity Gossip Club">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="siteDescription" class="form-label">Site Description</label>
+                                        <textarea class="form-control" id="siteDescription" rows="2">The latest and juiciest celebrity gossip, rumors, and news!</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="siteLogo" class="form-label">Site Logo</label>
+                                        <input class="form-control" type="file" id="siteLogo">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="siteTheme" class="form-label">Theme</label>
+                                        <select class="form-select" id="siteTheme">
+                                            <option selected>Default</option>
+                                            <option>Dark</option>
+                                            <option>Light</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Profile -->
+                    <div class="tab-pane fade" id="profile">
+                        <h3>Profile</h3>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="profileName" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="profileName" value="Admin">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profileEmail" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="profileEmail" value="admin@celebritygossip.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profileAvatar" class="form-label">Avatar</label>
+                                        <input class="form-control" type="file" id="profileAvatar">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="profilePassword" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="profilePassword" placeholder="Change password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Post Modal -->
+    <div class="modal fade" id="addPostModal" tabindex="-1" aria-labelledby="addPostModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="addPostForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPostModalLabel">New Post</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="postTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postCategory" class="form-label">Category</label>
+                            <select class="form-select" id="postCategory" required>
+                                <option value="">Select category</option>
+                                <option>Events</option>
+                                <option>Rumors</option>
+                                <option>Interviews</option>
+                                <option>Fashion</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postStatus" class="form-label">Status</label>
+                            <select class="form-select" id="postStatus" required>
+                                <option>Draft</option>
+                                <option>Published</option>
+                                <option>Rejected</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postImage" class="form-label">Image</label>
+                            <input class="form-control" type="file" id="postImage">
+                            <img id="postImagePreview" class="modal-img-preview d-none" alt="Preview">
+                        </div>
+                        <div class="mb-3">
+                            <label for="postContent" class="form-label">Content</label>
+                            <textarea class="form-control" id="postContent" rows="6" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add Category Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="addCategoryForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addCategoryModalLabel">New Category</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="categoryName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="categoryName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoryDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="categoryDescription" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="addUserForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addUserModalLabel">New User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="userName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="userEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">Role</label>
+                            <select class="form-select" id="userRole" required>
+                                <option>Admin</option>
+                                <option>Editor</option>
+                                <option>Author</option>
+                                <option>Subscriber</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userStatus" class="form-label">Status</label>
+                            <select class="form-select" id="userStatus" required>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                                <option>Banned</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userAvatar" class="form-label">Avatar</label>
+                            <input class="form-control" type="file" id="userAvatar">
+                            <img id="userAvatarPreview" class="modal-img-preview d-none" alt="Preview">
+                        </div>
+                        <div class="mb-3">
+                            <label for="userPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="userPassword" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const categories = [
+            { name: "Events", description: "Celebrity events, galas, and parties.", posts: 34 },
+            { name: "Rumors", description: "Latest rumors and gossip.", posts: 56 },
+            { name: "Interviews", description: "Exclusive interviews with celebrities.", posts: 18 },
+            { name: "Fashion", description: "Celebrity fashion and style.", posts: 20 }
+        ];
+
+        const comments = [
+            {
+                post: "Celebrity X Spotted at Gala",
+                user: "fan123",
+                userImg: "https://randomuser.me/api/portraits/men/50.jpg",
+                comment: "Wow, she looked amazing!",
+                status: "Approved",
+                date: "2024-06-01"
+            },
+            {
+                post: "Rumor: Celebrity Y's New Project",
+                user: "gossipqueen",
+                userImg: "https://randomuser.me/api/portraits/women/51.jpg",
+                comment: "Is this really true?",
+                status: "Pending",
+                date: "2024-05-30"
+            },
+            {
+                post: "Exclusive: Interview with Celebrity Z",
+                user: "celebwatcher",
+                userImg: "https://randomuser.me/api/portraits/men/52.jpg",
+                comment: "Great interview!",
+                status: "Approved",
+                date: "2024-05-28"
+            },
+            {
+                post: "Celebrity Couple Breakup?",
+                user: "rumormill",
+                userImg: "https://randomuser.me/api/portraits/women/53.jpg",
+                comment: "I knew it!",
+                status: "Rejected",
+                date: "2024-05-26"
+            }
+        ];
+
+        const users = [
+            {
+                name: "Jane Doe",
+                email: "jane@celebritygossip.com",
+                role: "Editor",
+                status: "Active",
+                avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+            },
+            {
+                name: "John Smith",
+                email: "john@celebritygossip.com",
+                role: "Author",
+                status: "Active",
+                avatar: "https://randomuser.me/api/portraits/men/45.jpg"
+            },
+            {
+                name: "Alice Lee",
+                email: "alice@celebritygossip.com",
+                role: "Author",
+                status: "Inactive",
+                avatar: "https://randomuser.me/api/portraits/women/46.jpg"
+            },
+            {
+                name: "Bob Brown",
+                email: "bob@celebritygossip.com",
+                role: "Editor",
+                status: "Banned",
+                avatar: "https://randomuser.me/api/portraits/men/47.jpg"
+            },
+            {
+                name: "Clara White",
+                email: "clara@celebritygossip.com",
+                role: "Admin",
+                status: "Active",
+                avatar: "https://randomuser.me/api/portraits/women/48.jpg"
+            }
+        ];
+
+        // Utility functions
+        function statusBadge(status) {
+            switch (status) {
+                case "Published": return '<span class="badge bg-success badge-status">Published</span>';
+                case "Draft": return '<span class="badge bg-warning text-dark badge-status">Draft</span>';
+                case "Rejected": return '<span class="badge bg-danger badge-status">Rejected</span>';
+                case "Approved": return '<span class="badge bg-success badge-status">Approved</span>';
+                case "Pending": return '<span class="badge bg-warning text-dark badge-status">Pending</span>';
+                case "Active": return '<span class="badge bg-success badge-status">Active</span>';
+                case "Inactive": return '<span class="badge bg-secondary badge-status">Inactive</span>';
+                case "Banned": return '<span class="badge bg-danger badge-status">Banned</span>';
+                default: return `<span class="badge bg-secondary badge-status">${status}</span>`;
+            }
+        }
+        // Load Categories Table
+        function loadCategories() {
+            const tbody = document.getElementById('categoriesTableBody');
+            tbody.innerHTML = '';
+            categories.forEach((cat, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${cat.name}</td>
+                        <td>${cat.description}</td>
+                        <td>${cat.posts}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete" onclick="deleteCategory(${idx})"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Load Comments Table
+        function loadComments() {
+            const tbody = document.getElementById('commentsTableBody');
+            tbody.innerHTML = '';
+            comments.forEach((cmt, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${cmt.post}</td>
+                        <td>
+                            <img src="${cmt.userImg}" class="table-avatar me-2" alt="user">
+                            ${cmt.user}
+                        </td>
+                        <td>${cmt.comment}</td>
+                        <td>${statusBadge(cmt.status)}</td>
+                        <td>${cmt.date}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-success" title="Approve"><i class="bi bi-check"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Reject"><i class="bi bi-x"></i></button>
+                            <button class="btn btn-sm btn-outline-secondary" title="Delete" onclick="deleteComment(${idx})"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Load Users Table
+        function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            users.forEach((user, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${user.avatar}" class="table-avatar" alt="avatar"></td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                        <td>${statusBadge(user.status)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary" title="Edit"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Delete" onclick="deleteUser(${idx})"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Delete functions (demo only)
+        function deletePost(idx) {
+            if (confirm('Delete this post?')) {
+                posts.splice(idx, 1);
+                loadPosts();
+            }
+        }
+        function deleteCategory(idx) {
+            if (confirm('Delete this category?')) {
+                categories.splice(idx, 1);
+                loadCategories();
+            }
+        }
+        function deleteComment(idx) {
+            if (confirm('Delete this comment?')) {
+                comments.splice(idx, 1);
+                loadComments();
+            }
+        }
+        function deleteUser(idx) {
+            if (confirm('Delete this user?')) {
+                users.splice(idx, 1);
+                loadUsers();
+            }
+        }
+
+        // Add Post
+        document.getElementById('addPostForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('postTitle').value;
+            const category = document.getElementById('postCategory').value;
+            const status = document.getElementById('postStatus').value;
+            const content = document.getElementById('postContent').value;
+            posts.unshift({
+                title,
+                author: "Admin",
+                authorImg: "https://randomuser.me/api/portraits/men/32.jpg",
+                category,
+                status,
+                date: new Date().toISOString().slice(0,10)
+            });
+            loadPosts();
+            document.getElementById('addPostForm').reset();
+            document.getElementById('postImagePreview').classList.add('d-none');
+            bootstrap.Modal.getInstance(document.getElementById('addPostModal')).hide();
+        });
+
+        // Add Category
+        document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('categoryName').value;
+            const description = document.getElementById('categoryDescription').value;
+            categories.push({ name, description, posts: 0 });
+            loadCategories();
+            document.getElementById('addCategoryForm').reset();
+            bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+        });
+
+        // Add User
+        document.getElementById('addUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const role = document.getElementById('userRole').value;
+            const status = document.getElementById('userStatus').value;
+            users.push({
+                name,
+                email,
+                role,
+                status,
+                avatar: "https://randomuser.me/api/portraits/lego/1.jpg"
+            });
+            loadUsers();
+            document.getElementById('addUserForm').reset();
+            document.getElementById('userAvatarPreview').classList.add('d-none');
+            bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+        });
+
+        // Image Preview for Post
+        document.getElementById('postImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('postImagePreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    preview.src = evt.target.result;
+                    preview.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('d-none');
+            }
+        });
+
+        // Image Preview for User
+        document.getElementById('userAvatar').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('userAvatarPreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    preview.src = evt.target.result;
+                    preview.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('d-none');
+            }
+        });
+
+        // Refresh Comments
+        document.getElementById('refreshCommentsBtn').addEventListener('click', function() {
+            loadComments();
+        });
+
+        // Tab navigation (Bootstrap 5)
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        loadCategories();
+        loadComments();
+        loadUsers();
+    </script>
+</body>
+</html>

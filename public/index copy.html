@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile | Celebrity Gossip Club</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts for better typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and base styles */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #f7f7fa 0%, #f3e7e9 100%);
+      min-height: 100vh;
+      color: #222;
+      box-sizing: border-box;
+    }
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+    /* Container */
+    .container {
+      max-width: 440px;
+      margin: 48px auto 32px auto;
+      background: rgba(255,255,255,0.98);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(44, 62, 80, 0.13), 0 1.5px 4px rgba(0,0,0,0.06);
+      padding: 40px 34px 32px 34px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 1.2s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    /* Decorative background shapes */
+    .container::before, .container::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      z-index: 0;
+      opacity: 0.13;
+      pointer-events: none;
+    }
+    .container::before {
+      width: 180px; height: 180px;
+      background: linear-gradient(135deg, #f2c94c 0%, #f2994a 100%);
+      top: -60px; left: -60px;
+    }
+    .container::after {
+      width: 120px; height: 120px;
+      background: linear-gradient(135deg, #56ccf2 0%, #2f80ed 100%);
+      bottom: -40px; right: -40px;
+    }
+    /* Profile Picture */
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #f2c94c;
+      margin-bottom: 18px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 4px 24px rgba(242,201,76,0.13);
+      background: #f7f7fa;
+      transition: box-shadow 0.3s;
+      position: relative;
+      z-index: 1;
+    }
+    .profile-pic:hover {
+      box-shadow: 0 8px 32px rgba(242,201,76,0.22);
+    }
+    /* Username */
+    .username {
+      text-align: center;
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+      color: #222;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 0 #fff, 0 2px 8px rgba(44,62,80,0.04);
+    }
+    /* Full Name */
+    .full-name {
+      text-align: center;
+      color: #666;
+      font-size: 1.18em;
+      margin-bottom: 22px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      position: relative;
+      z-index: 1;
+    }
+    /* User Info Section */
+    .user-info {
+      margin: 0 auto;
+      max-width: 340px;
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 22px 18px 16px 18px;
+      box-shadow: 0 1px 4px rgba(44,62,80,0.04);
+      position: relative;
+      z-index: 1;
+    }
+    .user-info label {
+      display: block;
+      font-size: 1em;
+      color: #888;
+      margin-bottom: 2px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .user-info .value {
+      font-size: 1.13em;
+      margin-bottom: 16px;
+      color: #222;
+      font-family: 'Roboto', Arial, sans-serif;
+      font-weight: 400;
+      word-break: break-all;
+    }
+    /* Role Badge */
+    .role-badge {
+      display: inline-block;
+      padding: 5px 18px;
+      background: linear-gradient(90deg, #f2c94c 0%, #f2994a 100%);
+      color: #222;
+      border-radius: 16px;
+      font-size: 1em;
+      font-weight: 600;
+      margin-top: 10px;
+      box-shadow: 0 1px 4px rgba(242,201,76,0.08);
+      letter-spacing: 0.02em;
+      border: none;
+      outline: none;
+      transition: background 0.2s;
+      text-shadow: 0 1px 0 #fff;
+    }
+    .role-badge.admin {
+      background: linear-gradient(90deg, #56ccf2 0%, #2f80ed 100%);
+      color: #fff;
+      text-shadow: 0 1px 0 #2f80ed;
+    }
+    .role-badge.moderator {
+      background: linear-gradient(90deg, #bb6bd9 0%, #8f5ae8 100%);
+      color: #fff;
+      text-shadow: 0 1px 0 #8f5ae8;
+    }
+    /* Error Message */
+    .error-message {
+      color: #d32f2f;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 1.13em;
+      font-weight: 500;
+      background: #fff0f0;
+      border-radius: 8px;
+      padding: 18px 10px;
+      box-shadow: 0 1px 4px rgba(211,47,47,0.07);
+    }
+    /* Loading Spinner */
+    .spinner {
+      margin: 40px auto 24px auto;
+      width: 48px;
+      height: 48px;
+      border: 5px solid #f2c94c;
+      border-top: 5px solid #56ccf2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      display: block;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container {
+        max-width: 98vw;
+        padding: 18vw 2vw 10vw 2vw;
+        margin: 18vw 0 0 0;
+      }
+      .user-info {
+        padding: 14px 6vw 10px 6vw;
+      }
+      .profile-pic {
+        width: 90px;
+        height: 90px;
+      }
+      .username {
+        font-size: 1.3em;
+      }
+    }
+    /* Decorative divider */
+    .divider {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #f2c94c 0%, #56ccf2 100%);
+      border-radius: 2px;
+      margin: 18px auto 24px auto;
+      opacity: 0.7;
+    }
+    /* Edit Profile Button */
+    .edit-btn {
+      display: block;
+      margin: 28px auto 0 auto;
+      padding: 10px 32px;
+      background: linear-gradient(90deg, #56ccf2 0%, #2f80ed 100%);
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      font-size: 1.08em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+      transition: background 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.01em;
+    }
+    .edit-btn:hover {
+      background: linear-gradient(90deg, #2f80ed 0%, #56ccf2 100%);
+      box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+    }
+    /* Social Links */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+    .social-link {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f7f7fa;
+      box-shadow: 0 1px 4px rgba(44,62,80,0.04);
+      transition: background 0.2s, box-shadow 0.2s;
+      color: #888;
+      font-size: 1.3em;
+      text-decoration: none;
+    }
+    .social-link:hover {
+      background: #f2c94c;
+      color: #222;
+      box-shadow: 0 2px 8px rgba(242,201,76,0.13);
+    }
+    /* Tooltip */
+    .social-link[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      background: #222;
+      color: #fff;
+      font-size: 0.85em;
+      padding: 3px 10px;
+      border-radius: 6px;
+      top: 44px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      z-index: 10;
+      opacity: 0.93;
+      pointer-events: none;
+    }
+    /* Subtle fade-in for all elements */
+    .fade-in {
+      opacity: 0;
+      animation: fadeInEl 0.7s forwards;
+    }
+    @keyframes fadeInEl {
+      to { opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="user-profile">
+    <div style="text-align:center;">
+      <div class="spinner"></div>
+      <div style="color:#888; font-size:1.1em;">Loading profile...</div>
+    </div>
+  </div>
+  <script>
+    // Social icons SVGs
+    const socialIcons = {
+      twitter: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 5.924c-.793.352-1.646.59-2.542.698a4.48 4.48 0 0 0 1.963-2.475 8.94 8.94 0 0 1-2.828 1.082 4.48 4.48 0 0 0-7.635 4.086A12.73 12.73 0 0 1 3.11 4.86a4.48 4.48 0 0 0 1.39 5.976 4.44 4.44 0 0 1-2.03-.561v.057a4.48 4.48 0 0 0 3.6 4.393 4.48 4.48 0 0 1-2.025.077 4.48 4.48 0 0 0 4.18 3.11A8.98 8.98 0 0 1 2 19.54a12.7 12.7 0 0 0 6.88 2.02c8.26 0 12.78-6.84 12.78-12.77 0-.19-.01-.38-.02-.57A9.1 9.1 0 0 0 24 4.59a8.93 8.93 0 0 1-2.54.7z"/></svg>`,
+      facebook: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg>`,
+      instagram: `<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.974.974 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.974.974-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.974-.974-1.246-2.242-1.308-3.608C2.175 15.647 2.163 15.267 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.974-.974 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.771.131 4.659.425 3.678 1.406c-.98.98-1.274 2.092-1.334 3.374C2.013 5.668 2 6.077 2 12c0 5.923.013 6.332.072 7.612.06 1.282.354 2.394 1.334 3.374.981.981 2.093 1.274 3.374 1.334C8.332 23.987 8.741 24 12 24s3.668-.013 4.948-.072c1.281-.06 2.393-.353 3.374-1.334.98-.98 1.274-2.092 1.334-3.374.059-1.28.072-1.689.072-7.612 0-5.923-.013-6.332-.072-7.612-.06-1.282-.354-2.394-1.334-3.374-.981-.981-2.093-1.274-3.374-1.334C15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998zm6.406-11.845a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>`
+    };
+
+    // Helper: fade-in effect for elements
+    function fadeInElement(el, delay = 0) {
+      el.classList.add('fade-in');
+      el.style.animationDelay = delay + 's';
+    }
+
+    async function fetchUserProfile() {
+      try {
+        const response = await fetch('/auth/user');
+        const data = await response.json();
+
+        const container = document.getElementById('user-profile');
+        container.innerHTML = '';
+
+        if (data && data.id) {
+          // Profile Picture
+          const img = document.createElement('img');
+          img.className = 'profile-pic';
+          img.src = data.profile_picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.full_name || data.username) + '&background=f2c94c&color=222&size=256';
+          img.alt = 'Profile Picture';
+          fadeInElement(img, 0.1);
+          container.appendChild(img);
+
+          // Username
+          const username = document.createElement('div');
+          username.className = 'username';
+          username.textContent = '@' + data.username;
+          fadeInElement(username, 0.2);
+          container.appendChild(username);
+
+          // Full Name
+          const fullName = document.createElement('div');
+          fullName.className = 'full-name';
+          fullName.textContent = data.full_name;
+          fadeInElement(fullName, 0.3);
+          container.appendChild(fullName);
+
+          // Decorative divider
+          const divider = document.createElement('div');
+          divider.className = 'divider';
+          fadeInElement(divider, 0.35);
+          container.appendChild(divider);
+
+          // User Info
+          const info = document.createElement('div');
+          info.className = 'user-info';
+
+          // Email
+          const emailLabel = document.createElement('label');
+          emailLabel.textContent = 'Email';
+          info.appendChild(emailLabel);
+          const emailValue = document.createElement('div');
+          emailValue.className = 'value';
+          emailValue.textContent = data.email;
+          info.appendChild(emailValue);
+
+          // Role
+          const roleLabel = document.createElement('label');
+          roleLabel.textContent = 'Role';
+          info.appendChild(roleLabel);
+          const roleValue = document.createElement('span');
+          roleValue.className = 'role-badge';
+          let role = data.role || '';
+          roleValue.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+          if (role === 'admin') roleValue.classList.add('admin');
+          if (role === 'moderator') roleValue.classList.add('moderator');
+          info.appendChild(roleValue);
+
+          // Optionally: Join Date
+          if (data.created_at) {
+            const joinLabel = document.createElement('label');
+            joinLabel.textContent = 'Joined';
+            info.appendChild(joinLabel);
+            const joinValue = document.createElement('div');
+            joinValue.className = 'value';
+            const date = new Date(data.created_at);
+            joinValue.textContent = date.toLocaleDateString(undefined, {year:'numeric', month:'long', day:'numeric'});
+            info.appendChild(joinValue);
+          }
+
+          fadeInElement(info, 0.4);
+          container.appendChild(info);
+
+          // Social Links (if available)
+          if (data.social && typeof data.social === 'object') {
+            const socialLinks = document.createElement('div');
+            socialLinks.className = 'social-links';
+            let delay = 0.5;
+            for (const [platform, url] of Object.entries(data.social)) {
+              if (url && socialIcons[platform]) {
+                const a = document.createElement('a');
+                a.className = 'social-link';
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.innerHTML = socialIcons[platform];
+                a.setAttribute('data-tooltip', platform.charAt(0).toUpperCase() + platform.slice(1));
+                fadeInElement(a, delay);
+                delay += 0.07;
+                socialLinks.appendChild(a);
+              }
+            }
+            if (socialLinks.children.length > 0) {
+              container.appendChild(socialLinks);
+            }
+          }
+
+          // Edit Profile Button (optional, only for self)
+          if (data.can_edit_profile) {
+            const editBtn = document.createElement('button');
+            editBtn.className = 'edit-btn';
+            editBtn.textContent = 'Edit Profile';
+            editBtn.onclick = function() {
+              window.location.href = '/user/edit';
+            };
+            fadeInElement(editBtn, 0.6);
+            container.appendChild(editBtn);
+          }
+        } else if (data && data.message) {
+          container.innerHTML = `<div class="error-message">${data.message}</div>`;
+        } else {
+          container.innerHTML = `<div class="error-message">Unable to load user profile.</div>`;
+        }
+      } catch (err) {
+        document.getElementById('user-profile').innerHTML = `<div class="error-message">Error loading profile. Please try again later.</div>`;
+      }
+    }
+
+    fetchUserProfile();
+
+
+  </script>
+</body>
+</html>

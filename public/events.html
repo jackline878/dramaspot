@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity Gossip Club - Events</title>
+    <meta name="description" content="Stay updated with the latest celebrity events, parties, and red carpet moments. Join the Celebrity Gossip Club for exclusive event coverage.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e91e63;
+            --secondary: #fff;
+            --accent: #f8bbd0;
+            --dark: #222;
+            --light: #f5f5f5;
+            --border: #e0e0e0;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
+        header {
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 70px;
+        }
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline-block;
+        }
+        nav ul li a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        nav ul li a.active, nav ul li a:hover {
+            color: var(--accent);
+        }
+        .hero {
+            background: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            min-height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(233,30,99,0.5);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .hero-content h1 {
+            font-size: 3rem;
+            margin: 0 0 1rem 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .hero-content p {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .events-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+        .event-card {
+            background: var(--secondary);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .event-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(233,30,99,0.15);
+        }
+        .event-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .event-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .event-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--primary);
+        }
+        .event-meta {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+        .event-description {
+            flex: 1;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+        .event-tags {
+            margin-bottom: 1rem;
+        }
+        .event-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--primary);
+            border-radius: 16px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+        .event-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        .btn {
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            border-radius: 24px;
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn.secondary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .btn:hover {
+            background: #ad1457;
+        }
+        .btn.secondary:hover {
+            background: #f06292;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0 2rem 0;
+            gap: 0.5rem;
+        }
+        .pagination button {
+            background: var(--secondary);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .pagination button.active, .pagination button:hover {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+        aside.sidebar {
+            background: var(--secondary);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+        .sidebar h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary);
+            margin-top: 0;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 0.8rem;
+        }
+        .sidebar ul li a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .sidebar ul li a:hover {
+            color: var(--primary);
+        }
+        .newsletter {
+            margin-top: 2rem;
+        }
+        .newsletter input[type="email"] {
+            padding: 0.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            width: 70%;
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+        .newsletter button {
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            border: none;
+            background: var(--primary);
+            color: var(--secondary);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .newsletter button:hover {
+            background: #ad1457;
+        }
+        .footer {
+            background: var(--dark);
+            color: var(--secondary);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 2rem;
+        }
+        .footer-section {
+            flex: 1 1 200px;
+        }
+        .footer-section h4 {
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 0;
+            color: var(--accent);
+        }
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-section ul li {
+            margin-bottom: 0.7rem;
+        }
+        .footer-section ul li a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-section ul li a:hover {
+            color: var(--accent);
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.95rem;
+            color: #bbb;
+        }
+        @media (max-width: 900px) {
+            .events-list {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            main {
+                padding: 0 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="logo">Celebrity Gossip Club</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="events.html" class="active">Events</a></li>
+                    <li><a href="photos.html">Photos</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Upcoming Celebrity Events</h1>
+            <p>Red carpets, exclusive parties, and star-studded galas. Get the inside scoop on the hottest celebrity events!</p>
+        </div>
+    </section>
+    <main>
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
+            <section style="flex: 3 1 600px;">
+                <div class="events-list" id="events-list">
+                    <!-- Event cards will be injected here by JS -->
+                </div>
+                <div class="pagination" id="pagination">
+                    <!-- Pagination buttons will be injected here by JS -->
+                </div>
+            </section>
+            <aside class="sidebar" style="flex: 1 1 280px; min-width: 260px;">
+                <h3>Popular Events</h3>
+                <ul>
+                    <li><a href="#">Oscars After Party 2024</a></li>
+                    <li><a href="#">Met Gala 2024</a></li>
+                    <li><a href="#">Cannes Film Festival</a></li>
+                    <li><a href="#">Grammy Awards Night</a></li>
+                    <li><a href="#">Fashion Week NYC</a></li>
+                </ul>
+                <div class="newsletter">
+                    <h3>Subscribe for Updates</h3>
+                    <form id="newsletter-form">
+                        <input type="email" placeholder="Your email" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                    <div id="newsletter-message" style="margin-top:0.5rem;color:var(--primary);font-size:0.95rem;"></div>
+                </div>
+                <div style="margin-top:2rem;">
+                    <h3>Event Categories</h3>
+                    <ul>
+                        <li><a href="#">Award Shows</a></li>
+                        <li><a href="#">Movie Premieres</a></li>
+                        <li><a href="#">Fashion Events</a></li>
+                        <li><a href="#">Charity Galas</a></li>
+                        <li><a href="#">Music Festivals</a></li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Us</h4>
+                <p>
+                    Celebrity Gossip Club brings you the latest buzz, exclusive photos, and inside stories from the world of celebrities. Join our community and never miss a moment!
+                </p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="photos.html">Photos</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter/X</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">TikTok</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Celebrity Gossip Club. All rights reserved.
+        </div>
+    </footer>
+    <script>
+        // Sample event data (20+ events for pagination demo)
+        const events = [
+            {
+                title: "Oscars After Party 2024",
+                date: "March 11, 2024",
+                location: "Los Angeles, CA",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                description: "The most exclusive Oscars after party returns! See who wore what, who mingled with whom, and all the behind-the-scenes drama.",
+                tags: ["Award Show", "Party", "Red Carpet"],
+                link: "#"
+            },
+            {
+                title: "Met Gala 2024",
+                date: "May 6, 2024",
+                location: "New York, NY",
+                image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+                description: "Fashion's biggest night out! Celebrities dazzle in extravagant outfits at the Met Gala. Get the scoop on the most talked-about looks.",
+                tags: ["Fashion", "Gala", "Red Carpet"],
+                link: "#"
+            },
+            {
+                title: "Cannes Film Festival",
+                date: "May 14-25, 2024",
+                location: "Cannes, France",
+                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+                description: "The world's most glamorous film festival. Catch the premieres, celebrity sightings, and all the glitz from the French Riviera.",
+                tags: ["Film Festival", "Premiere", "International"],
+                link: "#"
+            },
+            {
+                title: "Grammy Awards Night",
+                date: "February 4, 2024",
+                location: "Los Angeles, CA",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+                description: "Music's biggest stars gather for the Grammy Awards. See the winners, performances, and red carpet highlights.",
+                tags: ["Music", "Award Show", "Live"],
+                link: "#"
+            },
+            {
+                title: "Fashion Week NYC",
+                date: "September 6-13, 2024",
+                location: "New York, NY",
+                image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80",
+                description: "The latest trends hit the runway at New York Fashion Week. Celebrities, designers, and influencers take over the city.",
+                tags: ["Fashion", "Runway", "Trends"],
+                link: "#"
+            },
+            {
+                title: "Charity Gala for Change",
+                date: "April 20, 2024",
+                location: "London, UK",
+                image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+                description: "A night of giving back. Celebrities unite for a good cause at this star-studded charity gala.",
+                tags: ["Charity", "Gala", "Social"],
+                link: "#"
+            },
+            {
+                title: "Hollywood Movie Premiere: 'Starlight'",
+                date: "June 15, 2024",
+                location: "Hollywood, CA",
+                image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=800&q=80",
+                description: "The cast of 'Starlight' walks the red carpet for the highly anticipated premiere. Exclusive interviews and photos.",
+                tags: ["Movie Premiere", "Hollywood", "Red Carpet"],
+                link: "#"
+            },
+            {
+                title: "Coachella Music Festival",
+                date: "April 12-21, 2024",
+                location: "Indio, CA",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+                description: "Celebrities and music lovers flock to the desert for Coachella. See the best festival looks and performances.",
+                tags: ["Music Festival", "Concert", "Trendy"],
+                link: "#"
+            },
+            {
+                title: "Venice Film Festival",
+                date: "August 28 - September 7, 2024",
+                location: "Venice, Italy",
+                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+                description: "A celebration of cinema on the canals. The Venice Film Festival attracts stars from around the globe.",
+                tags: ["Film Festival", "International", "Premiere"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Beach Bash",
+                date: "July 10, 2024",
+                location: "Malibu, CA",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                description: "Sun, sand, and stars! The annual Celebrity Beach Bash is the summer's hottest party.",
+                tags: ["Party", "Beach", "Summer"],
+                link: "#"
+            },
+            {
+                title: "Royal Charity Ball",
+                date: "October 5, 2024",
+                location: "London, UK",
+                image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+                description: "Royals and celebrities gather for a night of elegance and philanthropy at the Royal Charity Ball.",
+                tags: ["Charity", "Royal", "Gala"],
+                link: "#"
+            },
+            {
+                title: "MTV Video Music Awards",
+                date: "August 25, 2024",
+                location: "New York, NY",
+                image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+                description: "The VMAs are back! See the wildest performances, red carpet moments, and after party gossip.",
+                tags: ["Music", "Award Show", "Party"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Halloween Bash",
+                date: "October 31, 2024",
+                location: "Los Angeles, CA",
+                image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80",
+                description: "Who wore the best costume? The annual Halloween Bash is a spooky, star-studded affair.",
+                tags: ["Party", "Halloween", "Costume"],
+                link: "#"
+            },
+            {
+                title: "Golden Globe Awards",
+                date: "January 7, 2024",
+                location: "Beverly Hills, CA",
+                image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=800&q=80",
+                description: "The Golden Globes kick off awards season with glitz, glamour, and plenty of surprises.",
+                tags: ["Award Show", "Red Carpet", "Hollywood"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Chef Cook-Off",
+                date: "November 12, 2024",
+                location: "Las Vegas, NV",
+                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+                description: "Famous faces compete in the kitchen for charity. Who will win the coveted golden spatula?",
+                tags: ["Charity", "Food", "Competition"],
+                link: "#"
+            },
+            {
+                title: "Supermodel Runway Show",
+                date: "September 20, 2024",
+                location: "Paris, France",
+                image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+                description: "The world's top supermodels strut their stuff at this exclusive Paris runway event.",
+                tags: ["Fashion", "Runway", "International"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Book Launch",
+                date: "June 28, 2024",
+                location: "New York, NY",
+                image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+                description: "A-list authors and stars celebrate the release of the season's most anticipated books.",
+                tags: ["Book Launch", "Literature", "Social"],
+                link: "#"
+            },
+            {
+                title: "Hollywood Charity Poker Night",
+                date: "August 18, 2024",
+                location: "Hollywood, CA",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+                description: "Celebrities go all-in for a good cause at this high-stakes poker night.",
+                tags: ["Charity", "Poker", "Hollywood"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Ski Weekend",
+                date: "December 14-16, 2024",
+                location: "Aspen, CO",
+                image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80",
+                description: "Stars hit the slopes for a weekend of fun, fashion, and après-ski parties.",
+                tags: ["Winter", "Party", "Sports"],
+                link: "#"
+            },
+            {
+                title: "Celebrity New Year's Eve Bash",
+                date: "December 31, 2024",
+                location: "Miami, FL",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+                description: "Ring in the new year with the hottest celebrities at Miami's most exclusive party.",
+                tags: ["Party", "New Year", "Miami"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Art Auction",
+                date: "March 22, 2024",
+                location: "Los Angeles, CA",
+                image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=800&q=80",
+                description: "Bid on art created by your favorite stars, with proceeds going to charity.",
+                tags: ["Art", "Charity", "Auction"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Yoga Retreat",
+                date: "May 18-20, 2024",
+                location: "Sedona, AZ",
+                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+                description: "Celebrities unwind and recharge at this serene yoga retreat in the desert.",
+                tags: ["Wellness", "Yoga", "Retreat"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Tech Summit",
+                date: "October 15, 2024",
+                location: "San Francisco, CA",
+                image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+                description: "Stars and tech moguls converge to discuss the future of entertainment and technology.",
+                tags: ["Tech", "Summit", "Innovation"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Tennis Invitational",
+                date: "July 22, 2024",
+                location: "Palm Springs, CA",
+                image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80",
+                description: "Celebrities serve up some friendly competition at this annual tennis invitational.",
+                tags: ["Sports", "Tennis", "Charity"],
+                link: "#"
+            },
+            {
+                title: "Celebrity Film Screening: 'Midnight Lights'",
+                date: "August 2, 2024",
+                location: "Los Angeles, CA",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+                description: "An exclusive screening of 'Midnight Lights' with cast Q&A and after party.",
+                tags: ["Film", "Screening", "Hollywood"],
+                link: "#"
+            }
+        ];
+
+        // Pagination variables
+        const eventsPerPage = 6;
+        let currentPage = 1;
+        const totalPages = Math.ceil(events.length / eventsPerPage);
+
+        function renderEvents(page) {
+            const start = (page - 1) * eventsPerPage;
+            const end = start + eventsPerPage;
+            const eventsToShow = events.slice(start, end);
+
+            const eventsList = document.getElementById('events-list');
+            eventsList.innerHTML = '';
+
+            eventsToShow.forEach(event => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                card.innerHTML = `
+                    <img src="${event.image}" alt="${event.title}" class="event-image">
+                    <div class="event-content">
+                        <h2 class="event-title">${event.title}</h2>
+                        <div class="event-meta">${event.date} &bull; ${event.location}</div>
+                        <div class="event-tags">
+                            ${event.tags.map(tag => `<span class="event-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="event-description">${event.description}</div>
+                        <div class="event-actions">
+                            <a href="${event.link}" class="btn" target="_blank">Read More</a>
+                            <button class="btn secondary" onclick="alert('Event added to your calendar!')">Add to Calendar</button>
+                        </div>
+                    </div>
+                `;
+                eventsList.appendChild(card);
+            });
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                if (i === currentPage) btn.classList.add('active');
+                btn.addEventListener('click', () => {
+                    currentPage = i;
+                    renderEvents(currentPage);
+                    renderPagination();
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                });
+                pagination.appendChild(btn);
+            }
+        }
+
+        // Newsletter form
+        document.addEventListener('DOMContentLoaded', function() {
+            renderEvents(currentPage);
+            renderPagination();
+
+            const form = document.getElementById('newsletter-form');
+            const message = document.getElementById('newsletter-message');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                message.textContent = "Thank you for subscribing!";
+                form.reset();
+            });
+        });
+    </script>
+</body>
+</html>

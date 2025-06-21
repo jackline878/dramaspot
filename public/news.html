@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Celebrity Gossip Club - Latest News</title>
+    <meta name="description" content="Stay updated with the latest celebrity gossip, news, and trending stories at Celebrity Gossip Club.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+    <style>
+
+                    :root {
+            --primary: #fa3577;
+            --secondary: #fff;
+            --accent: #ffeb3b;
+            --dark: #222;
+            --light: #f8f8f8;
+            --gray: #888;
+        }
+                .bg-pink{
+            background: var(--primary);
+            color: var(--secondary);
+        }
+        .text-pink{
+            color: var(--primary);
+        }
+        .btn-pink{
+            background: var(--primary);
+            color: var(--secondary);
+        }
+        .btn-outline-pink{
+            border-color: var(--primary);
+        }
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .news-card {
+            transition: box-shadow 0.2s;
+        }
+        .news-card:hover {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        }
+        .category-badge {
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        .news-img {
+            object-fit: cover;
+            height: 220px;
+            width: 100%;
+        }
+        .author-img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        .trending-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 0.75rem;
+        }
+        .pagination .page-link {
+            color: #212529;
+        }
+        .pagination .active .page-link {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+        }
+        .newsletter-form input[type="email"] {
+            border-radius: 0.25rem 0 0 0.25rem;
+        }
+        .newsletter-form button {
+            border-radius: 0 0.25rem 0.25rem 0;
+        }
+        .tag-badge {
+            background: #e9ecef;
+            color: #212529;
+            margin: 0.2rem;
+            font-size: 0.85rem;
+            border-radius: 0.25rem;
+            padding: 0.3rem 0.7rem;
+            display: inline-block;
+        }
+        .ad-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: #856404;
+        }
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        .news-meta {
+            font-size: 0.95rem;
+            color: #6c757d;
+        }
+        .news-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .news-excerpt {
+            font-size: 1.05rem;
+            color: #495057;
+        }
+        
+        .footer-link {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 0.5rem;
+        }
+
+        .ad-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            border-radius: 0.5rem;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-icons a {
+            color: #495057;
+            margin-right: 0.7rem;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+        .social-icons a:hover {
+            color: #ffc107;
+        }
+        @media (max-width: 991.98px) {
+            .news-img {
+                height: 160px;
+            }
+            .trending-img {
+                width: 48px;
+                height: 48px;
+            }
+        }
+        @media (max-width: 767.98px) {
+            .news-img {
+                height: 120px;
+            }
+            .sidebar-title {
+                font-size: 1rem;
+            }
+        }
+
+        
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            overflow-x: scroll;
+
+        }
+
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-nav a {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: rgb(250, 217, 234);
+            transition: border-color 0.3s;
+        }
+
+        .tab-nav a.active,
+        .tab-nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        @media (max-width: 767.98px) {
+
+            .tab-nav {
+                gap: 5px;
+                justify-content: left;
+
+            }
+
+            .tab-nav a {
+                padding: 0px 5px;
+                font-size: 0.9rem;
+                color: rgb(250, 217, 234);
+                font-weight: 500;
+                border: 1px solid transparent;
+                border-radius: 4px;
+            }
+        }
+
+        .all {
+            display: flex;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .articles {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .aside {
+            width: 300px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            /* distance from top of viewport */
+            align-self: flex-start;
+        }
+                .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+    </style>
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Celebrity Gossip</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/news.html">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trending.html">Trending</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page"
+                            href="/exclusives.html">Exclusives <span class="exclusive-badge">Hot</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-warning py-5 mb-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-2">Latest Celebrity News & Gossip</h1>
+                    <p class="lead mb-0">Get the hottest updates, exclusive scoops, and trending stories from the world of celebrities. Stay in the loop with Celebrity Gossip Club!</p>
+                </div>
+                <div class="col-lg-4 d-none d-lg-block text-end">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=400&h=200&facepad=2" alt="Celebrity" class="img-fluid rounded shadow">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">News</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container my-4">
+        <div class="row">
+            <!-- News Articles -->
+            <main class="col-lg-8">
+                <div class="row g-4">
+                    <!-- News Card 1 -->
+                    <div class="col-md-6">
+                        <div class="card news-card h-100">
+                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" class="card-img-top news-img" alt="Celebrity News 1">
+                            <div class="card-body">
+                                <span class="badge bg-danger category-badge">Scandal</span>
+                                <span class="badge bg-secondary category-badge">Hollywood</span>
+                                <h2 class="news-title"><a href="#" class="text-dark text-decoration-none">A-Lister's Secret Romance Revealed!</a></h2>
+                                <p class="news-excerpt">Rumors swirl as paparazzi spot the superstar with a mystery partner. Fans are buzzing about the possible new couple in Tinseltown...</p>
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="author-img" alt="Author">
+                                    <div>
+                                        <span class="fw-semibold">By Jessica Lane</span>
+                                        <div class="news-meta">June 10, 2024 &middot; 3 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <div class="social-icons">
+                                    <a href="#" title="Share on Facebook"><i class="bi bi-facebook"></i></a>
+                                    <a href="#" title="Share on Twitter"><i class="bi bi-twitter"></i></a>
+                                    <a href="#" title="Share on Instagram"><i class="bi bi-instagram"></i></a>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- News Card 2 -->
+                    <div class="col-md-6">
+                        <div class="card news-card h-100">
+                            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80" class="card-img-top news-img" alt="Celebrity News 2">
+                            <div class="card-body">
+                                <span class="badge bg-info category-badge">Fashion</span>
+                                <span class="badge bg-success category-badge">Red Carpet</span>
+                                <h2 class="news-title"><a href="#" class="text-dark text-decoration-none">Stunning Looks at the Gala Night</a></h2>
+                                <p class="news-excerpt">The annual gala was a star-studded affair with jaw-dropping outfits. See who wore what and who stole the spotlight this year...</p>
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Author">
+                                    <div>
+                                        <span class="fw-semibold">By Mark Evans</span>
+                                        <div class="news-meta">June 9, 2024 &middot; 2 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <div class="social-icons">
+                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- News Card 3 -->
+                    <div class="col-md-6">
+                        <div class="card news-card h-100">
+                            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" class="card-img-top news-img" alt="Celebrity News 3">
+                            <div class="card-body">
+                                <span class="badge bg-primary category-badge">Music</span>
+                                <span class="badge bg-warning text-dark category-badge">Exclusive</span>
+                                <h2 class="news-title"><a href="#" class="text-dark text-decoration-none">Chart-Topping Singer Drops Surprise Album</a></h2>
+                                <p class="news-excerpt">Fans are ecstatic as the pop icon releases a new album overnight. Critics are already calling it the album of the year...</p>
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="author-img" alt="Author">
+                                    <div>
+                                        <span class="fw-semibold">By Olivia Chen</span>
+                                        <div class="news-meta">June 8, 2024 &middot; 4 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <div class="social-icons">
+                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- News Card 4 -->
+                    <div class="col-md-6">
+                        <div class="card news-card h-100">
+                            <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80" class="card-img-top news-img" alt="Celebrity News 4">
+                            <div class="card-body">
+                                <span class="badge bg-dark category-badge">Interview</span>
+                                <span class="badge bg-danger category-badge">Exclusive</span>
+                                <h2 class="news-title"><a href="#" class="text-dark text-decoration-none">Inside the Mind of a Comedy Legend</a></h2>
+                                <p class="news-excerpt">We sit down with the king of comedy for an unfiltered conversation about fame, family, and the future of entertainment...</p>
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" class="author-img" alt="Author">
+                                    <div>
+                                        <span class="fw-semibold">By Daniel Brooks</span>
+                                        <div class="news-meta">June 7, 2024 &middot; 5 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <div class="social-icons">
+                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- News Card 5 -->
+                    <div class="col-md-6">
+                        <div class="card news-card h-100">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" class="card-img-top news-img" alt="Celebrity News 5">
+                            <div class="card-body">
+                                <span class="badge bg-success category-badge">Wellness</span>
+                                <span class="badge bg-info category-badge">Lifestyle</span>
+                                <h2 class="news-title"><a href="#" class="text-dark text-decoration-none">How Celebs Stay Fit: Top 5 Secrets</a></h2>
+                                <p class="news-excerpt">From yoga to superfoods, discover the routines and diets that keep your favorite stars in top shape all year round...</p>
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://randomuser.me/api/portraits/women/68.jpg" class="author-img" alt="Author">
+                                    <div>
+                                        <span class="fw-semibold">By Mia Patel</span>
+                                        <div class="news-meta">June 6, 2024 &middot; 3 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <div class="social-icons">
+                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- News Card 6 -->
+                    <div class="col-md-6">
+                        <div class="card news-card h-100">
+                            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" class="card-img-top news-img" alt="Celebrity News 6">
+                            <div class="card-body">
+                                <span class="badge bg-warning text-dark category-badge">TV</span>
+                                <span class="badge bg-primary category-badge">Premiere</span>
+                                <h2 class="news-title"><a href="#" class="text-dark text-decoration-none">Blockbuster Series Returns: What to Expect</a></h2>
+                                <p class="news-excerpt">The much-awaited season is finally here! We break down the teasers, cast changes, and fan theories for the hit show...</p>
+                                <div class="d-flex align-items-center mt-3">
+                                    <img src="https://randomuser.me/api/portraits/men/51.jpg" class="author-img" alt="Author">
+                                    <div>
+                                        <span class="fw-semibold">By Alex Turner</span>
+                                        <div class="news-meta">June 5, 2024 &middot; 4 min read</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center">
+                                <div class="social-icons">
+                                    <a href="#"><i class="bi bi-facebook"></i></a>
+                                    <a href="#"><i class="bi bi-twitter"></i></a>
+                                    <a href="#"><i class="bi bi-instagram"></i></a>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-warning">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </main>
+            <!-- Sidebar -->
+            <aside class="col-lg-4 mt-5 mt-lg-0">
+                <!-- Trending Stories -->
+                <div class="mb-4">
+                    <div class="sidebar-title">Trending Stories</div>
+                    <ul class="list-unstyled">
+                        <li class="d-flex align-items-center mb-3">
+                            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=60&q=80" class="trending-img" alt="Trending 1">
+                            <div>
+                                <a href="#" class="fw-semibold text-dark text-decoration-none">Red Carpet Fails: Who Wore It Worst?</a>
+                                <div class="news-meta">2 hours ago</div>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=60&q=80" class="trending-img" alt="Trending 2">
+                            <div>
+                                <a href="#" class="fw-semibold text-dark text-decoration-none">Secret Wedding: Celeb Couple Ties the Knot</a>
+                                <div class="news-meta">4 hours ago</div>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=60&q=80" class="trending-img" alt="Trending 3">
+                            <div>
+                                <a href="#" class="fw-semibold text-dark text-decoration-none">Interview: Rising Star Talks Breakthrough Role</a>
+                                <div class="news-meta">6 hours ago</div>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center mb-3">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=60&q=80" class="trending-img" alt="Trending 4">
+                            <div>
+                                <a href="#" class="fw-semibold text-dark text-decoration-none">Fitness Craze: Celebs Try New Workout Trend</a>
+                                <div class="news-meta">8 hours ago</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Advertisement Banner -->
+                <div class="ad-banner mb-4">
+                    <strong>Advertisement</strong><br>
+                    <span>Get the latest celebrity merchandise at <a href="#">StarShop</a>! Exclusive deals for our readers.</span>
+                </div>
+                <!-- Newsletter Signup -->
+                <div class="mb-4">
+                    <div class="sidebar-title">Subscribe to Our Newsletter</div>
+                    <form class="newsletter-form d-flex" autocomplete="off">
+                        <input type="email" class="form-control" placeholder="Your email" required>
+                        <button class="btn btn-warning ms-2" type="submit">Subscribe</button>
+                    </form>
+                    <small class="text-muted d-block mt-2">Get weekly updates delivered to your inbox.</small>
+                </div>
+                <!-- Popular Tags -->
+                <div class="mb-4">
+                    <div class="sidebar-title">Popular Tags</div>
+                    <div>
+                        <span class="tag-badge">#Hollywood</span>
+                        <span class="tag-badge">#Scandal</span>
+                        <span class="tag-badge">#Fashion</span>
+                        <span class="tag-badge">#Music</span>
+                        <span class="tag-badge">#RedCarpet</span>
+                        <span class="tag-badge">#Wellness</span>
+                        <span class="tag-badge">#TV</span>
+                        <span class="tag-badge">#Exclusive</span>
+                        <span class="tag-badge">#Interview</span>
+                        <span class="tag-badge">#Trending</span>
+                    </div>
+                </div>
+                <!-- Social Media Links -->
+                <div class="mb-4">
+                    <div class="sidebar-title">Follow Us</div>
+                    <div class="social-icons">
+                        <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" title="Twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" title="YouTube"><i class="bi bi-youtube"></i></a>
+                        <a href="#" title="TikTok"><i class="bi bi-tiktok"></i></a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-danger text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold">Celebrity Gossip Club</h5>
+                    <p class="small">Your #1 source for the latest in celebrity relationships, breakups, and Hollywood
+                        news.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Sections</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="/" class="footer-link">Home</a></li>
+                        <li><a href="/breakups.html" class="footer-link">Breakups</a></li>
+                        <li><a href="/couples.html" class="footer-link">Couples</a></li>
+                        <li><a href="/news.html" class="footer-link">News</a></li>
+                        <li><a href="/about.html" class="footer-link">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Contact</h6>
+                    <ul class="list-unstyled small">
+                        <li>Email: <a href="mailto:info@celebritygossipclub.com"
+                                class="footer-link">info@celebritygossipclub.com</a></li>
+                        <li>Twitter: <a href="#" class="footer-link">@celebclub</a></li>
+                        <li>Instagram: <a href="#" class="footer-link">@celebritygossipclub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold">Newsletter</h6>
+                    <form class="d-flex flex-column gap-2">
+                        <input type="email" class="form-control" placeholder="Your email" required>
+                        <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <hr class="border-light my-4">
+            <div class="text-center small">
+                &copy; 2024 Celebrity Gossip Club. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <script>
+        // Newsletter form handler (demo only)
+        document.querySelectorAll('.newsletter-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Thank you for subscribing!');
+                form.reset();
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Celebrity Gossip Club</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Optional Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, rgba(255, 0, 128, 0.1), rgba(0, 0, 0, 0.8));
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .author-img {
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .card-title {
+      font-weight: bold;
+    }
+    .btn-outline-pink {
+      border-color: hotpink;
+      color: hotpink;
+    }
+    .btn-outline-pink:hover {
+      background-color: hotpink;
+      color: white;
+    }
+    .news-img {
+      height: 180px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Search Section -->
+<section class="search-section py-4">
+  <div class="container">
+    <h2 class="mb-4 text-center text-uppercase fw-bold">🔥 Trending on Celeb Gossip Club</h2>
+    <div class="row g-3" id="search-results">
+      <!-- Cards will be injected here -->
+    </div>
+  </div>
+</section>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const users = [
+    { username: "Ally_Glam", profile_pic: "https://i.pravatar.cc/50?img=1", bio: "Pop culture queen & gossip lover." },
+    { username: "CelebWatch", profile_pic: "https://i.pravatar.cc/50?img=2", bio: "Breaking headlines & celeb tea!" }
+  ];
+
+  const categories = [
+    { name: "Hollywood", color: "danger" },
+    { name: "Music", color: "success" },
+    { name: "Reality TV", color: "primary" }
+  ];
+
+  const articles = [
+    {
+      title: "Is the Rumor True?",
+      excerpt: "Celebrity X was spotted with Y again. Fans are speculating!",
+      image: "https://source.unsplash.com/random/300x200?celebrity",
+      published_at: new Date(),
+      author: users[0]
+    },
+    {
+      title: "Top 10 Red Carpet Moments",
+      excerpt: "You won’t believe what happened on the red carpet this year!",
+      image: "https://source.unsplash.com/random/301x200?event",
+      published_at: new Date(),
+      author: users[1]
+    }
+  ];
+
+  function timeAgo(date) {
+    return "2h ago"; // Replace with real time logic if needed
+  }
+
+  const userCards = users.map(u => `
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <img src="${u.profile_pic}" class="author-img mx-auto mt-3" width="60" height="60" alt="${u.username}">
+        <div class="card-body">
+          <h5 class="card-title">@${u.username}</h5>
+          <p class="card-text small text-muted">${u.bio}</p>
+        </div>
+      </div>
+    </div>
+  `);
+
+  const categoryCards = categories.map(c => `
+    <div class="col-md-3">
+      <div class="card bg-${c.color} text-white shadow-sm text-center">
+        <div class="card-body">
+          <h5 class="card-title">${c.name}</h5>
+          <p class="small">Explore hot stories in ${c.name}</p>
+        </div>
+      </div>
+    </div>
+  `);
+
+  const articleCards = articles.map(a => `
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm">
+        <img src="${a.image}" class="card-img-top news-img" alt="News Image">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <img src="${a.author.profile_pic}" class="author-img me-2" width="30" height="30" alt="Author">
+            <span class="fw-bold">${a.author.username}</span>
+            <span class="ms-auto text-muted small">${timeAgo(a.published_at)}</span>
+          </div>
+          <h5 class="card-title">${a.title}</h5>
+          <p class="card-text">${a.excerpt}</p>
+          <a href="#" class="btn btn-outline-pink btn-sm mt-2">Read More</a>
+        </div>
+      </div>
+    </div>
+  `);
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  const allCards = [...userCards, ...categoryCards, ...articleCards];
+  shuffle(allCards);
+
+  document.getElementById("search-results").innerHTML = allCards.join('');
+</script>
+
+</body>
+</html>

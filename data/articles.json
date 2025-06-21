@@ -1,0 +1,60 @@
+{
+  "fields": {
+    "title": "vdfdfdfdd",
+    "excerpt": "ssssss",
+    "status": "published",
+    "read_duration": "5",
+    "published_at": "",
+    "subcategories": "[17,16,15,57,56]",
+    "hashtags": "[\"breakingnews\",\"controversy\"]",
+    "section0-content0-captions": "[\"james\",\"cc\",\"\"]",
+    "sections": "[{\"order\":2,\"contents\":[{\"type\":\"carousel\",\"content\":\"{}\"}]},{\"order\":1,\"contents\":[{\"type\":\"head\",\"content\":\"{\\\"head\\\":\\\"Their Nice Moments\\\",\\\"level\\\":\\\"2\\\"}\"}]}]"
+  },
+  "files": [
+    {
+      "fieldname": "image",
+      "originalname": "yjk - Copy (2).jpg",
+      "encoding": "7bit",
+      "mimetype": "image/jpeg",
+      "path": "https://res.cloudinary.com/drltycycg/image/upload/v1749069650/my_uploads/1749069644280-yjk%20-%20Copy%20%282%29.jpg",
+      "size": 263467,
+      "filename": "my_uploads/1749069644280-yjk - Copy (2)"
+    },
+    {
+      "fieldname": "section0-content0-carrousel-image",
+      "originalname": "genzerra.png",
+      "encoding": "7bit",
+      "mimetype": "image/png",
+      "path": "https://res.cloudinary.com/drltycycg/image/upload/v1749069650/my_uploads/1749069646288-genzerra.png",
+      "size": 55977,
+      "filename": "my_uploads/1749069646288-genzerra"
+    },
+    {
+      "fieldname": "section0-content0-carrousel-image",
+      "originalname": "gghhh - Copy.png",
+      "encoding": "7bit",
+      "mimetype": "image/png",
+      "path": "https://res.cloudinary.com/drltycycg/image/upload/v1749069651/my_uploads/1749069646289-gghhh%20-%20Copy.png",
+      "size": 328904,
+      "filename": "my_uploads/1749069646289-gghhh - Copy"
+    },
+    {
+      "fieldname": "section0-content0-carrousel-image",
+      "originalname": "gghhh.png",
+      "encoding": "7bit",
+      "mimetype": "image/png",
+      "path": "https://res.cloudinary.com/drltycycg/image/upload/v1749069654/my_uploads/1749069648626-gghhh.png",
+      "size": 392994,
+      "filename": "my_uploads/1749069648626-gghhh"
+    },
+    {
+      "fieldname": "section0-content0-carrousel-image",
+      "originalname": "WhatsApp Image 2025-05-04 at 12.22.06_76565ba3.jpg",
+      "encoding": "7bit",
+      "mimetype": "image/jpeg",
+      "path": "https://res.cloudinary.com/drltycycg/image/upload/v1749069653/my_uploads/1749069651497-WhatsApp%20Image%202025-05-04%20at%2012.jpg",
+      "size": 46728,
+      "filename": "my_uploads/1749069651497-WhatsApp Image 2025-05-04 at 12"
+    }
+  ]
+}

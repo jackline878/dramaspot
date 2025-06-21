@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Drama Spots Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .settings-section {
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Drama Spots Admin</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 class="mb-4">Settings</h2>
+        <!-- Profile Settings -->
+        <div class="settings-section">
+            <h4>Profile Settings</h4>
+            <form id="profileForm">
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <img src="https://via.placeholder.com/80" id="avatarPreview" class="avatar-preview mb-2" alt="Avatar">
+                        <input class="form-control form-control-sm" type="file" id="avatarInput" accept="image/*">
+                    </div>
+                    <div class="col-md-10">
+                        <div class="mb-3">
+                            <label for="adminName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="adminName" value="Admin User" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adminEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="adminEmail" value="admin@celebritygossip.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="adminBio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="adminBio" rows="2">Site administrator and gossip enthusiast.</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- Site Settings -->
+        <div class="settings-section">
+            <h4>Site Settings</h4>
+            <form id="siteSettingsForm">
+                <div class="mb-3">
+                    <label for="siteTitle" class="form-label">Site Title</label>
+                    <input type="text" class="form-control" id="siteTitle" value="Drama Spots" required>
+                </div>
+                <div class="mb-3">
+                    <label for="siteDescription" class="form-label">Site Description</label>
+                    <textarea class="form-control" id="siteDescription" rows="2">The hottest celebrity gossip, news, and rumors!</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="siteLogo" class="form-label">Site Logo</label>
+                    <input class="form-control" type="file" id="siteLogo" accept="image/*">
+                </div>
+                <div class="mb-3">
+                    <label for="siteTheme" class="form-label">Theme</label>
+                    <select class="form-select" id="siteTheme">
+                        <option value="default" selected>Default</option>
+                        <option value="dark">Dark</option>
+                        <option value="pink">Pink</option>
+                        <option value="celebrity">Celebrity</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Site Settings</button>
+            </form>
+        </div>
+        <!-- Social Media Links -->
+        <div class="settings-section">
+            <h4>Social Media Links</h4>
+            <form id="socialLinksForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="facebook" class="form-label">Facebook</label>
+                        <input type="url" class="form-control" id="facebook" placeholder="https://facebook.com/yourpage">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="twitter" class="form-label">Twitter</label>
+                        <input type="url" class="form-control" id="twitter" placeholder="https://twitter.com/yourprofile">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="instagram" class="form-label">Instagram</label>
+                        <input type="url" class="form-control" id="instagram" placeholder="https://instagram.com/yourprofile">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="youtube" class="form-label">YouTube</label>
+                        <input type="url" class="form-control" id="youtube" placeholder="https://youtube.com/yourchannel">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Save Social Links</button>
+            </form>
+        </div>
+        <!-- Password Change -->
+        <div class="settings-section">
+            <h4>Change Password</h4>
+            <form id="passwordForm">
+                <div class="mb-3">
+                    <label for="currentPassword" class="form-label">Current Password</label>
+                    <input type="password" class="form-control" id="currentPassword" required>
+                </div>
+                <div class="mb-3">
+                    <label for="newPassword" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="newPassword" required>
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-warning">Change Password</button>
+            </form>
+        </div>
+        <!-- Notification Settings -->
+        <div class="settings-section">
+            <h4>Notification Settings</h4>
+            <form id="notificationForm">
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="notifyComments" checked>
+                    <label class="form-check-label" for="notifyComments">Email me about new comments</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="notifyPosts" checked>
+                    <label class="form-check-label" for="notifyPosts">Email me about new posts</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="notifyMentions">
+                    <label class="form-check-label" for="notifyMentions">Email me when mentioned</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+            </form>
+        </div>
+        <!-- Danger Zone -->
+        <div class="settings-section border border-danger">
+            <h4 class="text-danger">Danger Zone</h4>
+            <button class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+        </div>
+    </div>
+    <!-- Modals -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-danger" id="deleteAccountModalLabel">Delete Account</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteAccount">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Toasts -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+      <div id="toast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body" id="toastBody">
+            Settings saved!
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Avatar preview
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
+            const [file] = e.target.files;
+            if (file) {
+                document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+            }
+        });
+
+        // Toast function
+        function showToast(message, type = 'primary') {
+            const toastEl = document.getElementById('toast');
+            const toastBody = document.getElementById('toastBody');
+            toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+            toastBody.textContent = message;
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        // Profile form
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Profile updated!', 'success');
+        });
+
+        // Site settings form
+        document.getElementById('siteSettingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Site settings saved!', 'success');
+        });
+
+        // Social links form
+        document.getElementById('socialLinksForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Social links updated!', 'success');
+        });
+
+        // Password form
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (newPassword !== confirmPassword) {
+                showToast('Passwords do not match!', 'danger');
+                return;
+            }
+            showToast('Password changed!', 'success');
+        });
+
+        // Notification form
+        document.getElementById('notificationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Notification settings saved!', 'success');
+        });
+
+        // Danger zone
+        document.getElementById('deleteAccountBtn').addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+            modal.show();
+        });
+        document.getElementById('confirmDeleteAccount').addEventListener('click', function() {
+            showToast('Account deleted!', 'danger');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('deleteAccountModal'));
+            modal.hide();
+        });
+    </script>
+</body>
+</html>

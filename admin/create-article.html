@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Article - Celebrity Gossip Club Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            background: #fdfdfe;
+            padding: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .carousel-img-preview {
+            max-width: 100px;
+            max-height: 80px;
+            margin-right: 0.5rem;
+        }
+
+        .hashtag-badge {
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .required:after {
+            content: "*";
+            color: #dc3545;
+            margin-left: 0.25rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Celebrity Gossip Club Admin</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mb-4">Create New Article</h1>
+        <form id="articleForm" autocomplete="off">
+            <!-- Article Main Info -->
+            <div class="form-section">
+                <h4>Article Details</h4>
+                <div class="mb-3">
+                    <label for="title" class="form-label required">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" maxlength="200" required>
+                </div>
+                <!-- ✅ Image Upload Input -->
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input class="form-control" type="file" id="article-image" accept="image/*"
+                        onchange="previewImage(event)">
+                </div>
+
+                <!-- ✅ Image Preview Area -->
+                <div class="mb-3">
+                    <div>
+                        <img id="imagePreview" src="#" alt="Preview"
+                            style="max-width: 100%; max-height: 300px; display: none; border: 1px solid #ccc; padding: 5px;" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="hashtags" class="form-label">Hashtags</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="hashtagInput" placeholder="Add hashtag (no #)">
+                        <button class="btn btn-outline-secondary" type="button" id="addHashtagBtn">Add</button>
+                    </div>
+                    <div id="hashtagsList" class="mt-2"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="published_at" class="form-label">Publish Date</label>
+                    <input type="datetime-local" class="form-control" id="published_at" name="published_at">
+                </div>
+                <div class="mb-3">
+                    <label for="read_duration" class="form-label required">Read Duration (minutes)</label>
+                    <input type="number" class="form-control" id="read_duration" name="read_duration" min="1" max="60"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="categoryId" class="form-label required">Category</label>
+                    <select class="form-select" id="categoryId" name="categoryId" required>
+                        <option value="">Select category</option>
+                        <option value="1">Scandals</option>
+                        <option value="2">Fashion</option>
+                        <option value="3">Relationships</option>
+                        <option value="4">Events</option>
+                        <option value="5">Rumors</option>
+                        <option value="6">Interviews</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="excerpt" class="form-label required">Excerpt</label>
+                    <textarea class="form-control" id="excerpt" name="excerpt" rows="3" maxlength="500"
+                        required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label required">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Article Sections -->
+            <div class="form-section">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Article Sections</h4>
+                    <button type="button" class="btn btn-primary" id="addSectionBtn">Add Section</button>
+                </div>
+                <div id="sectionsContainer"></div>
+            </div>
+            <div class="mb-4">
+                <button type="submit" class="btn btn-success btn-lg">Create Article</button>
+                <button type="reset" class="btn btn-secondary btn-lg ms-2">Reset</button>
+            </div>
+        </form>
+        <!-- Modal for Section Content -->
+        <div class="modal fade" id="sectionContentModal" tabindex="-1" aria-labelledby="sectionContentModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form id="sectionContentForm" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sectionContentModalLabel">Edit Section Content</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="modalSectionIndex">
+                        <div class="mb-3">
+                            <label for="sectionType" class="form-label required">Section Type</label>
+                            <select class="form-select" id="sectionType" required>
+                                <option value="head">Heading</option>
+                                <option value="paragraph">Paragraph</option>
+                                <option value="listed">List</option>
+                                <option value="quote">Quote</option>
+                                <option value="carousel">Image Carousel</option>
+                            </select>
+                        </div>
+                        <div id="sectionTypeFields"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Section</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap 5 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Hashtag logic
+        const hashtags = [];
+        const hashtagInput = document.getElementById('hashtagInput');
+        const addHashtagBtn = document.getElementById('addHashtagBtn');
+        const hashtagsList = document.getElementById('hashtagsList');
+
+        addHashtagBtn.addEventListener('click', () => {
+            const tag = hashtagInput.value.trim();
+            if (tag && !hashtags.includes(tag)) {
+                hashtags.push(tag);
+                renderHashtags();
+                hashtagInput.value = '';
+            }
+        });
+
+        hashtagInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addHashtagBtn.click();
+            }
+        });
+
+        function renderHashtags() {
+            hashtagsList.innerHTML = '';
+            hashtags.forEach((tag, idx) => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-info text-dark hashtag-badge';
+                badge.textContent = '#' + tag;
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn-close btn-close-white btn-sm ms-1';
+                removeBtn.style.verticalAlign = 'middle';
+                removeBtn.onclick = () => {
+                    hashtags.splice(idx, 1);
+                    renderHashtags();
+                };
+                badge.appendChild(removeBtn);
+                hashtagsList.appendChild(badge);
+            });
+        }
+
+        // Section logic
+        let sections = [];
+        const sectionsContainer = document.getElementById('sectionsContainer');
+        const addSectionBtn = document.getElementById('addSectionBtn');
+        const sectionContentModal = new bootstrap.Modal(document.getElementById('sectionContentModal'));
+        let editingSectionIndex = null;
+
+        addSectionBtn.addEventListener('click', () => {
+            editingSectionIndex = null;
+            openSectionModal();
+        });
+
+        function openSectionModal(section = null, index = null) {
+            document.getElementById('modalSectionIndex').value = index !== null ? index : '';
+            document.getElementById('sectionType').value = section ? section.type : 'head';
+            renderSectionTypeFields(section ? section.type : 'head', section ? section.content : null);
+            sectionContentModal.show();
+        }
+
+        document.getElementById('sectionType').addEventListener('change', function () {
+            renderSectionTypeFields(this.value, null);
+        });
+
+        function renderSectionTypeFields(type, content) {
+            const container = document.getElementById('sectionTypeFields');
+            container.innerHTML = '';
+            if (type === 'head') {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label required">Heading Text</label>
+                        <input type="text" class="form-control" id="headText" maxlength="150" required value="${content && content.text ? content.text : ''}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Level</label>
+                        <select class="form-select" id="headLevel">
+                            <option value="1" ${content && content.level == 1 ? 'selected' : ''}>H1</option>
+                            <option value="2" ${content && content.level == 2 ? 'selected' : ''}>H2</option>
+                            <option value="3" ${content && content.level == 3 ? 'selected' : ''}>H3</option>
+                            <option value="4" ${content && content.level == 4 ? 'selected' : ''}>H4</option>
+                        </select>
+                    </div>
+                `;
+            } else if (type === 'paragraph') {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label required">Paragraph</label>
+                        <textarea class="form-control" id="paragraphText" rows="5" maxlength="2000" required>${content && content.text ? content.text : ''}</textarea>
+                    </div>
+                `;
+            } else if (type === 'listed') {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label required">List Items (one per line)</label>
+                        <textarea class="form-control" id="listItems" rows="4" required>${content && content.items ? content.items.join('\n') : ''}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ordered List?</label>
+                        <input type="checkbox" id="listOrdered" ${content && content.ordered ? 'checked' : ''}>
+                    </div>
+                `;
+            } else if (type === 'quote') {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label required">Quote Text</label>
+                        <textarea class="form-control" id="quoteText" rows="3" maxlength="500" required>${content && content.text ? content.text : ''}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Attribution</label>
+                        <input type="text" class="form-control" id="quoteBy" maxlength="100" value="${content && content.by ? content.by : ''}">
+                    </div>
+                `;
+            } else if (type === 'carousel') {
+                container.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label required">Carousel Images</label>
+                        <input type="file" name="media" class="form-control" id="carouselImages" accept="image/*" multiple>
+                        <div id="carouselPreview" class="mt-2 d-flex flex-wrap"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Captions (optional, one per image, separated by new lines)</label>
+                        <textarea class="form-control" id="carouselCaptions" rows="2">${content && content.captions ? content.captions.join('\n') : ''}</textarea>
+                    </div>
+                `;
+                if (content && content.images) {
+                    renderCarouselPreview(content.images);
+                }
+                document.getElementById('carouselImages').addEventListener('change', function () {
+                    handleCarouselImagePreview(this.files);
+                });
+            }
+        }
+
+        function renderCarouselPreview(images) {
+            const preview = document.getElementById('carouselPreview');
+            preview.innerHTML = '';
+            if (!images) return;
+            images.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'carousel-img-preview rounded border me-2 mb-2';
+                preview.appendChild(img);
+            });
+        }
+
+        function handleCarouselImagePreview(files) {
+            const preview = document.getElementById('carouselPreview');
+            preview.innerHTML = '';
+            content.carouselFiles = Array.from(files); // Store the files to submit later
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'carousel-img-preview rounded border me-2 mb-2';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+        // Section modal form submit
+        document.getElementById('sectionContentForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const type = document.getElementById('sectionType').value;
+            let content = {};
+            if (type === 'head') {
+                content.text = document.getElementById('headText').value.trim();
+                content.level = parseInt(document.getElementById('headLevel').value);
+                if (!content.text) return;
+            } else if (type === 'paragraph') {
+                content.text = document.getElementById('paragraphText').value.trim();
+                if (!content.text) return;
+            } else if (type === 'listed') {
+                content.items = document.getElementById('listItems').value.split('\n').map(i => i.trim()).filter(i => i);
+                content.ordered = document.getElementById('listOrdered').checked;
+                if (!content.items.length) return;
+            } else if (type === 'quote') {
+                content.text = document.getElementById('quoteText').value.trim();
+                content.by = document.getElementById('quoteBy').value.trim();
+                if (!content.text) return;
+            } else if (type === 'carousel') {
+                const files = document.getElementById('carouselImages').files;
+                content.images = [];
+                content.media = [];
+                if (files.length) {
+                    let loaded = 0;
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            content.images.push(e.target.result);
+                            content.media.push(file);
+                            loaded++;
+                            if (loaded === files.length) {
+                                finishCarousel();
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                    return; // Wait for async
+                } else {
+                    finishCarousel();
+                }
+                function finishCarousel() {
+                    content.captions = document.getElementById('carouselCaptions').value.split('\n').map(i => i.trim());
+                    saveSection(type, content);
+                }
+                return;
+            }
+            saveSection(type, content);
+        });
+
+        function saveSection(type, content) {
+            const idx = document.getElementById('modalSectionIndex').value;
+            if (idx !== '') {
+                sections[parseInt(idx)] = { type, content };
+            } else {
+                sections.push({ type, content });
+            }
+            renderSections();
+            sectionContentModal.hide();
+        }
+
+        function renderSections() {
+            sectionsContainer.innerHTML = '';
+            sections.forEach((section, idx) => {
+                const card = document.createElement('div');
+                card.className = 'section-card';
+                card.innerHTML = `
+                    <div class="section-header mb-2">
+                        <strong>Section ${idx + 1}: ${sectionTypeLabel(section.type)}</strong>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-primary me-1" onclick="editSection(${idx})">Edit</button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeSection(${idx})">Delete</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="moveSection(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>&uarr;</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="moveSection(${idx}, 1)" ${idx === sections.length - 1 ? 'disabled' : ''}>&darr;</button>
+                        </div>
+                    </div>
+                    <div>${renderSectionPreview(section)}</div>
+                `;
+                sectionsContainer.appendChild(card);
+            });
+        }
+
+        function sectionTypeLabel(type) {
+            switch (type) {
+                case 'head': return 'Heading';
+                case 'paragraph': return 'Paragraph';
+                case 'listed': return 'List';
+                case 'quote': return 'Quote';
+                case 'carousel': return 'Image Carousel';
+                default: return '';
+            }
+        }
+
+        function renderSectionPreview(section) {
+            const c = section.content;
+            switch (section.type) {
+                case 'head':
+                    return `<h${c.level}>${escapeHtml(c.text)}</h${c.level}>`;
+                case 'paragraph':
+                    return `<p>${escapeHtml(c.text)}</p>`;
+                case 'listed':
+                    return c.ordered
+                        ? `<ol>${c.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ol>`
+                        : `<ul>${c.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
+                case 'quote':
+                    return `<blockquote class="blockquote"><p>${escapeHtml(c.text)}</p>${c.by ? `<footer class="blockquote-footer">${escapeHtml(c.by)}</footer>` : ''}</blockquote>`;
+                case 'carousel':
+                    return c.images && c.images.length
+                        ? `<div class="d-flex flex-wrap">${c.images.map((img, i) => `<img src="${img}" class="carousel-img-preview rounded border me-2 mb-2" title="${c.captions && c.captions[i] ? escapeHtml(c.captions[i]) : ''}">`).join('')}</div>`
+                        : '<em>No images</em>';
+                default:
+                    return '';
+            }
+        }
+
+        // Section actions
+        window.editSection = function (idx) {
+            editingSectionIndex = idx;
+            openSectionModal(sections[idx], idx);
+        };
+
+        window.removeSection = function (idx) {
+            if (confirm('Remove this section?')) {
+                sections.splice(idx, 1);
+                renderSections();
+            }
+        };
+
+        window.moveSection = function (idx, dir) {
+            const newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= sections.length) return;
+            [sections[idx], sections[newIdx]] = [sections[newIdx], sections[idx]];
+            renderSections();
+        };
+
+        // Escape HTML for preview
+        function escapeHtml(text) {
+            return text.replace(/[&<>"']/g, function (m) {
+                return ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                })[m];
+            });
+        }
+
+        // Article form submit
+        document.getElementById('articleForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Gather article data
+            const article = {
+                title: document.getElementById('title').value.trim(),
+                hashtags: hashtags,
+                published_at: document.getElementById('published_at').value ? new Date(document.getElementById('published_at').value) : null,
+                read_duration: parseInt(document.getElementById('read_duration').value),
+                categoryId: parseInt(document.getElementById('categoryId').value),
+                excerpt: document.getElementById('excerpt').value.trim(),
+                status: document.getElementById('status').value,
+                sections: sections.map((s, i) => ({
+                    order: i + 1,
+                    type: s.type,
+                    content: s.content
+                }))
+            };
+            // Validation
+            if (!article.title || !article.read_duration || !article.categoryId || !article.excerpt || !article.status) {
+                alert('Please fill all required fields.');
+                return;
+            }
+            if (!article.sections.length) {
+                alert('Please add at least one section.');
+                return;
+            }
+            // Submit to backend (example, replace with real API)
+
+
+            const formData = new FormData();
+            formData.append('title', article.title);
+            formData.append('image', document.getElementById('article-image').files[0] || null);
+            formData.append('hashtags', JSON.stringify(article.hashtags));
+            formData.append('published_at', article.published_at ? article.published_at.toISOString() : '');
+            formData.append('read_duration', article.read_duration);
+            formData.append('categoryId', article.categoryId);
+            formData.append('excerpt', article.excerpt);
+            formData.append('status', article.status);
+            article.sections.forEach((section, index) => {
+                formData.append(`sections[${index}][order]`, section.order);
+                formData.append(`sections[${index}][type]`, section.type);
+                if (section.type === 'carousel') {
+                    section.content.media.forEach(file => {
+                        formData.append(`sections-${index}-media`, file); // Append each image
+                    });
+                    formData.append(`sections-${index}-captions`, JSON.stringify(section.content.captions));
+                } else {
+                    formData.append(`sections[${index}][content]`, JSON.stringify(section.content));
+                }
+
+            });
+            fetch('/articles', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Article created successfully!');
+                        document.getElementById('articleForm').reset();
+                        hashtags.length = 0;
+                        renderHashtags();
+                        sections = [];
+                        renderSections();
+                        document.getElementById('imagePreview').style.display = 'none';
+                        window.scrollTo(0, 0); // Scroll to top
+                    } else {
+                        alert('Error creating article: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while creating the article.');
+                });
+        });
+
+        // Reset form
+        document.getElementById('articleForm').addEventListener('reset', function () {
+            hashtags.length = 0;
+            renderHashtags();
+            sections = [];
+            renderSections();
+        });
+
+        function previewImage(event) {
+            const preview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '#';
+                preview.style.display = 'none';
+            }
+        }
+        // Initial render
+        renderHashtags();
+        renderSections();
+    </script>
+</body>
+
+</html>
+

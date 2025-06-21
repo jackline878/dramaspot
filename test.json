@@ -1,0 +1,139 @@
+{
+  "article": {
+    "id": 3,
+    "title": "King Charles & Queen Camilla Shine at Royal Ascot with Family",
+    "image": "https://res.cloudinary.com/drltycycg/image/upload/v1750383986/my_uploads/1750383985611-king-charles-III-ascot-061925-1-3294401a5a024be1b741fda69a825777.webp",
+    "slug": "king-charles-queen-camilla-shine-at-royal-ascot-with-family",
+    "published_at": "just now",
+    "read_duration": 5,
+    "featured": false,
+    "userId": 1,
+    "excerpt": "King Charles and Queen Camilla made a grand appearance at Royal Ascot alongside their extended family—including Princess Anne, Prince Edward, and nieces—on June 19",
+    "status": "published",
+    "createdAt": "2025-06-20T01:46:27.000Z",
+    "updatedAt": "2025-06-20T01:46:27.000Z",
+    "author": {
+      "id": 1,
+      "username": "Dramaspots",
+      "email": "dramaspots@gmail.com",
+      "profile_pic": "https://res.cloudinary.com/drltycycg/image/upload/v1750378122/my_uploads/1750378118163-PAPA.png",
+      "role": "admin"
+    },
+    "subcategories": [],
+    "hashtags": [
+      {
+        "id": 1553,
+        "name": "kingcharles",
+        "ArticleHashtag": {
+          "article_id": 3,
+          "hashtag_id": 1553,
+          "createdAt": "2025-06-20T01:46:29.000Z",
+          "updatedAt": "2025-06-20T01:46:29.000Z"
+        }
+      }
+    ],
+    "likes": [],
+    "sections": [
+      {
+        "id": 11,
+        "articleId": 3,
+        "order": 1,
+        "createdAt": "2025-06-20T01:46:29.000Z",
+        "updatedAt": "2025-06-20T01:46:29.000Z",
+        "contents": [
+          {
+            "id": 11,
+            "sectionId": 11,
+            "type": "head",
+            "content": "{\"head\":\"NEED TO KNOW\",\"level\":\"2\"}",
+            "createdAt": "2025-06-20T01:46:29.000Z",
+            "updatedAt": "2025-06-20T01:46:29.000Z"
+          },
+          {
+            "id": 12,
+            "sectionId": 11,
+            "type": "list",
+            "content": "{\"items\":[\"King Charles and Queen Camilla were back at Royal Ascot on June 19 — and surrounded by royal relatives Their third outing to the 2025 horse races came a day after Kate Middleton had to cancel her appearance as she manages her full time return to royal duties  amid recovery from cancer treatment\",\"The King and Queen were joined by Charles' nieces Princess Beatrice and Zara Tindall at Ascot on Gold Cup day as temperatures hit a sweltering 84F\"],\"is_ordered\":false}",
+            "createdAt": "2025-06-20T01:46:30.000Z",
+            "updatedAt": "2025-06-20T01:46:30.000Z"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "articleId": 3,
+        "order": 2,
+        "createdAt": "2025-06-20T01:46:30.000Z",
+        "updatedAt": "2025-06-20T01:46:30.000Z",
+        "contents": [
+          {
+            "id": 13,
+            "sectionId": 12,
+            "type": "text",
+            "content": "{\"text\":\"King Charles and Queen Camilla are back at the races with plenty of family for support.\\n\\nThe royal couple were joined by two of Charles' siblings, his nieces and some close friends at Royal Ascot on June 19 as temperatures hit a sweltering 84F.\\n\\nThe King, 76, and Queen, 77, arrived for th e third day of Royal Ascot's week of horse racing accompanied by Charles' sister Princess Anne and her husband Vice Admiral Sir Tim Laurence, who shared a carriage with Prince Edward and his wife Sophie, Duchess of Edinburgh.\\n\\nCharles' niece Princess Beatrice and her husband, Edoardo Mapelli Mozzi, were in another carriage, while Anne's daughter Zara Tindall and her husband, former professional rugby player Mike Tindall, were in the fourth carriage.\"}",
+            "createdAt": "2025-06-20T01:46:30.000Z",
+            "updatedAt": "2025-06-20T01:46:30.000Z"
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "articleId": 3,
+        "order": 3,
+        "createdAt": "2025-06-20T01:46:30.000Z",
+        "updatedAt": "2025-06-20T01:46:30.000Z",
+        "contents": [
+          {
+            "id": 14,
+            "sectionId": 13,
+            "type": "image",
+            "content": "{\"caption\":\"\",\"image\":\"https://res.cloudinary.com/drltycycg/image/upload/v1750383986/my_uploads/1750383986325-king-charles-III-queen-camilla-ascot-061925-2-b95d0a2cfce44e4e8c00988c0ba2a6a2.webp\"}",
+            "createdAt": "2025-06-20T01:46:30.000Z",
+            "updatedAt": "2025-06-20T01:46:30.000Z"
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "articleId": 3,
+        "order": 4,
+        "createdAt": "2025-06-20T01:46:30.000Z",
+        "updatedAt": "2025-06-20T01:46:30.000Z",
+        "contents": [
+          {
+            "id": 15,
+            "sectionId": 14,
+            "type": "text",
+            "content": "{\"text\":\"It came a day after Prince William appeared solo at the races after his wife Kate Middleton pulled out at the last minute. She is continuing to manage her appearances at public events amid her recovery from cancer treatment. The 43-year-old announced in January that she was in remission from an undisclosed cancer, just days after her birthday.\\n\\nThe royal race fans were looking for gold as Ascot's third day, which used to be known as Ladies Day, is Gold Cup day. The two-and-a-half mile marathon is one of the best-known races in the week.\"}",
+            "createdAt": "2025-06-20T01:46:30.000Z",
+            "updatedAt": "2025-06-20T01:46:30.000Z"
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "articleId": 3,
+        "order": 5,
+        "createdAt": "2025-06-20T01:46:31.000Z",
+        "updatedAt": "2025-06-20T01:46:31.000Z",
+        "contents": [
+          {
+            "id": 16,
+            "sectionId": 15,
+            "type": "image",
+            "content": "{\"caption\":\"\",\"image\":\"https://res.cloudinary.com/drltycycg/image/upload/v1750383987/my_uploads/1750383986544-zara-mike-tindall-ascot-061925-1-aa30441c6f4544a39d1f3126d9266c54.webp\"}",
+            "createdAt": "2025-06-20T01:46:31.000Z",
+            "updatedAt": "2025-06-20T01:46:31.000Z"
+          }
+        ]
+      }
+    ],
+    "isLiked": false,
+    "likesCount": 0,
+    "comments": ""
+  },
+  "categories": [],
+  "mostViewed": [],
+  "recommended": [],
+  "related": []
+}

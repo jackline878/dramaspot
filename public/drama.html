@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity Gossip Club - Drama</title>
+    <meta name="description" content="Latest celebrity drama, scandals, and gossip. Stay updated with the juiciest stories in the entertainment world.">
+    <link rel="stylesheet" href="header.css">
+
+    <link rel="stylesheet" href="footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Reset and base styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f7f7fa;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        main {
+            display: flex;
+            gap: 32px;
+            margin: 32px 0;
+        }
+        .content {
+            flex: 3;
+        }
+        aside {
+            flex: 1;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 24px;
+            margin-top: 8px;
+            min-width: 260px;
+        }
+        .drama-list {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .drama-post {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 32px;
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            transition: box-shadow 0.2s;
+        }
+        .drama-post:hover {
+            box-shadow: 0 4px 16px rgba(233,30,99,0.08);
+        }
+        .drama-img {
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(156,39,176,0.08);
+        }
+        .drama-details {
+            flex: 1;
+        }
+        .drama-title {
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #9c27b0;
+            margin-bottom: 8px;
+        }
+        .drama-meta {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .drama-summary {
+            margin-bottom: 16px;
+        }
+        .read-more {
+            display: inline-block;
+            background: #e91e63;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .read-more:hover {
+            background: #9c27b0;
+        }
+        .sidebar-section {
+            margin-bottom: 32px;
+        }
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e91e63;
+            margin-bottom: 12px;
+        }
+        .popular-list, .tags-list {
+            list-style: none;
+        }
+        .popular-list li {
+            margin-bottom: 14px;
+        }
+        .popular-list a {
+            color: #333;
+            font-weight: 500;
+        }
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag {
+            background: #f3e5f5;
+            color: #9c27b0;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+        .tag:hover {
+            background: #e1bee7;
+        }
+        .newsletter-form input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .newsletter-form button {
+            width: 100%;
+            background: #e91e63;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .newsletter-form button:hover {
+            background: #9c27b0;
+        }
+        footer {
+            background: #222;
+            color: #fff;
+            text-align: center;
+            padding: 32px 0 16px 0;
+            margin-top: 48px;
+        }
+        .footer-links {
+            margin-bottom: 12px;
+        }
+        .footer-links a {
+            color: #e91e63;
+            margin: 0 12px;
+            font-size: 1rem;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #e91e63;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(233,30,99,0.15);
+            z-index: 100;
+            display: none;
+        }
+        @media (max-width: 900px) {
+            main { flex-direction: column; }
+            aside { margin-top: 32px; }
+        }
+        @media (max-width: 600px) {
+            .drama-post { flex-direction: column; align-items: stretch; }
+            .drama-img { width: 100%; height: 180px; }
+            .container { width: 98%; }
+            header, footer { padding-left: 8px; padding-right: 8px; }
+        }
+
+                .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            overflow-x: scroll;
+
+        }
+
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-nav a {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: rgb(250, 217, 234);
+            transition: border-color 0.3s;
+        }
+
+        .tab-nav a.active,
+        .tab-nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        @media (max-width: 767.98px) {
+
+            .tab-nav {
+                gap: 5px;
+                justify-content: left;
+
+            }
+
+            .tab-nav a {
+                padding: 0px 5px;
+                font-size: 0.9rem;
+                color: rgb(250, 217, 234);
+                font-weight: 500;
+                border: 1px solid transparent;
+                border-radius: 4px;
+            }
+        }
+
+        .all {
+            display: flex;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .articles {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .aside {
+            width: 300px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            /* distance from top of viewport */
+            align-self: flex-start;
+        }
+                .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Celebrity Gossip</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/news.html">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trending.html">Trending</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page"
+                            href="/exclusives.html">Exclusives <span class="exclusive-badge">Hot</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <main class="all">
+            <section class="content articles">
+                <h1 style="color:#e91e63; margin-bottom:24px;">Latest Celebrity Drama</h1>
+                <div class="drama-list">
+                    <!-- Drama Post 1 -->
+                    <article class="drama-post">
+                        <img src="images/drama1.jpg" alt="Celebrity Feud" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">A-List Feud: Taylor Sparks & Jamie Lane's Red Carpet Showdown</div>
+                            <div class="drama-meta">By <b>Olivia Reed</b> | June 10, 2024 | <span>#Feud</span></div>
+                            <div class="drama-summary">
+                                The annual Star Awards turned into a battleground as Taylor Sparks and Jamie Lane exchanged icy glares and sharp words on the red carpet. Sources say the feud began over a disputed movie role, but tensions have been simmering for months. Witnesses claim the two nearly came to blows before security intervened.
+                            </div>
+                            <a href="post1.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 2 -->
+                    <article class="drama-post">
+                        <img src="images/drama2.jpg" alt="Breakup Rumor" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Breakup Bombshell: Alex Rivera & Mia Chen Call It Quits</div>
+                            <div class="drama-meta">By <b>Sam Carter</b> | June 8, 2024 | <span>#Breakup</span></div>
+                            <div class="drama-summary">
+                                After months of speculation, Alex Rivera and Mia Chen have officially ended their whirlwind romance. Insiders reveal that conflicting schedules and trust issues led to the split. Fans are heartbroken, but both stars have asked for privacy as they move forward separately.
+                            </div>
+                            <a href="post2.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 3 -->
+                    <article class="drama-post">
+                        <img src="images/drama3.jpg" alt="Secret Wedding" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Secret Wedding: Who Tied the Knot in Paris?</div>
+                            <div class="drama-meta">By <b>Jenna Lee</b> | June 5, 2024 | <span>#Wedding</span></div>
+                            <div class="drama-summary">
+                                Rumors are swirling after paparazzi spotted two megastars leaving a Parisian chapel in matching rings. The internet is abuzz with theories, but neither camp has confirmed the nuptials. Could this be the celebrity wedding of the year?
+                            </div>
+                            <a href="post3.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 4 -->
+                    <article class="drama-post">
+                        <img src="images/drama4.jpg" alt="Social Media Scandal" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Social Media Scandal: Viral Video Shakes Up Hollywood</div>
+                            <div class="drama-meta">By <b>Chris Nolan</b> | June 2, 2024 | <span>#Scandal</span></div>
+                            <div class="drama-summary">
+                                A leaked video featuring a top actor in a heated argument has gone viral, sparking debates across social media. PR teams are scrambling to contain the fallout as fans demand answers. Will this controversy end a promising career?
+                            </div>
+                            <a href="post4.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 5 -->
+                    <article class="drama-post">
+                        <img src="images/drama5.jpg" alt="Fashion Disaster" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Fashion Disaster: Red Carpet Look Goes Wrong</div>
+                            <div class="drama-meta">By <b>Riley Brooks</b> | May 30, 2024 | <span>#FashionFail</span></div>
+                            <div class="drama-summary">
+                                Last night's gala saw a major fashion faux pas as a beloved star's dress ripped mid-interview. The incident was caught on camera and quickly became a trending meme. Designers are rushing to defend their work, but the internet is unforgiving.
+                            </div>
+                            <a href="post5.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 6 -->
+                    <article class="drama-post">
+                        <img src="images/drama6.jpg" alt="Award Snub" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Award Snub: Fans Outraged Over Oscar Overlook</div>
+                            <div class="drama-meta">By <b>Harper West</b> | May 28, 2024 | <span>#Awards</span></div>
+                            <div class="drama-summary">
+                                The Oscar nominations left fans fuming as a critically acclaimed performance was snubbed. Social media erupted with hashtags demanding justice. Industry insiders suggest politics may have played a role in the shocking omission.
+                            </div>
+                            <a href="post6.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 7 -->
+                    <article class="drama-post">
+                        <img src="images/drama7.jpg" alt="On-Set Meltdown" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">On-Set Meltdown: Director Storms Off Set</div>
+                            <div class="drama-meta">By <b>Casey Morgan</b> | May 25, 2024 | <span>#OnSetDrama</span></div>
+                            <div class="drama-summary">
+                                Filming for the highly anticipated blockbuster was halted after the director stormed off set, citing creative differences. Cast and crew were left in limbo as producers scrambled to resolve the dispute. Will production resume or is the project doomed?
+                            </div>
+                            <a href="post7.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 8 -->
+                    <article class="drama-post">
+                        <img src="images/drama8.jpg" alt="Surprise Collaboration" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Surprise Collaboration: Rivals Team Up for Charity</div>
+                            <div class="drama-meta">By <b>Jordan Kim</b> | May 22, 2024 | <span>#Collab</span></div>
+                            <div class="drama-summary">
+                                In a shocking twist, two longtime rivals have joined forces for a charity single. Fans are divided, with some praising the move and others questioning the motives. Is this the start of a new friendship or just a publicity stunt?
+                            </div>
+                            <a href="post8.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 9 -->
+                    <article class="drama-post">
+                        <img src="images/drama9.jpg" alt="Secret Rehab" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Secret Rehab: Star Checks In Under Alias</div>
+                            <div class="drama-meta">By <b>Alexis Ford</b> | May 20, 2024 | <span>#Rehab</span></div>
+                            <div class="drama-summary">
+                                Reports have surfaced that a beloved star has checked into rehab under a secret name. Friends say the move was necessary for their well-being. The star's team has yet to comment, but fans are sending messages of support.
+                            </div>
+                            <a href="post9.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- Drama Post 10 -->
+                    <article class="drama-post">
+                        <img src="images/drama10.jpg" alt="Comeback Rumor" class="drama-img">
+                        <div class="drama-details">
+                            <div class="drama-title">Comeback Rumor: Retired Icon Teases Return</div>
+                            <div class="drama-meta">By <b>Blake Evans</b> | May 18, 2024 | <span>#Comeback</span></div>
+                            <div class="drama-summary">
+                                The entertainment world is buzzing after a retired icon posted a cryptic message hinting at a comeback. Fans are speculating about possible projects, but nothing has been confirmed. Will this legend reclaim the spotlight?
+                            </div>
+                            <a href="post10.html" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <!-- More drama posts can be added here to reach the desired length -->
+                    <!-- ... -->
+                </div>
+                <!-- Pagination (for demonstration) -->
+                <div style="margin:32px 0; text-align:center;">
+                    <a href="#" style="margin:0 8px; color:#9c27b0;">&#8592; Prev</a>
+                    <span style="margin:0 8px; font-weight:bold;">1</span>
+                    <a href="#" style="margin:0 8px;">2</a>
+                    <a href="#" style="margin:0 8px;">3</a>
+                    <a href="#" style="margin:0 8px;">Next &#8594;</a>
+                </div>
+            </section>
+            <aside class="aside">
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Popular Drama</div>
+                    <ul class="popular-list">
+                        <li><a href="post1.html">Taylor Sparks & Jamie Lane's Feud</a></li>
+                        <li><a href="post2.html">Alex Rivera & Mia Chen Breakup</a></li>
+                        <li><a href="post4.html">Viral Video Scandal</a></li>
+                        <li><a href="post6.html">Oscar Snub Outrage</a></li>
+                        <li><a href="post9.html">Secret Rehab Revelation</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Tags</div>
+                    <div class="tags-list">
+                        <a href="#" class="tag">#Feud</a>
+                        <a href="#" class="tag">#Breakup</a>
+                        <a href="#" class="tag">#Scandal</a>
+                        <a href="#" class="tag">#FashionFail</a>
+                        <a href="#" class="tag">#Awards</a>
+                        <a href="#" class="tag">#OnSetDrama</a>
+                        <a href="#" class="tag">#Collab</a>
+                        <a href="#" class="tag">#Rehab</a>
+                        <a href="#" class="tag">#Comeback</a>
+                        <a href="#" class="tag">#Wedding</a>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Newsletter</div>
+                    <form class="newsletter-form" onsubmit="return subscribeNewsletter(event)">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                        <div id="newsletter-message" style="margin-top:8px; font-size:0.95rem; color:#9c27b0;"></div>
+                    </form>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Follow Us</div>
+                    <div style="display:flex; gap:12px;">
+                        <a href="#" title="Instagram" style="font-size:1.5rem;"><img src="images/instagram.svg" alt="Instagram" width="28"></a>
+                        <a href="#" title="Twitter" style="font-size:1.5rem;"><img src="images/twitter.svg" alt="Twitter" width="28"></a>
+                        <a href="#" title="Facebook" style="font-size:1.5rem;"><img src="images/facebook.svg" alt="Facebook" width="28"></a>
+                        <a href="#" title="YouTube" style="font-size:1.5rem;"><img src="images/youtube.svg" alt="YouTube" width="28"></a>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+    <footer>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a> |
+            <a href="terms.html">Terms of Service</a> |
+            <a href="about.html">About</a> |
+            <a href="contact.html">Contact</a>
+        </div>
+        <div>&copy; 2024 Celebrity Gossip Club. All rights reserved.</div>
+    </footer>
+    <button class="scroll-top" id="scrollTopBtn" title="Back to top">&#8679;</button>
+    <script>
+        // Scroll to top button
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollBtn.style.display = "flex";
+            } else {
+                scrollBtn.style.display = "none";
+            }
+        };
+        scrollBtn.onclick = function() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+
+        // Newsletter form
+        function subscribeNewsletter(event) {
+            event.preventDefault();
+            const emailInput = event.target.querySelector('input[type="email"]');
+            const messageDiv = document.getElementById('newsletter-message');
+            if (emailInput.value.trim() === "") {
+                messageDiv.textContent = "Please enter a valid email address.";
+                messageDiv.style.color = "#e91e63";
+                return false;
+            }
+            messageDiv.textContent = "Thank you for subscribing!";
+            messageDiv.style.color = "#4caf50";
+            emailInput.value = "";
+            return false;
+        }
+    </script>
+    <!-- Decorative SVG background shapes for drama effect -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="bg-gradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#e91e63"/>
+                <stop offset="100%" stop-color="#9c27b0"/>
+            </linearGradient>
+        </defs>
+    </svg>
+    <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;">
+        <svg width="100%" height="100%">
+            <ellipse cx="80%" cy="10%" rx="180" ry="80" fill="url(#bg-gradient)" opacity="0.08"/>
+            <ellipse cx="20%" cy="90%" rx="120" ry="60" fill="url(#bg-gradient)" opacity="0.07"/>
+            <ellipse cx="50%" cy="50%" rx="300" ry="120" fill="url(#bg-gradient)" opacity="0.04"/>
+        </svg>
+    </div>
+    <!-- End SVG background -->
+</body>
+</html></html>
