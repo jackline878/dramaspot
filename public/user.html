@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Profile | Celebrity Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .profile-header {
+            background: linear-gradient(90deg, #6f42c1 0%, #d63384 100%);
+            color: #fff;
+            padding: 3rem 0 2rem 0;
+            border-radius: 0 0 2rem 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            margin-top: -70px;
+            background: #fff;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #d63384;
+        }
+
+        .card {
+            border-radius: 1rem;
+        }
+
+        .edit-btn {
+            float: right;
+        }
+
+        .post-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .followers-list img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .modal-header {
+            background: #d63384;
+            color: #fff;
+        }
+
+        .form-control:focus {
+            border-color: #d63384;
+            box-shadow: 0 0 0 0.2rem rgba(214, 51, 132, .25);
+        }
+
+        .spinner-border {
+            color: #d63384;
+        }
+
+        .badge-category {
+            background: #6f42c1;
+        }
+
+        .draft {
+            border-left: 3px solid #d63384;
+        }
+
+        .draft-event {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .draft-event:before {
+            content: '';
+            position: absolute;
+            left: -2.1rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: #d63384;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            z-index: 1;
+        }
+
+        .draft-event:last-child {
+            margin-bottom: 0;
+        }
+
+        .cover-photo {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 1rem 1rem 0 0;
+            background: #e9ecef;
+        }
+
+        @media (max-width: 767px) {
+            .profile-header {
+                padding: 2rem 0 1rem 0;
+            }
+
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                margin-top: -50px;
+            }
+
+            .cover-photo {
+                height: 120px;
+            }
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        button {
+            color: #fff;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-follow {
+            font-weight: 500;
+            border: none;
+            font-size: 0.85rem;
+            transition: background 0.3s;
+        }
+
+        .btn-follow.following {
+            background-color: #999;
+        }
+
+        .btn-follow.friend {
+            background-color: #f7f4f5;
+            color: black;
+            border: grey solid 1px;
+        }
+
+        .button2 {
+            background-color: #f7f4f5;
+            color: black;
+            border: grey solid 1px;
+        }
+
+        .btn-follow.follow_back,
+        .btn-follow.follow {
+            background: linear-gradient(45deg, #fa029b);
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: linear-gradient(135deg, rgba(216, 173, 193, 0.952));
+          z-index: 1500;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+      }
+
+      .spinner {
+          border: 6px solid white;
+          border-top: 6px solid transparent;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 1s linear infinite;
+          background: none;
+      }
+
+      @keyframes spin {
+          0% {
+              transform: rotate(0deg);
+          }
+
+          100% {
+              transform: rotate(360deg);
+          }
+      }
+
+      .loader-text {
+          margin-top: 1rem;
+          font-size: 1.2rem;
+          color: white;
+          font-weight: 500;
+      }
+  </style>
+</head>
+<body class="page-wrapper d-flex flex-column min-vh-100">
+  <!-- Modal -->
+  <div id="modalOverlay" class="modal-overlay">
+      <div class="spinner"></div>
+      <div class="loader-text">...</div>
+  </div>
+
+
+    <!-- Profile Header -->
+    <div class="container-fluid profile-header text-center position-relative">
+        <img id="coverPhoto" class="cover-photo mb-3"
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80"
+            alt="Cover Photo">
+        <img id="profileAvatar" class="profile-avatar shadow" src="https://randomuser.me/api/portraits/men/1.jpg"
+            alt="User Avatar">
+        <h2 id="profileName" class="mt-3 mb-1">Loading...</h2>
+        <p id="profileUsername" class="mb-2">@username</p>
+        <div class="actions">
+
+            <button class="button button2 message"><i class="fas fa-message"></i> Message</button>
+            <button id="follow-btn" class="button btn-follow follow">Follow</button>
+            <button class="button button2 settings"><i class="fas fa-cog"></i> Settings</button>
+
+        </div>
+        <div id="details" class="justify-content-center gap-4 mt-3">
+            <div>
+                <span id="followersCount" class="fw-bold">0</span>
+                <span class="text-light">Followers</span>
+            </div>
+            <div>
+                <span id="followingCount" class="fw-bold">0</span>
+                <span class="text-light">Following</span>
+            </div>
+            <div>
+                <span id="postsCount" class="fw-bold">0</span>
+                <span class="text-light">Posts</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left Sidebar -->
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">About</h5>
+                        <p id="profileBio" class="card-text text-muted">Loading bio...</p>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="bi bi-envelope me-2"></i><span
+                                    id="profileEmail">Loading...</span></li>
+                            <li><i class="bi bi-calendar3 me-2"></i>Joined <span id="profileJoined">Loading...</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Profile Content -->
+            <div id="contents" class="col-lg-8">
+                <ul class="nav nav-pills mb-3" id="profileTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="posts-tab" data-bs-toggle="pill" data-bs-target="#posts"
+                            type="button" role="tab" aria-controls="posts" aria-selected="true">
+                            <i class="bi bi-card-text"></i> Posts
+                        </button>
+                    </li>
+                    <li id="drafted" class="nav-item" role="presentation">
+                        <button class="nav-link" id="draft-tab" data-bs-toggle="pill" data-bs-target="#draft"
+                            type="button" role="tab" aria-controls="draft" aria-selected="false">
+                            <i class="bi bi-clock-history"></i> Draft
+                        </button>
+                    </li>
+                    <li id="postBtn" class="nav-item" role="presentation">
+                        <button onclick="window.location.href='/article/add/bit'" class="nav-link" type="button"
+                            role="button" aria-selected="false">
+                            <i class="bi bi-clock-add"></i> Add Post
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="profileTabsContent">
+                    <!-- Posts Tab -->
+                    <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                        <div id="postsList" class="row g-4">
+                            <!-- Posts will be loaded here -->
+                            <div class="text-center py-5" id="postsLoading">
+                                <div class="spinner-border" role="status"></div>
+                                <div>Loading posts...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- draft Tab -->
+                    <div class="tab-pane fade" id="draft" role="tabpanel" aria-labelledby="draft-tab">
+                        <div class="draft row g-4" id="draftList">
+                            <!-- draft events will be loaded here -->
+                            <div class="text-center py-5" id="draftLoading">
+                                <div class="spinner-border" role="status"></div>
+                                <div>Loading draft...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Main Profile Content -->
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const user = urlParams.get('user') || '';
+        if (urlParams.has('user')) {
+            document.getElementById('drafted').classList.add('d-none');
+            document.getElementById('postBtn').classList.add('d-none');
+            document.querySelector('.settings').style.display = 'none';
+
+            document.querySelector('.message').addEventListener('click', () => {
+                window.location.href = `/web/chat?id=${user}`;
+            });
+        } else {
+            document.querySelector('.message').style.display = 'none';
+            document.querySelector('.follow').style.display = 'none';
+            document.querySelector('.settings').addEventListener('click', () => {
+                window.location.href = `/auth/settings`;
+            });
+        }
+
+        // Utility functions
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function (m) {
+                return ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                })[m];
+            });
+        }
+
+        // Fetch and render user profile
+        async function loadUserProfile() {
+            try {
+                const response = await fetch(`/auth/user/${user}`);
+                const data = await response.json();
+
+                // Profile header
+                document.getElementById('profileName').textContent = `${data.full_name}` || 'No Name';
+                document.getElementById('profileUsername').textContent = '@' + (data.username || 'username');
+                document.getElementById('profileAvatar').src = data.profile_picture || 'https://randomuser.me/api/portraits/men/1.jpg';
+                document.getElementById('coverPhoto').src = data.cover_picture || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80';
+
+                // Sidebar
+                document.getElementById('profileBio').textContent = data.bio || 'No bio provided.';
+                document.getElementById('profileEmail').textContent = data.email || 'No email';
+                document.getElementById('profileJoined').textContent = data.createdAt ? formatDate(data.createdAt) : 'Unknown';
+
+                // Stats
+                document.getElementById('followersCount').textContent = data.followers;
+                document.getElementById('followingCount').textContent = data.following;
+                document.getElementById('postsCount').textContent = data.posts ? data.totalArticles : 0;
+
+                if (data.role === 'user') {
+                    document.getElementById('details').classList.add('d-none');
+                    document.getElementById('contents').classList.add('d-none');
+                    document.querySelector('.follow').style.display = 'none';
+                } else {
+                    document.getElementById('details').classList.remove('d-none');
+                    document.getElementById('details').classList.add('d-flex'); // in case it's hidden
+                    document.getElementById('contents').classList.remove('d-none');
+                    document.getElementById('follow-btn').classList.remove('d-none');
+                }
+
+                const followBtn = document.getElementById("follow-btn");
+                let buttonText = 'Follow';
+                if (data.isFollowing) {
+                    if (data.isFollower) {
+                        followBtn.className = "btn btn-follow friend";
+                        buttonText = "Friend";
+                    } else {
+                        followBtn.className = "btn btn-follow following";
+                        buttonText = "Following";
+                    }
+                } else {
+                    if (data.isFollower) {
+                        followBtn.className = "btn btn-follow follow_back";
+                        buttonText = "Follow Back";
+                    } else {
+                        followBtn.className = "btn btn-follow follow";
+                        buttonText = "Follow";
+                    }
+                }
+                followBtn.textContent = buttonText;
+
+                followBtn.onclick = async () => {
+                    try {
+                        const response = await fetch(`/auth/follow?id=${data.id}`, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        });
+
+                        const result = await response.json();
+                        if (response.ok) {
+                            data.isFollowing = !data.isFollowing;
+
+                            if (data.isFollowing) {
+                                if (data.isFollower) {
+                                    followBtn.className = "btn btn-follow friend";
+                                    buttonText = "Friend";
+                                } else {
+                                    followBtn.className = "btn btn-follow following";
+                                    buttonText = "Following";
+                                }
+                            } else {
+                                if (data.isFollower) {
+                                    followBtn.className = "btn btn-follow follow_back";
+                                    buttonText = "Follow Back";
+                                } else {
+                                    followBtn.className = "btn btn-follow follow";
+                                    buttonText = "Follow";
+                                }
+                            }
+                            followBtn.textContent = buttonText;
+                        } else {
+                            alert(result.message || "Failed to follow/unfollow.");
+                        }
+                    } catch (err) {
+                        console.error("Error:", err);
+                        alert("Something went wrong.");
+                    }
+                };
+
+                // Posts
+                renderPosts(data.posts.filter(p => p.status === 'published') || []);
+
+                // draft
+                renderDrafts(data.posts.filter(p => p.status === 'draft') || []);
+
+            } catch (err) {
+                document.getElementById('profileName').textContent = 'Error loading profile';
+                document.getElementById('profileBio').textContent = 'Could not load profile data.';
+                document.getElementById('postsLoading').innerHTML = '<div class="text-danger">Failed to load posts.</div>';
+                document.getElementById('draftLoading').innerHTML = '<div class="text-danger">Failed to load draft.</div>';
+            }
+            document.getElementById("modalOverlay").style.display = 'none';
+        }
+
+        // Render posts
+        function renderPosts(posts) {
+            const postsList = document.getElementById('postsList');
+            postsList.innerHTML = '';
+            if (!posts.length) {
+                postsList.innerHTML = '<div class="text-center text-muted py-5">No posts yet.</div>';
+                return;
+            }
+            posts.forEach(post => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <div class="card shadow-sm h-100">
+                        <img src="${escapeHTML(post.image || 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80')}" class="post-img card-img-top" alt="Post Image">
+                        <div class="card-body">
+                            <h6 class="card-title">${escapeHTML(post.title || 'Untitled')}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">${formatDate(post.createdAt)}</span>
+                                <div>
+                                    <a href="/article/${post.slug}" class="btn btn-sm btn-outline-primary">Read</a>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    ${!user ? `
+                                        <button onclick="window.location.href='/article/edit?id=${post.id}'" class="btn btn-sm btn-outline-secondary edit-post-btn" data-id="${post.id}">Edit</button>
+                                        <button class="btn btn-sm btn-outline-danger delete-post-btn" data-id="${post.id}">Delete</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                postsList.appendChild(col);
+            });
+        }
+
+        function renderDrafts(drafts) {
+            const draftsList = document.getElementById('draftList');
+            draftsList.innerHTML = '';
+            if (!drafts.length) {
+                draftsList.innerHTML = '<div class="text-center text-muted py-5">No drafts yet.</div>';
+                return;
+            }
+            drafts.forEach(post => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <div class="card shadow-sm h-100">
+                        <img src="${escapeHTML(post.image || 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80')}" class="post-img card-img-top" alt="Post Image">
+                        <div class="card-body">
+                            <h6 class="card-title">${escapeHTML(post.title || 'Untitled')}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">${formatDate(post.createdAt)}</span>
+                                <div>
+                                    <a href="/article/${post.slug}" class="btn btn-sm btn-outline-primary">Read</a>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    ${!user ? `
+                                        <button class="btn btn-sm btn-outline-secondary publish-post-btn" data-id="${post.id}">Publish</button>
+                                        <button onclick="window.location.href='/article/edit?id=${post.id}'" class="btn btn-sm btn-outline-secondary edit-post-btn" data-id="${post.id}">Edit</button>
+                                        <button class="btn btn-sm btn-outline-danger delete-post-btn" data-id="${post.id}">Delete</button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                draftsList.appendChild(col);
+            });
+        }
+
+
+        document.addEventListener('click', async function (e) {
+            if (e.target.classList.contains('delete-post-btn')) {
+                const postId = e.target.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this post?')) {
+                    try {
+                        const res = await fetch(`/article/${postId}`, {
+                            method: 'DELETE',
+                            credentials: 'include'
+                        });
+                        if (res.ok) {
+                            await loadUserProfile();
+                        } else {
+                            alert('Failed to delete post.');
+                        }
+                    } catch (err) {
+                        alert('Error deleting post.');
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('click', async function (e) {
+            if (e.target.classList.contains('publish-post-btn')) {
+                const postId = e.target.getAttribute('data-id');
+                if (confirm('You are about to publish this post?')) {
+                    try {
+                        const res = await fetch(`/article/publish/${postId}`, {
+                            method: 'PUT',
+                            credentials: 'include'
+                        });
+                        if (res.ok) {
+                            await loadUserProfile();
+                        } else {
+                            alert('Failed to publish post.');
+                        }
+                    } catch (err) {
+                        alert('Error publishing post.');
+                    }
+                }
+            }
+        });
+
+        // Initial load
+        loadUserProfile();
+    </script>
+</body>
+
+</html>

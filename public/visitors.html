@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visitors - Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; }
+        .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 32px; }
+        h1 { margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f0f0f0; }
+        tr:last-child td { border-bottom: none; }
+        .loader { text-align: center; padding: 24px; color: #888; }
+        .search-bar { margin-bottom: 18px; }
+        .search-bar input { padding: 7px 10px; width: 220px; border: 1px solid #ccc; border-radius: 4px; }
+        @media (max-width: 700px) {
+            .container { padding: 10px; }
+            table, thead, tbody, th, td, tr { display: block; }
+            th { position: absolute; left: -9999px; }
+            td { border: none; position: relative; padding-left: 50%; }
+            td:before { position: absolute; left: 10px; width: 45%; white-space: nowrap; font-weight: bold; }
+            td:nth-child(1):before { content: "IP"; }
+            td:nth-child(2):before { content: "Location"; }
+            td:nth-child(3):before { content: "User Agent"; }
+            td:nth-child(4):before { content: "Page"; }
+            td:nth-child(5):before { content: "Date"; }
+            td:nth-child(6):before { content: "Frequency"; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Visitors</h1>
+        <form class="search-bar" id="searchForm" onsubmit="return false;">
+            <input type="text" id="searchInput" placeholder="Search by IP, location, page..." autocomplete="off">
+        </form>
+        <table id="visitorsTable">
+            <thead>
+                <tr>
+                    <th>IP</th>
+                    <th>Location</th>
+                    <th>User Agent</th>
+                    <th>Page</th>
+                    <th>Date</th>
+                    <th>Frequency</th>
+                </tr>
+            </thead>
+            <tbody id="visitorsBody">
+                <!-- Visitor rows will be appended here -->
+            </tbody>
+        </table>
+        <div class="loader" id="loader" style="display:none;">Loading...</div>
+        <div class="loader" id="endMsg" style="display:none;">No more visitors.</div>
+    </div>
+    <script>
+        let page = 1;
+        let loading = false;
+        let endReached = false;
+        let searchQuery = '';
+
+        const visitorsBody = document.getElementById('visitorsBody');
+        const loader = document.getElementById('loader');
+        const endMsg = document.getElementById('endMsg');
+        const searchInput = document.getElementById('searchInput');
+
+        async function fetchVisitors() {
+            if (loading || endReached) return;
+            loading = true;
+            loader.style.display = 'block';
+            endMsg.style.display = 'none';
+
+            let url = `/visitors?page=${page}`;
+            if (searchQuery) url += `&q=${encodeURIComponent(searchQuery)}`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('Failed to fetch');
+                const data = await res.json();
+
+                if (Array.isArray(data.visitors) && data.visitors.length > 0) {
+                    for (const v of data.visitors) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${v.ip || ''}</td>
+                            <td>${v.location || ''}</td>
+                            <td title="${v.userAgent || ''}">${(v.userAgent || '').slice(0, 40)}${(v.userAgent && v.userAgent.length > 40 ? '…' : '')}</td>
+                            <td>${v.page || ''}</td>
+                            <td>${v.visitDate || ''}</td>
+                            <td>${v.frequency || 1}</td>
+                        `;
+                        visitorsBody.appendChild(tr);
+                    }
+                    page++;
+                } else {
+                    endReached = true;
+                    endMsg.style.display = 'block';
+                }
+            } catch (err) {
+                endMsg.textContent = 'Error loading visitors.';
+                endMsg.style.display = 'block';
+            } finally {
+                loader.style.display = 'none';
+                loading = false;
+            }
+        }
+
+        function resetVisitors() {
+            page = 1;
+            endReached = false;
+            visitorsBody.innerHTML = '';
+            endMsg.style.display = 'none';
+            fetchVisitors();
+        }
+
+        // Infinite scroll
+        window.addEventListener('scroll', () => {
+            if (loading || endReached) return;
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                fetchVisitors();
+            }
+        });
+
+        // Search
+        searchInput.addEventListener('input', function() {
+            searchQuery = this.value.trim();
+            resetVisitors();
+        });
+
+        // Initial load
+        fetchVisitors();
+    </script>
+</body>
+</html>

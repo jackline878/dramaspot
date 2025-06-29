@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Followers</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: #222;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .container {
+      max-width: 700px;
+      width: 95%;
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 0 10px;
+    }
+
+    .back-btn {
+      font-size: 20px;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .user-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .tab {
+      margin-top: 10px;
+    }
+
+    .tab-items {
+      display: flex;
+      justify-content: space-around;
+      list-style: none;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-item {
+      text-align: center;
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .tab-item p {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .divider {
+      border-top: 1px solid #ccc;
+      margin: 15px 0;
+    }
+
+    .people-div {
+      padding-bottom: 20px;
+    }
+
+    .people {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .person {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: background 0.2s;
+    }
+
+    .person:hover {
+      background-color: #f0f0f0;
+    }
+
+    .person a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+    }
+
+    .profile img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #eee;
+    }
+
+    .profile p {
+      margin-left: 10px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .actions button {
+      padding: 8px 14px;
+      background-color: #0da5fd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .tab-items {
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px;
+      }
+
+      .tab-item {
+        border-top: 1px solid #eee;
+        padding: 6px 0;
+      }
+
+      .tab-item:first-child {
+        border-top: none;
+      }
+
+      .person a {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .profile {
+        flex-direction: row;
+      }
+
+      .actions {
+        align-self: flex-end;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="container nav">
+        <a href="#" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <span class="user-name" id="userName">Alphonce Onyango</span>
+      </div>
+    </nav>
+    <div class="container tab">
+      <ul class="tab-items">
+        <li class="tab-item">
+          <p>4</p> followers
+        </li>
+        <li class="tab-item">
+          <p>12</p> following
+        </li>
+        <li class="tab-item">
+          <p>5</p> friends
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <div class="container people-div">
+    <span class="divider"></span>
+    <ul class="people" id="followersList">
+      <!-- JavaScript will append followers here -->
+    </ul>
+  </div>
+
+  <script>
+    const sampleFollowers = [
+      {
+        name: "Jane Doe",
+        img: "https://randomuser.me/api/portraits/women/44.jpg"
+      },
+      {
+        name: "John Smith",
+        img: "https://randomuser.me/api/portraits/men/34.jpg"
+      },
+      {
+        name: "Lucy Lee",
+        img: "https://randomuser.me/api/portraits/women/68.jpg"
+      },
+      {
+        name: "Daniel Otieno",
+        img: "https://randomuser.me/api/portraits/men/15.jpg"
+      }
+    ];
+
+    const followersList = document.getElementById('followersList');
+
+    sampleFollowers.forEach(follower => {
+      const li = document.createElement('li');
+      li.classList.add('person');
+      li.innerHTML = `
+        <a href="#">
+          <span class="profile">
+            <img src="${follower.img}" alt="${follower.name}" onerror="this.src='https://via.placeholder.com/48'" />
+            <p class="name">${follower.name}</p>
+          </span>
+          <span class="actions">
+            <button class="follow">Follow</button>
+          </span>
+        </a>
+      `;
+      followersList.appendChild(li);
+    });
+  </script>
+</body>
+</html>

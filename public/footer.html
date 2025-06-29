@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Our Ministries | [Your Church Name]</title>
+    <meta name="description" content="Discover the ministries at [Your Church Name]. Get involved, grow in faith, and serve the community.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f7f7f7; color: #222; }
+        header, footer { background: #2c3e50; color: #fff; padding: 2rem 0; text-align: center; }
+        nav { background: #34495e; padding: 1rem 0; }
+        nav a { color: #fff; margin: 0 1.5rem; text-decoration: none; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 1200px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);}
+        h1, h2, h3 { color: #2c3e50; }
+        .ministries-list { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; }
+        .ministry-card { flex: 1 1 320px; background: #f1f6fa; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 4px rgba(44,62,80,0.07);}
+        .ministry-card img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 6px; }
+        .ministry-card h3 { margin-top: 1rem; }
+        .ministry-card p { margin: 1rem 0; }
+        .btn { display: inline-block; background: #2980b9; color: #fff; padding: 0.7rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; transition: background 0.2s;}
+        .btn:hover { background: #1abc9c; }
+        .section { margin: 3rem 0; }
+        .contact-form { background: #f9fafb; padding: 2rem; border-radius: 8px; max-width: 500px; margin: 2rem auto;}
+        .contact-form label { display: block; margin-bottom: 0.5rem; font-weight: 500;}
+        .contact-form input, .contact-form textarea, .contact-form select { width: 100%; padding: 0.7rem; margin-bottom: 1.2rem; border: 1px solid #ccc; border-radius: 4px;}
+        .contact-form button { background: #27ae60; color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 4px; font-size: 1rem; cursor: pointer;}
+        .contact-form button:hover { background: #16a085;}
+        @media (max-width: 900px) {
+            .ministries-list { flex-direction: column; }
+            .ministry-card { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Our Ministries</h1>
+        <p>Serving God, Serving People, Transforming Lives</p>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="ministries.html">Ministries</a>
+        <a href="events.html">Events</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+    <div class="container">
+        <section>
+            <h2>Welcome to Our Ministry Page</h2>
+            <p>
+                At [Your Church Name], our ministries are the heartbeat of our church. We believe in nurturing faith, building community, and serving others. Explore our ministries below and discover how you can get involved!
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Ministry Opportunities</h2>
+            <div class="ministries-list">
+                <!-- Example Ministry 1 -->
+                <div class="ministry-card">
+                    <img src="images/youth-ministry.jpg" alt="Youth Ministry">
+                    <h3>Youth Ministry</h3>
+                    <p>
+                        Empowering the next generation through fellowship, worship, and service. Weekly gatherings, Bible studies, and fun events for teens and young adults.
+                    </p>
+                    <a href="#contact" class="btn">Join Youth Ministry</a>
+                </div>
+                <!-- Example Ministry 2 -->
+                <div class="ministry-card">
+                    <img src="images/children-ministry.jpg" alt="Children's Ministry">
+                    <h3>Children's Ministry</h3>
+                    <p>
+                        Safe, engaging, and faith-filled programs for children. Sunday School, Vacation Bible School, and special events to help kids grow in Christ.
+                    </p>
+                    <a href="#contact" class="btn">Join Children's Ministry</a>
+                </div>
+                <!-- Example Ministry 3 -->
+                <div class="ministry-card">
+                    <img src="images/women-ministry.jpg" alt="Women's Ministry">
+                    <h3>Women's Ministry</h3>
+                    <p>
+                        Encouraging women to grow spiritually and connect through Bible studies, retreats, and outreach projects.
+                    </p>
+                    <a href="#contact" class="btn">Join Women's Ministry</a>
+                </div>
+                <!-- Example Ministry 4 -->
+                <div class="ministry-card">
+                    <img src="images/men-ministry.jpg" alt="Men's Ministry">
+                    <h3>Men's Ministry</h3>
+                    <p>
+                        Building strong men of faith through fellowship, mentorship, and service opportunities.
+                    </p>
+                    <a href="#contact" class="btn">Join Men's Ministry</a>
+                </div>
+                <!-- Example Ministry 5 -->
+                <div class="ministry-card">
+                    <img src="images/music-ministry.jpg" alt="Music Ministry">
+                    <h3>Music & Worship Ministry</h3>
+                    <p>
+                        Leading the congregation in worship through music, choir, and creative arts. All skill levels welcome!
+                    </p>
+                    <a href="#contact" class="btn">Join Music Ministry</a>
+                </div>
+                <!-- Example Ministry 6 -->
+                <div class="ministry-card">
+                    <img src="images/outreach-ministry.jpg" alt="Outreach Ministry">
+                    <h3>Outreach & Missions</h3>
+                    <p>
+                        Serving our local and global community through food drives, mission trips, and acts of compassion.
+                    </p>
+                    <a href="#contact" class="btn">Join Outreach Ministry</a>
+                </div>
+                <!-- Example Ministry 7 -->
+                <div class="ministry-card">
+                    <img src="images/prayer-ministry.jpg" alt="Prayer Ministry">
+                    <h3>Prayer Ministry</h3>
+                    <p>
+                        Interceding for our church, community, and world. Join our prayer meetings or submit a prayer request.
+                    </p>
+                    <a href="#contact" class="btn">Join Prayer Ministry</a>
+                </div>
+                <!-- Example Ministry 8 -->
+                <div class="ministry-card">
+                    <img src="images/tech-ministry.jpg" alt="Tech Ministry">
+                    <h3>Media & Tech Ministry</h3>
+                    <p>
+                        Supporting worship and outreach through sound, video, and online platforms. Training provided!
+                    </p>
+                    <a href="#contact" class="btn">Join Tech Ministry</a>
+                </div>
+                <!-- Example Ministry 9 -->
+                <div class="ministry-card">
+                    <img src="images/hospitality-ministry.jpg" alt="Hospitality Ministry">
+                    <h3>Hospitality Ministry</h3>
+                    <p>
+                        Welcoming guests and members with warmth and care. Greeters, ushers, and event hosts needed.
+                    </p>
+                    <a href="#contact" class="btn">Join Hospitality Ministry</a>
+                </div>
+                <!-- Example Ministry 10 -->
+                <div class="ministry-card">
+                    <img src="images/care-ministry.jpg" alt="Care Ministry">
+                    <h3>Care & Support Ministry</h3>
+                    <p>
+                        Providing care, counseling, and support to those in need within our church family and beyond.
+                    </p>
+                    <a href="#contact" class="btn">Join Care Ministry</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>How to Get Involved</h2>
+            <ol>
+                <li>Browse the ministries above and find one that matches your passion or calling.</li>
+                <li>Click the "Join" button or fill out the contact form below.</li>
+                <li>Our ministry leaders will reach out to you with next steps.</li>
+            </ol>
+        </section>
+
+        <section class="section" id="contact">
+            <h2>Contact & Sign Up</h2>
+            <form class="contact-form" action="mailto:info@yourchurch.org" method="POST" enctype="text/plain">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone">
+
+                <label for="ministry">Ministry of Interest *</label>
+                <select id="ministry" name="ministry" required>
+                    <option value="">-- Select Ministry --</option>
+                    <option value="Youth Ministry">Youth Ministry</option>
+                    <option value="Children's Ministry">Children's Ministry</option>
+                    <option value="Women's Ministry">Women's Ministry</option>
+                    <option value="Men's Ministry">Men's Ministry</option>
+                    <option value="Music & Worship Ministry">Music & Worship Ministry</option>
+                    <option value="Outreach & Missions">Outreach & Missions</option>
+                    <option value="Prayer Ministry">Prayer Ministry</option>
+                    <option value="Media & Tech Ministry">Media & Tech Ministry</option>
+                    <option value="Hospitality Ministry">Hospitality Ministry</option>
+                    <option value="Care & Support Ministry">Care & Support Ministry</option>
+                </select>
+
+                <label for="message">Tell us about your interest</label>
+                <textarea id="message" name="message" rows="4"></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <section class="section">
+            <h2>Frequently Asked Questions</h2>
+            <details>
+                <summary>Do I need to be a member to join a ministry?</summary>
+                <p>No, everyone is welcome to participate in our ministries. Membership is not required to serve or attend.</p>
+            </details>
+            <details>
+                <summary>Can I join more than one ministry?</summary>
+                <p>Absolutely! Many of our members serve in multiple ministries as their time allows.</p>
+            </details>
+            <details>
+                <summary>Are there age restrictions for ministries?</summary>
+                <p>Some ministries are age-specific (like Youth or Children's Ministry), but most are open to all adults.</p>
+            </details>
+            <details>
+                <summary>How do I get more information?</summary>
+                <p>Fill out the contact form above or email us at <a href="mailto:info@yourchurch.org">info@yourchurch.org</a>.</p>
+            </details>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; [Year] [Your Church Name]. All rights reserved.</p>
+        <p>
+            <a href="https://facebook.com/yourchurch" style="color:#fff;">Facebook</a> |
+            <a href="https://instagram.com/yourchurch" style="color:#fff;">Instagram</a> |
+            <a href="mailto:info@yourchurch.org" style="color:#fff;">Email</a>
+        </p>
+        <p>123 Church Street, City, State ZIP | (123) 456-7890</p>
+    </footer>
+</body>
+</html>
