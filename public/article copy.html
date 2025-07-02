@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity Gossip Club - Breakup Exclusive</title>
+    <meta name="description"
+        content="Read the latest exclusive on the most talked-about celebrity breakup. Get all the details, reactions, and behind-the-scenes gossip.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .article-header {
+            background: linear-gradient(90deg, #ffdde1 0%, #ee9ca7 100%);
+            padding: 3rem 0 2rem 0;
+        }
+
+        .author-img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .article-img-main {
+            width: 100%;
+            max-height: 480px;
+            object-fit: cover;
+            border-radius: 1rem;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .tag {
+            background: #fff3cd;
+            color: #856404;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .sidebar-widget {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .related-article-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .footer-link {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 0.5rem;
+        }
+
+        .ad-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #adb5bd;
+            border-radius: 0.5rem;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #adb5bd;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-evenly;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        article {
+            flex: 3;
+            padding: 20px;
+        }
+
+        aside {
+            flex: 1;
+            padding: 20px;
+            width: 300px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            /* distance from top of viewport */
+            align-self: flex-start;
+        }
+
+        blockquote {
+            font-style: italic;
+        }
+
+        blockquote footer {
+            font-size: 0.9rem;
+            font-style: normal;
+            padding-top: 30px;
+            color: #6c757d;
+        }
+
+        .like-btn,
+        .like-comment-btn,
+        .like-reply-btn {
+            cursor: pointer;
+            color: #6c757d;
+            transition: color 0.2s;
+        }
+
+        .like-btn.liked,
+        .like-comment-btn.liked,
+        .like-reply-btn.liked {
+            color: #e0245e;
+        }
+
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .reply-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-box {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .reply-box {
+            background: #f1f3f4;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            margin-left: 3.5rem;
+        }
+
+        .comment-actions {
+            font-size: 0.95rem;
+        }
+
+        .reply-actions {
+            font-size: 0.9rem;
+        }
+
+        .comment-form textarea {
+            resize: none;
+        }
+
+        @media (max-width: 767.98px) {
+            .article-header-overlay {
+                padding: 1rem;
+            }
+
+            .comment-box {
+                padding: 1rem;
+            }
+        }
+
+        /* Custom scrollbar for comments */
+        .comments-section {
+            overflow-y: auto;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #e9ecef;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ced4da;
+            border-radius: 4px;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            overflow-x: scroll;
+
+        }
+
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-nav a {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: rgb(250, 217, 234);
+            transition: border-color 0.3s;
+        }
+
+        .tab-nav a.active,
+        .tab-nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        @media (max-width: 767.98px) {
+
+            .tab-nav {
+                gap: 5px;
+                justify-content: left;
+
+            }
+
+            .tab-nav a {
+                padding: 0px 5px;
+                font-size: 0.9rem;
+                color: rgb(250, 217, 234);
+                font-weight: 500;
+                border: 1px solid transparent;
+                border-radius: 4px;
+            }
+        }
+
+        .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Celebrity Gossip</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/news.html">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trending.html">Trending</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page"
+                            href="/exclusives.html">Exclusives <span class="exclusive-badge">Hot</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="article-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">Shocking Split: Taylor Swift & Joe Alwyn Call It Quits After 6
+                        Years</h1>
+                    <div class="mb-2">
+                        <span class="tag">Breakups</span>
+                        <span class="tag">Exclusive</span>
+                        <span class="tag">Trending</span>
+                    </div>
+                    <div class="d-flex align-items-center mt-3">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Author"
+                            class="author-img me-2">
+                        <div>
+                            <div class="fw-semibold">By Jessica Lane</div>
+                            <div class="text-muted small">Published: June 10, 2024 &middot; 8 min read</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80"
+                        alt="Taylor Swift and Joe Alwyn" class="article-img-main shadow">
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row">
+            <!-- Article Body -->
+            <article class="col-lg-8 mb-5">
+                <div class="mb-4">
+                    <div class="ad-placeholder">Advertisement</div>
+                </div>
+                <section>
+                    <h2 class="fw-bold mb-3">The End of an Era</h2>
+                    <p>
+                        In a revelation that has sent shockwaves through the entertainment world, <strong>Taylor
+                            Swift</strong> and <strong>Joe Alwyn</strong> have officially ended their six-year
+                        relationship. Sources close to the couple confirmed the split late Sunday night, leaving fans
+                        heartbroken and speculating about the reasons behind the breakup.
+                    </p>
+                    <p>
+                        The couple, who began dating in 2017, managed to keep their romance largely out of the public
+                        eye. Despite their efforts to maintain privacy, rumors of trouble had been swirling for months.
+                        Insiders say the decision was mutual and amicable, but the details remain closely guarded.
+                    </p>
+                </section>
+                <section>
+                    <h2 class="fw-bold mt-5 mb-3">Timeline of Their Relationship</h2>
+                    <ol class="list-group list-group-flush mb-4">
+                        <li class="list-group-item">May 2017: Taylor and Joe are first spotted together in Nashville.
+                        </li>
+                        <li class="list-group-item">December 2018: The couple makes a rare public appearance at the
+                            Golden Globes afterparty.</li>
+                        <li class="list-group-item">August 2020: Joe is credited as a co-writer on Taylor's album
+                            "Folklore".</li>
+                        <li class="list-group-item">April 2022: Engagement rumors swirl, but are never confirmed.</li>
+                        <li class="list-group-item">June 2024: News of their breakup is confirmed.</li>
+                    </ol>
+                </section>
+                <section>
+                    <h2 class="fw-bold mt-5 mb-3">What Went Wrong?</h2>
+                    <p>
+                        While neither Taylor nor Joe has commented publicly, sources suggest that their demanding
+                        schedules and the pressures of fame played a significant role. "They tried to make it work, but
+                        ultimately, their lives were heading in different directions," an insider revealed.
+                    </p>
+                    <blockquote class="blockquote px-4 py-3 bg-light border-start border-4 border-danger rounded mb-4">
+                        <p class="mb-0">"They remain friends and have a lot of respect for each other, but it just
+                            wasn't meant to be."</p>
+                        <footer class="blockquote-footer">Anonymous Source</footer>
+                    </blockquote>
+                    <p>
+                        Fans have taken to social media to express their support for both stars, with hashtags like
+                        <span class="text-danger">#WeLoveYouTaylor</span> and <span
+                            class="text-danger">#StayStrongJoe</span> trending worldwide.
+                    </p>
+                </section>
+                <section>
+                    <h2 class="fw-bold mt-5 mb-3">Celebrity Reactions</h2>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Celebrity"
+                                            class="comment-avatar me-2">
+                                        <span class="fw-semibold">Selena Gomez</span>
+                                    </div>
+                                    <p class="mb-0">"Sending love to my bestie. She's stronger than anyone I know."</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Celebrity"
+                                            class="comment-avatar me-2">
+                                        <span class="fw-semibold">Ed Sheeran</span>
+                                    </div>
+                                    <p class="mb-0">"Wishing them both happiness and peace moving forward."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h2 class="fw-bold mt-5 mb-3">Fan Reactions (<span id="commentsCount">3</span>)</h2>
+
+                    <!-- Comments List -->
+                    <div class="comments-section" id="commentsList">
+                        <!-- Comments will be rendered here by JS -->
+                    </div>
+                </section>
+                <section>
+                    <h2 class="fw-bold mt-5 mb-3">What's Next for Taylor and Joe?</h2>
+                    <p>
+                        As Taylor gears up for her international tour and Joe focuses on his upcoming film projects,
+                        both are expected to keep busy. Friends say they are taking time to heal and focus on their
+                        careers.
+                    </p>
+                    <p>
+                        Only time will tell if this is truly the end, or if fate has other plans for these two stars.
+                    </p>
+                </section>
+                <section>
+                    <h2 class="fw-bold mt-5 mb-3">Gallery: Their Best Moments</h2>
+                    <div id="galleryCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner rounded shadow">
+                            <div class="carousel-item active">
+                                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+                                    class="d-block w-100" alt="Taylor and Joe 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
+                                    class="d-block w-100" alt="Taylor and Joe 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80"
+                                    class="d-block w-100" alt="Taylor and Joe 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </section>
+
+
+                <!-- Like Article Button -->
+                <div class="mb-4">
+                    <button id="likeArticleBtn" class="btn btn-outline-danger like-btn" data-liked="false">
+                        <i class="bi bi-heart"></i> Like Article <span id="articleLikeCount">120</span>
+                    </button>
+                </div>
+                <!-- Comments Section -->
+                <section id="comments" class="mb-5">
+                    <!-- Add Comment Form -->
+                    <div class="comment-box mb-4">
+                        <form id="addCommentForm" class="comment-form">
+                            <div class="mb-3">
+                                <label for="commentName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="commentName" required maxlength="32">
+                            </div>
+                            <div class="mb-3">
+                                <label for="commentText" class="form-label">Comment</label>
+                                <textarea class="form-control" id="commentText" rows="3" required
+                                    maxlength="500"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Comment</button>
+                        </form>
+                    </div>
+                </section>
+                <div class="mb-4">
+                    <div class="ad-placeholder">Advertisement</div>
+                </div>
+            </article>
+            <!-- Sidebar -->
+            <aside class="col-lg-4">
+                <div class="sidebar-widget mb-4">
+                    <h5 class="fw-bold mb-3">About the Author</h5>
+                    <div class="d-flex align-items-center mb-2">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Jessica Lane"
+                            class="author-img me-2">
+                        <div>
+                            <div class="fw-semibold">Jessica Lane</div>
+                            <div class="text-muted small">Senior Editor</div>
+                        </div>
+                    </div>
+                    <p class="mb-0">Jessica covers celebrity news and pop culture for over a decade. She loves coffee,
+                        red carpets, and all things Hollywood.</p>
+                </div>
+
+                <div class="sidebar-widget mb-4">
+                    <h5 class="fw-bold mb-3">Trending Now</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <a href="#" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trending 1" class="related-article-img me-3">
+                                <span>Zendaya & Tom Holland: Are They Still Together?</span>
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trending 2" class="related-article-img me-3">
+                                <span>Kim Kardashian's New Mystery Man Revealed</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trending 3" class="related-article-img me-3">
+                                <span>Selena Gomez's Heartfelt Message to Fans</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-widget mb-4">
+                    <h5 class="fw-bold mb-3">Recommended for you</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <a href="#" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trending 1" class="related-article-img me-3">
+                                <span>Zendaya & Tom Holland: Are They Still Together?</span>
+                            </a>
+                        </li>
+                        <li class="mb-3">
+                            <a href="#" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trending 2" class="related-article-img me-3">
+                                <span>Kim Kardashian's New Mystery Man Revealed</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=100&q=80"
+                                    alt="Trending 3" class="related-article-img me-3">
+                                <span>Selena Gomez's Heartfelt Message to Fans</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-widget mb-4">
+                    <h5 class="fw-bold mb-3">Subscribe to Our Newsletter</h5>
+                    <form>
+                        <div class="mb-3">
+                            <label for="newsletterEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="newsletterEmail" placeholder="you@example.com"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">Subscribe</button>
+                    </form>
+                </div>
+                <div class="sidebar-widget">
+                    <h5 class="fw-bold mb-3">Follow Us</h5>
+                    <div class="d-flex">
+                        <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/facebook.svg"
+                                alt="Facebook" class="social-icon"></a>
+                        <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/twitter.svg"
+                                alt="Twitter" class="social-icon"></a>
+                        <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/instagram.svg"
+                                alt="Instagram" class="social-icon"></a>
+                        <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/youtube.svg"
+                                alt="YouTube" class="social-icon"></a>
+                    </div>
+                </div>
+                <div class="ad-placeholder mt-4">Advertisement</div>
+            </aside>
+        </div>
+        <!-- Related Articles -->
+        <section class="mt-5">
+            <h3 class="fw-bold mb-4">Related Articles</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80"
+                            class="card-img-top" alt="Related 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Ariana Grande & Dalton Gomez: The Real Story Behind Their Split</h5>
+                            <p class="card-text text-muted small">Find out what led to the breakup of pop's favorite
+                                couple.</p>
+                            <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+                            class="card-img-top" alt="Related 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Gigi Hadid & Zayn Malik: Co-Parenting After the Breakup</h5>
+                            <p class="card-text text-muted small">How the supermodel and singer are navigating life
+                                post-split.</p>
+                            <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80"
+                            class="card-img-top" alt="Related 3">
+                        <div class="card-body">
+                            <h5 class="card-title">Shawn Mendes & Camila Cabello: Are They Back Together?</h5>
+                            <p class="card-text text-muted small">Rumors are swirling after their recent public outing.
+                            </p>
+                            <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-danger text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold">Celebrity Gossip Club</h5>
+                    <p class="small">Your #1 source for the latest in celebrity relationships, breakups, and Hollywood
+                        news.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Sections</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="/" class="footer-link">Home</a></li>
+                        <li><a href="/breakups.html" class="footer-link">Breakups</a></li>
+                        <li><a href="/couples.html" class="footer-link">Couples</a></li>
+                        <li><a href="/news.html" class="footer-link">News</a></li>
+                        <li><a href="/about.html" class="footer-link">About</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Contact</h6>
+                    <ul class="list-unstyled small">
+                        <li>Email: <a href="mailto:info@celebritygossipclub.com"
+                                class="footer-link">info@celebritygossipclub.com</a></li>
+                        <li>Twitter: <a href="#" class="footer-link">@celebclub</a></li>
+                        <li>Instagram: <a href="#" class="footer-link">@celebritygossipclub</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold">Newsletter</h6>
+                    <form class="d-flex flex-column gap-2">
+                        <input type="email" class="form-control" placeholder="Your email" required>
+                        <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <hr class="border-light my-4">
+            <div class="text-center small">
+                &copy; 2024 Celebrity Gossip Club. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    <!-- Bootstrap 5 JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Main JS for Comments, Likes, Replies -->
+    <script>
+        // Demo data for comments
+        let comments = [
+            {
+                id: 1,
+                name: "Alex G.",
+                avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                text: "Wow! I can't believe this. Celebrity X always surprises us!",
+                likes: 5,
+                liked: false,
+                replies: [
+                    {
+                        id: 11,
+                        name: "Samantha",
+                        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                        text: "Right? I wonder who the mystery partner is.",
+                        likes: 2,
+                        liked: false,
+                        replies: [
+                            {
+                                id: 111,
+                                name: "Chris",
+                                avatar: "https://randomuser.me/api/portraits/men/65.jpg",
+                                text: "Maybe it's just a friend. Let's not jump to conclusions.",
+                                likes: 1,
+                                liked: false
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "Bella",
+                avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+                text: "I saw them together last week too! This is getting interesting.",
+                likes: 3,
+                liked: false,
+                replies: []
+            },
+            {
+                id: 3,
+                name: "Mike",
+                avatar: "https://randomuser.me/api/portraits/men/77.jpg",
+                text: "Not sure if I believe these rumors. Let's wait for official news.",
+                likes: 2,
+                liked: false,
+                replies: [
+                    {
+                        id: 31,
+                        name: "Lily",
+                        avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+                        text: "True, but the photos don't lie!",
+                        likes: 1,
+                        liked: false,
+                        replies: []
+                    }
+                ]
+            }
+        ];
+
+        // Utility to generate unique IDs for new comments/replies
+        let commentIdCounter = 1000;
+
+        // Render comments recursively (up to 2 levels)
+        function renderComments(commentsArr, parentId = null, level = 0) {
+            let html = '';
+            commentsArr.forEach(comment => {
+                html += `
+                <div class="comment-box mb-3" data-comment-id="${comment.id}" style="${level === 1 ? 'margin-left:3.5rem;' : ''}">
+                    <div class="d-flex align-items-start">
+                        <img src="${comment.avatar}" class="${level === 0 ? 'comment-avatar' : 'reply-avatar'} me-3" alt="${comment.name}">
+                        <div class="flex-grow-1">
+                            <div>
+                                <span class="fw-bold">${comment.name}</span>
+                                <span class="text-muted small ms-2">${timeAgo()}</span>
+                            </div>
+                            <div class="mt-1 mb-2">${escapeHTML(comment.text)}</div>
+                            <div class="${level === 0 ? 'comment-actions' : 'reply-actions'} d-flex align-items-center gap-3">
+                                <span class="like-comment-btn ${comment.liked ? 'liked' : ''}" data-id="${comment.id}" data-level="${level}">
+                                    <i class="bi bi-heart${comment.liked ? '-fill' : ''}"></i> <span class="like-count">${comment.likes}</span>
+                                </span>
+                                ${level < 2 ? `<span class="reply-btn text-primary" data-id="${comment.id}" data-level="${level}"><i class="bi bi-reply"></i> Reply</span>` : ''}
+                            </div>
+                            <div class="reply-form-container mt-2"></div>
+                        </div>
+                    </div>
+                    ${level < 2 && comment.replies && comment.replies.length > 0 ? `
+                        <div class="replies mt-3">
+                            ${renderComments(comment.replies, comment.id, level + 1)}
+                        </div>
+                    ` : ''}
+                </div>
+                `;
+            });
+            return html;
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function (m) {
+                return ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                })[m];
+            });
+        }
+
+        // Dummy time ago
+        function timeAgo() {
+            return "just now";
+        }
+
+        // Render all comments
+        function updateComments() {
+            document.getElementById('commentsList').innerHTML = renderComments(comments);
+            document.getElementById('commentsCount').textContent = countComments(comments);
+        }
+
+        // Count all comments and replies (up to 2 levels)
+        function countComments(arr) {
+            let count = 0;
+            arr.forEach(c => {
+                count++;
+                if (c.replies) {
+                    c.replies.forEach(r => {
+                        count++;
+                        if (r.replies) count += r.replies.length;
+                    });
+                }
+            });
+            return count;
+        }
+
+        // Like article
+        document.getElementById('likeBtn').addEventListener('click', async function () {
+            let btn = this;
+
+        });
+
+        document.querySelectorAll('.like-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+
+                    const type = btn.dataset.type;     // 'article' or 'comment'
+            const id = parseInt(btn.dataset.id);
+
+            const res = await likeItem({
+                article_id: type === 'Article' ? id : null,
+                comment_id: type === 'Comment' ? id : null
+            });
+
+            if (!res.error) {
+                btn.classList.toggle('liked', res.liked);
+                if(res.liked){
+                btn.querySelector('i').classList.replace('bi-heart', 'bi-heart-fill');
+                } else {                    
+                btn.querySelector('i').classList.replace('bi-heart-fill', 'bi-heart');
+                }
+                document.getElementById('articleLikeCount').textContent = res.likeCount;
+            } else {
+                console.warn('Like failed:', res.message);
+            }
+      });
+    });
+
+        // Add comment
+        document.getElementById('addCommentForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            let name = document.getElementById('commentName').value.trim();
+            let text = document.getElementById('commentText').value.trim();
+            if (!name || !text) return;
+
+            const comment = await addComment({
+                article_id: 1,
+                parent_comment_id: null,
+                content: text
+            });
+
+            if (comment) {
+                comments.unshift({
+                    id: comment.id,
+                    name: comment.author.username,
+                    avatar: comment.author.profile_pic,
+                    text: comment.content,
+                    likes: 0,
+                    liked: false,
+                    replies: []
+                });
+            }
+
+            this.reset();
+            updateComments();
+        });
+
+        async function addComment(comment) {
+            fetch('/reactions/addComment', {
+                method: 'POST',
+                body: comment
+            }
+            ).then(res => {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    return null;
+                }
+            })
+        }
+
+        // Delegate events for like, reply, and reply form submit
+        document.getElementById('commentsList').addEventListener('click', function (e) {
+            // Like comment/reply
+            if (e.target.closest('.like-comment-btn')) {
+                let btn = e.target.closest('.like-comment-btn');
+                let id = parseInt(btn.getAttribute('data-id'));
+                let level = parseInt(btn.getAttribute('data-level'));
+                toggleLikeComment(id, level, comments);
+                updateComments();
+            }
+            // Reply button
+            if (e.target.closest('.reply-btn')) {
+                let btn = e.target.closest('.reply-btn');
+                let id = parseInt(btn.getAttribute('data-id'));
+                let level = parseInt(btn.getAttribute('data-level'));
+                showReplyForm(id, level, e.target.closest('.comment-box'));
+            }
+        });
+
+        // Delegate submit for reply forms
+        document.getElementById('commentsList').addEventListener('submit', function (e) {
+            if (e.target.classList.contains('reply-form')) {
+                e.preventDefault();
+                let form = e.target;
+                let name = form.querySelector('.reply-name').value.trim();
+                let text = form.querySelector('.reply-text').value.trim();
+                let parentId = parseInt(form.getAttribute('data-parent-id'));
+                let level = parseInt(form.getAttribute('data-level'));
+                if (!name || !text) return;
+                addReply(parentId, level, name, text, comments);
+                updateComments();
+            }
+        });
+
+        // Toggle like for comment or reply
+        function toggleLikeComment(id, level, arr) {
+            for (let c of arr) {
+                if (c.id === id && level === 0) {
+                    c.liked = !c.liked;
+                    c.likes += c.liked ? 1 : -1;
+                    return;
+                }
+                if (c.replies) {
+                    for (let r of c.replies) {
+                        if (r.id === id && level === 1) {
+                            r.liked = !r.liked;
+                            r.likes += r.liked ? 1 : -1;
+                            return;
+                        }
+                        if (r.replies) {
+                            for (let rr of r.replies) {
+                                if (rr.id === id && level === 2) {
+                                    rr.liked = !rr.liked;
+                                    rr.likes += rr.liked ? 1 : -1;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Show reply form
+        function showReplyForm(id, level, commentBox) {
+            let container = commentBox.querySelector('.reply-form-container');
+            if (container.innerHTML.trim() !== '') {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = `
+                <form class="reply-form mt-2" data-parent-id="${id}" data-level="${level}">
+                    <div class="mb-2">
+                        <input type="text" class="form-control form-control-sm reply-name" placeholder="Your name" required maxlength="32">
+                    </div>
+                    <div class="mb-2">
+                        <textarea class="form-control form-control-sm reply-text" rows="2" placeholder="Your reply" required maxlength="300"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-primary">Reply</button>
+                    <button type="button" class="btn btn-sm btn-link text-danger cancel-reply-btn">Cancel</button>
+                </form>
+            `;
+            // Cancel reply
+            container.querySelector('.cancel-reply-btn').onclick = function () {
+                container.innerHTML = '';
+            };
+        }
+
+        // Add reply to comment or reply
+        function addReply(parentId, level, name, text, arr) {
+            for (let c of arr) {
+                if (c.id === parentId && level === 0) {
+                    c.replies = c.replies || [];
+                    c.replies.push({
+                        id: ++commentIdCounter,
+                        name: escapeHTML(name),
+                        avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(Math.random() * 10)}.jpg`,
+                        text: escapeHTML(text),
+                        likes: 0,
+                        liked: false,
+                        replies: []
+                    });
+                    return;
+                }
+                if (c.replies) {
+                    for (let r of c.replies) {
+                        if (r.id === parentId && level === 1) {
+                            r.replies = r.replies || [];
+                            r.replies.push({
+                                id: ++commentIdCounter,
+                                name: escapeHTML(name),
+                                avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(Math.random() * 10)}.jpg`,
+                                text: escapeHTML(text),
+                                likes: 0,
+                                liked: false
+                            });
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Initial render
+        updateComments();
+
+        // Responsive fix for sidebar
+        window.addEventListener('resize', function () {
+            if (window.innerWidth < 992) {
+                document.querySelector('aside').classList.add('mt-4');
+            } else {
+                document.querySelector('aside').classList.remove('mt-4');
+            }
+        });
+
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();       // Prevent this form from submitting normally
+            e.stopPropagation();      // Prevent bubbling to parent forms
+
+            const text = textarea.value.trim();
+            if (!text) return;
+
+            const commentData = {
+                article_id: 1,
+                parent_comment_id: id,
+                content: text,
+                level: level + 1,
+            };
+
+            const newComment = await addComment(commentData);
+            if (newComment) {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = newComment;
+
+                const repliesContainer = commentBox.querySelector('.replies') || document.createElement('div');
+                repliesContainer.className = 'replies mt-3';
+                repliesContainer.appendChild(wrapper);
+                if (!commentBox.contains(repliesContainer)) {
+                    commentBox.appendChild(repliesContainer);
+                }
+                container.innerHTML = '';
+            }
+        });
+
+    </script>
+</body>
+
+</html>

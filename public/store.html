@@ -1,0 +1,857 @@
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Celebrity Buzz - Gossip Blog</title>
+    <meta name="description" content="Stay updated with the latest celebrity gossip, news, and trends.">
+    <link rel="icon" href="favicon.ico">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* ... styles unchanged ... */
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <!-- ... navbar unchanged ... -->
+    </nav>
+    <div class="mb-5">
+        <div class="m-0 all">
+            <main class="col-lg-8 articles">
+                <div class="card mb-4 post-card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="${data.featured.author.profile_pic}" class="author-img" alt="Author">
+                            <span class="me-2">By <strong>${data.featured.author.username}</strong></span>
+                            <span class="text-muted small"><i class="far fa-clock"></i> ${timeAgo(data.featured.published_at)}</span>
+                        </div>
+                        <h2 class="card-title h4">${data.featured.title}</h2>
+                    </div>
+                    <img src="${data.featured.imagec ||'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80'}" class="card-img-top" alt="Featured Celebrity">
+                    <div class="card-body">
+                        <div class="mb-2">
+                        ${
+                            data.featured.subcategories.map((s, i) =>`<span class="badge m-1 bg-${colors[s.category.id%6]} text-light category-badge">${s.category.name}</span>`).join('')
+                        }
+                        </div>
+                        <p class="card-text">${data.featured.excerpt}</p>
+                        <div class="d-flex align-items-center mb-2 gap-3">
+                            <span class="text-muted"><i class="far fa-comment"></i> ${randomCount(10, 120)} Comments</span>
+                            <span class="text-muted"><i class="far fa-thumbs-up"></i> ${randomCount(50, 500)} Likes</span>
+                            <span class="text-muted"><i class="fas fa-share"></i> ${randomCount(5, 60)} Shares</span>
+                        </div>
+                        <a href="/articles/${data.featured.id}" class="btn btn-outline-pink btn-sm">Read More</a>
+                    </div>
+                </div>
+                <h3 class="mb-4" id="latest-posts">Latest Gossip</h3>
+                <div class="grid-system" id="latest-posts-list">
+                   ${
+                    data.latest.map(l => {
+                        return `
+                    <div class="col-md-6 grid-child">
+                        <div class="card post-card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="${l.author.profile_pic}" class="author-img" alt="Author">
+                                    <span class="me-2">By <strong>${l.author.username}</strong></span>
+                                    <span class="text-muted small"><i class="far fa-clock"></i> ${timeAgo(l.published_at)}</span>
+                                </div>
+                                <h5 class="card-title">${l.title}</h5>
+                            </div>
+                            <img src="${l.image||'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=80'}" class="card-img-top" alt="Celebrity News">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                ${
+                            l.subcategories.map((s, i) =>`<span class="badge bg-${colors[s.category.id%6]} m-1 text-light category-badge">${s.category.name}</span>`).join('')
+                                }
+                                </div>
+                                <p class="card-text">${l.excerpt}</p>
+                                <div>
+                                ${
+                            l.hashtags.map((h, i) =>`<span class="tag-badge">#${h.name}</span>`).join('')
+                                }
+                                </div>
+                                <div class="d-flex align-items-center mb-2 gap-3">
+                                    <span class="text-muted"><i class="far fa-comment"></i> ${randomCount(5, 80)} Comments</span>
+                                    <span class="text-muted"><i class="far fa-thumbs-up"></i> ${randomCount(20, 300)} Likes</span>
+                                    <span class="text-muted"><i class="fas fa-share"></i> ${randomCount(2, 40)} Shares</span>
+                                </div>
+                                <a href="/articles/${l.id}" class="btn btn-outline-pink btn-sm mt-2">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                        `;
+                    }).join('')
+                   }
+                </div>
+                <div class="text-center">
+                    <button id="fetch-more-btn" class="fetch-more-btn" type="button">
+                        Fetch More <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </main>
+            <aside class="col-lg-4 mt-5 mt-lg-0 aside">
+                <!-- ... sidebar unchanged ... -->
+            </aside>
+        </div>
+    </div>
+    <section class="bg-white py-5">
+        <!-- ... instagram section unchanged ... -->
+    </section>
+    <footer class="footer mt-5">
+        <!-- ... footer unchanged ... -->
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let page = 1;
+        const fetchMoreBtn = document.getElementById('fetch-more-btn');
+        const latestPostsList = document.getElementById('latest-posts-list');
+        fetchMoreBtn.addEventListener('click', async function() {
+            fetchMoreBtn.disabled = true;
+            fetchMoreBtn.innerHTML = 'Loading... <i class="fas fa-spinner fa-spin"></i>';
+            page++;
+            try {
+                // You should implement this API endpoint to return more posts as JSON
+                const res = await fetch('/articles/all/latest?page=' + page);
+                if (!res.ok) throw new Error('Failed to fetch');
+                const posts = await res.json();
+                if (!posts.length) {
+                    fetchMoreBtn.innerHTML = 'No more posts';
+                    fetchMoreBtn.disabled = true;
+                    return;
+                }
+                let colors = ['pink','info', 'success', 'danger', 'primary', 'secondary'];
+                function timeAgo(time) {
+                    const now = new Date();
+                    const past = new Date(time);
+                    const seconds = Math.floor((now - past) / 1000);
+                    const daysDiff = Math.floor(seconds / 86400);
+                    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    if (seconds < 60) {
+                        return 'just now';
+                    } else if (seconds < 3600) {
+                        const mins = Math.floor(seconds / 60);
+                        return \`\${mins} minute\${mins > 1 ? 's' : ''} ago\`;
+                    } else if (seconds < 86400) {
+                        const hrs = Math.floor(seconds / 3600);
+                        return \`\${hrs} hour\${hrs > 1 ? 's' : ''} ago\`;
+                    } else if (daysDiff < 7) {
+                        return weekdays[past.getDay()];
+                    } else {
+                        return past.toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                    }
+                }
+                function randomCount(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+                let html = '';
+                for (const l of posts) {
+                    html += \`
+                    <div class="col-md-6 grid-child">
+                        <div class="card post-card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="\${l.author.profile_pic}" class="author-img" alt="Author">
+                                    <span class="me-2">By <strong>\${l.author.username}</strong></span>
+                                    <span class="text-muted small"><i class="far fa-clock"></i> \${timeAgo(l.published_at)}</span>
+                                </div>
+                                <h5 class="card-title">\${l.title}</h5>
+                            </div>
+                            <img src="\${l.image||'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=80'}" class="card-img-top" alt="Celebrity News">
+                            <div class="card-body">
+                                <div class="mb-2">
+                                \${l.subcategories.map((s, i) =>\`<span class="badge bg-\${colors[s.category.id%6]} m-1 text-light category-badge">\${s.category.name}</span>\`).join('')}
+                                </div>
+                                <p class="card-text">\${l.excerpt}</p>
+                                <div>
+                                \${l.hashtags.map((h, i) =>\`<span class="tag-badge">#\${h.name}</span>\`).join('')}
+                                </div>
+                                <div class="d-flex align-items-center mb-2 gap-3">
+                                    <span class="text-muted"><i class="far fa-comment"></i> \${randomCount(5, 80)} Comments</span>
+                                    <span class="text-muted"><i class="far fa-thumbs-up"></i> \${randomCount(20, 300)} Likes</span>
+                                    <span class="text-muted"><i class="fas fa-share"></i> \${randomCount(2, 40)} Shares</span>
+                                </div>
+                                <a href="/articles/\${l.id}" class="btn btn-outline-pink btn-sm mt-2">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    \`;
+                }
+                latestPostsList.insertAdjacentHTML('beforeend', html);
+                fetchMoreBtn.disabled = false;
+                fetchMoreBtn.innerHTML = 'Fetch More <i class="fas fa-chevron-down"></i>';
+            } catch (e) {
+                fetchMoreBtn.innerHTML = 'Error. Try again';
+                fetchMoreBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+const { Category, Article } = require('../models');
+const express = require('express');
+
+exports.renderArticle = async (req, res) => {
+    try {
+        const article = req.article;
+        const userId = req.userId;
+        if (!article) {
+            return res.status(404).json({ error: 'Article not found' });
+        }
+
+        res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${article.title}</title>
+        <meta name="description" content="Read the latest exclusive on the most talked-about celebrity breakup. Get all the details, reactions, and behind-the-scenes gossip.">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="icon" href="favicon.ico">
+        <style>
+        body { background-color: #f8f9fa; }
+        .article-header { background: linear-gradient(90deg, #ffdde1 0%, #ee9ca7 100%); padding: 3rem 0 2rem 0; }
+        .author-img { width: 48px; height: 48px; object-fit: cover; border-radius: 50%; }
+        .article-img-main { width: 100%; max-height: 480px; object-fit: cover; border-radius: 1rem; box-shadow: 0 4px 24px rgba(0,0,0,0.08);}
+        .tag { background: #fff3cd; color: #856404; border-radius: 0.25rem; padding: 0.25rem 0.75rem; font-size: 0.9rem; margin-right: 0.5rem; }
+        .sidebar-widget { background: #fff; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 1.5rem; margin-bottom: 2rem; }
+        .related-article-img { width: 100%; height: 120px; object-fit: cover; border-radius: 0.5rem; }
+        .footer-link { color: #fff; text-decoration: underline; }
+        .social-icon { width: 32px; height: 32px; margin-right: 0.5rem; }
+        .ad-placeholder { background: #e9ecef; border: 2px dashed #adb5bd; border-radius: 0.5rem; height: 120px; display: flex; align-items: center; justify-content: center; color: #adb5bd; font-size: 1.2rem; margin-bottom: 2rem; }
+        .row { display: flex; align-items: flex-start; justify-content: space-evenly; max-width: 1200px; margin: 0 auto; }
+        article { flex: 3; padding: 20px; }
+        aside { flex: 1; padding: 20px; width: 300px; height: fit-content; position: sticky; top: 100px; align-self: flex-start; }
+        blockquote { font-style: italic; }
+        blockquote footer { font-size: 0.9rem; font-style: normal; padding-top: 30px; color: #6c757d; }
+        .like-btn, .like-comment-btn, .like-reply-btn { cursor: pointer; color: #6c757d; transition: color 0.2s; }
+        .like-btn.liked, .like-comment-btn.liked, .like-reply-btn.liked { color: #e0245e; }
+        .comment-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .reply-avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+        .comment-box { background: #fff; border-radius: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .reply-box { background: #f1f3f4; border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; margin-left: 3.5rem; }
+        .comment-actions { font-size: 0.95rem; }
+        .reply-actions { font-size: 0.9rem; }
+        .comment-form textarea { resize: none; }
+        @media (max-width: 767.98px) {
+            .article-header-overlay { padding: 1rem; }
+            .comment-box { padding: 1rem; }
+        }
+        .comments-section { overflow-y: auto; }
+        ::-webkit-scrollbar { width: 8px; background: #e9ecef; }
+        ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 4px; }
+        .navbar-brand { font-size: 1.3rem; font-weight: bold; letter-spacing: 2px; margin-bottom: 8px; background: linear-gradient(90deg, rgb(250,92,18) 0%, rgb(243,50,163) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); text-decoration: none; transition: color 0.3s ease; }
+        .tab-nav { display: flex; justify-content: center; align-items: center; width: 100%; gap: 10px; overflow-x: scroll; }
+        .tab-nav::-webkit-scrollbar { display: none; }
+        .tab-nav a { font-weight: 600; padding: 6px 12px; border-radius: 4px; text-decoration: none; color: rgb(250,217,234); transition: border-color 0.3s; }
+        .tab-nav a.active, .tab-nav a:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        @media (max-width: 767.98px) {
+            .tab-nav { gap: 5px; justify-content: left; }
+            .tab-nav a { padding: 0px 5px; font-size: 0.9rem; color: rgb(250,217,234); font-weight: 500; border: 1px solid transparent; border-radius: 4px; }
+        }
+        .exclusive-badge { background: #e83e8c; color: #fff; font-size: 0.85rem; padding: 0.25em 0.75em; border-radius: 1em; font-weight: 600; margin-left: 0.5em; }
+        </style>
+    </head>
+    <body data-auth="${userId}" data-id="${article.id}">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Celebrity Gossip</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/news.html">News</a></li>
+                <li class="nav-item"><a class="nav-link" href="/trending.html">Trending</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/exclusives.html">Exclusives <span class="exclusive-badge">Hot</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+            </ul>
+            </div>
+        </div>
+        </nav>
+        <!-- Article Header -->
+        <header class="article-header">
+        <div class="container">
+            <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">${article.title}</h1>
+                <div class="mb-2 d-flex flex-wrap">
+                ${article.hashtags.map(tag => `<span class="tag my-1">#${tag.name}</span>`).join('')}
+                </div>
+                <div class="d-flex align-items-center mt-3">
+                <img src="${article.author.profile_pic}" alt="Author" class="author-img me-2">
+                <div>
+                    <div class="fw-semibold">${article.author.username}</div>
+                    <div class="text-muted small">Published: ${article.published_at} &middot; ${article.read_duration} min read</div>
+                </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <img src="${article.image}" alt="Article Image" class="article-img-main shadow">
+            </div>
+            </div>
+        </div>
+        </header>
+        <!-- Main Content -->
+        <main class="my-5">
+        <div class="row">
+            <!-- Article Body -->
+            <article class="col-lg-8 mb-5">
+            <div class="mb-4">
+                <div class="ad-placeholder">Advertisement</div>
+            </div>
+            ${article.sections.map(section => {
+                return `<section>
+                ${section.contents.map(content => {
+                    const contentData = JSON.parse(content.content);
+                    switch (content.type) {
+                    case 'head':
+                        return `<h${contentData.level || 2} class="fw-bold mb-3">${contentData.head}</h${contentData.level || 2}>`;
+                    case 'text':
+                        return `<p>${contentData.text}</p>`;
+                    case 'list':
+                        if (contentData.items && Array.isArray(contentData.items)) {
+                        if (contentData.ordered) {
+                            return `<ol class="list-group list-group-flush mb-4">${contentData.items.map(item => `<li class="list-group-item">${item}</li>`).join('')}</ol>`;
+                        } else {
+                            return `<ul class="list-group list-group-flush mb-4">${contentData.items.map(item => `<li class="list-group-item">${item}</li>`).join('')}</ul>`;
+                        }
+                        }
+                        break;
+                    case 'quote':
+                        return `<blockquote class="blockquote px-4 py-3 bg-light border-start border-4 border-danger rounded mb-4">
+                        <p class="mb-0">${contentData.quote}</p>
+                        <footer class="blockquote-footer">${contentData.attribution}</footer>
+                        </blockquote>`;
+                    case 'carousel':
+                        return `<div id="galleryCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner rounded shadow">
+                            ${contentData.map((item, idx) => `
+                            <div class="carousel-item${idx === 0 ? ' active' : ''}">
+                                <img src="${item.image}" class="d-block w-100" alt="${item.caption}">
+                            </div>
+                            `).join('')}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                        </div>`;
+                    case 'image':
+                        return `<p class="mb-0">${contentData.caption}</p>
+                        <div class="card">
+                            <img src="${contentData.image}" class="d-block w-100" alt="Image">
+                        </div>`;
+                    case 'video':
+                        return `<p class="mb-0">${contentData.caption}</p>
+                        <div class="card">
+                            <video controls><source src="${contentData.video}" type="video/mp4"></video>
+                        </div>`;
+                    default:
+                        return `<p>${contentData.text}</p>`;
+                    }
+                }).join('')}
+                </section>`;
+            }).join('')}
+            <section>
+                <h2 class="fw-bold mt-5 mb-3">Fan Reactions (<span id="commentsCount">${article.commentsCount || 0}</span>)</h2>
+                <div class="comments-section" id="commentsList" style="max-height:600px;overflow-y:auto;">
+                ${article.comments}
+                <div id="commentsLoader" class="text-center my-3" style="display:none;">
+                    <button id="loadMoreComments" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-down"></i> Load more comments
+                    </button>
+                </div>
+                </div>
+            </section>
+            <div class="mb-4">
+                <button class="btn btn-outline-danger like-btn  ${article.isLiked ? 'liked' : ''}"  data-type="Article" data-id="${article.id}">
+                <i class="bi bi-heart${article.isLiked ? '-fill' : ''}"></i> <span class="like-count">${article.likesCount}</span>
+                </button>
+            </div>
+            <section id="comments" class="mb-5">
+                <div class="comment-box mb-4">
+                <form id="addCommentForm" class="comment-form">
+                    <div class="mb-3">
+                    <label for="commentText" class="form-label">Comment</label>
+                    <textarea class="form-control" data-article="${article.id}" id="commentText" rows="3" required maxlength="500"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                </form>
+                </div>
+            </section>
+            <div class="mb-4">
+                <div class="ad-placeholder">Advertisement</div>
+            </div>
+            </article>
+            <!-- Sidebar -->
+            <aside class="col-lg-4">
+            <div class="sidebar-widget mb-4">
+                <h5 class="fw-bold mb-3">About the Author</h5>
+                <div class="d-flex align-items-center mb-2">
+                <img src="${article.author.profile_pic}" alt="${article.author.username}" class="author-img me-2">
+                <div>
+                    <div class="fw-semibold">${article.author.username}</div>
+                    <div class="text-muted small">${article.author.role}</div>
+                </div>
+                </div>
+                <p class="mb-0">${article.author.bio || `${article.author.username} covers celebrity news and pop culture for over a decade. She loves coffee, red carpets, and all things Hollywood.`}</p>
+            </div>
+            <div class="sidebar-widget mb-4">
+                <h5 class="fw-bold mb-3">Trending Now</h5>
+                <ul class="list-unstyled">
+                <li class="mb-3">
+                    <a href="#" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=100&q=80" alt="Trending 1" class="related-article-img me-3">
+                    <span>Zendaya & Tom Holland: Are They Still Together?</span>
+                    </a>
+                </li>
+                <li class="mb-3">
+                    <a href="#" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=100&q=80" alt="Trending 2" class="related-article-img me-3">
+                    <span>Kim Kardashian's New Mystery Man Revealed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=100&q=80" alt="Trending 3" class="related-article-img me-3">
+                    <span>Selena Gomez's Heartfelt Message to Fans</span>
+                    </a>
+                </li>
+                </ul>
+            </div>
+            <div class="sidebar-widget mb-4">
+                <h5 class="fw-bold mb-3">Recommended for you</h5>
+                <ul class="list-unstyled">
+                <li class="mb-3">
+                    <a href="#" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=100&q=80" alt="Trending 1" class="related-article-img me-3">
+                    <span>Zendaya & Tom Holland: Are They Still Together?</span>
+                    </a>
+                </li>
+                <li class="mb-3">
+                    <a href="#" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=100&q=80" alt="Trending 2" class="related-article-img me-3">
+                    <span>Kim Kardashian's New Mystery Man Revealed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=100&q=80" alt="Trending 3" class="related-article-img me-3">
+                    <span>Selena Gomez's Heartfelt Message to Fans</span>
+                    </a>
+                </li>
+                </ul>
+            </div>
+            <div class="sidebar-widget mb-4">
+                <h5 class="fw-bold mb-3">Subscribe to Our Newsletter</h5>
+                <form>
+                <div class="mb-3">
+                    <label for="newsletterEmail" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="newsletterEmail" placeholder="you@example.com" required>
+                </div>
+                <button type="submit" class="btn btn-danger w-100">Subscribe</button>
+                </form>
+            </div>
+            <div class="sidebar-widget">
+                <h5 class="fw-bold mb-3">Follow Us</h5>
+                <div class="d-flex">
+                <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/facebook.svg" alt="Facebook" class="social-icon"></a>
+                <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/twitter.svg" alt="Twitter" class="social-icon"></a>
+                <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/instagram.svg" alt="Instagram" class="social-icon"></a>
+                <a href="#"><img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/icons/youtube.svg" alt="YouTube" class="social-icon"></a>
+                </div>
+            </div>
+            <div class="ad-placeholder mt-4">Advertisement</div>
+            </aside>
+        </div>
+        <!-- Related Articles -->
+        <section class="mt-5">
+            <h3 class="fw-bold mb-4">Related Articles</h3>
+            <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related 1">
+                <div class="card-body">
+                    <h5 class="card-title">Ariana Grande & Dalton Gomez: The Real Story Behind Their Split</h5>
+                    <p class="card-text text-muted small">Find out what led to the breakup of pop's favorite couple.</p>
+                    <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related 2">
+                <div class="card-body">
+                    <h5 class="card-title">Gigi Hadid & Zayn Malik: Co-Parenting After the Breakup</h5>
+                    <p class="card-text text-muted small">How the supermodel and singer are navigating life post-split.</p>
+                    <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related 3">
+                <div class="card-body">
+                    <h5 class="card-title">Shawn Mendes & Camila Cabello: Are They Back Together?</h5>
+                    <p class="card-text text-muted small">Rumors are swirling after their recent public outing.</p>
+                    <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                </div>
+                </div>
+            </div>
+            </div>
+        </section>
+        </main>
+        <!-- Footer -->
+        <footer class="bg-danger text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-4 mb-4 mb-md-0">
+                <h5 class="fw-bold">Celebrity Gossip Club</h5>
+                <p class="small">Your #1 source for the latest in celebrity relationships, breakups, and Hollywood news.</p>
+            </div>
+            <div class="col-md-2 mb-4 mb-md-0">
+                <h6 class="fw-bold">Sections</h6>
+                <ul class="list-unstyled small">
+                <li><a href="/" class="footer-link">Home</a></li>
+                <li><a href="/breakups.html" class="footer-link">Breakups</a></li>
+                <li><a href="/couples.html" class="footer-link">Couples</a></li>
+                <li><a href="/news.html" class="footer-link">News</a></li>
+                <li><a href="/about.html" class="footer-link">About</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 mb-4 mb-md-0">
+                <h6 class="fw-bold">Contact</h6>
+                <ul class="list-unstyled small">
+                <li>Email: <a href="mailto:info@celebritygossipclub.com" class="footer-link">info@celebritygossipclub.com</a></li>
+                <li>Twitter: <a href="#" class="footer-link">@celebclub</a></li>
+                <li>Instagram: <a href="#" class="footer-link">@celebritygossipclub</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="fw-bold">Newsletter</h6>
+                <form class="d-flex flex-column gap-2">
+                <input type="email" class="form-control" placeholder="Your email" required>
+                <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+                </form>
+            </div>
+            </div>
+            <hr class="border-light my-4">
+            <div class="text-center small">
+            &copy; 2024 Celebrity Gossip Club. All rights reserved.
+            </div>
+        </div>
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+        // --- Add Comment ---
+        document.getElementById('addCommentForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const auth = document.body.dataset.auth;
+        const userId = auth && auth !== 'null' ? parseInt(auth) : null;
+        if (!userId) {
+            window.location.href = "/auth";
+            return;
+        }
+        const text = document.getElementById('commentText').value.trim();
+        let article_id = parseInt(document.getElementById('commentText').getAttribute('data-article'));
+        if (!text) return;
+        const comment = await addComment({
+            article_id,
+            parent_comment_id: null,
+            content: text,
+            level: 0,
+        });
+        if (comment) {
+            document.getElementById('commentsList').insertAdjacentHTML('afterbegin', comment);
+            updateCommentsCount(1);
+        }
+        this.reset();
+        });
+
+        async function addComment(comment) {
+        try {
+            const res = await fetch('/reactions/addComment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(comment)
+            });
+            if (res.ok) {
+            return await res.text();
+            } else {
+            return null;
+            }
+        } catch (error) {
+            console.error("Failed to post comment:", error);
+            return null;
+        }
+        }
+
+        // --- Show/Hide Reply Form ---
+        function showReplyForm(article_id, id, level, commentBox) {
+        const auth = document.body.dataset.auth;
+        const userId = auth && auth !== 'null' ? parseInt(auth) : null;
+        if (!userId) {
+            window.location.href = "/auth";
+            return;
+        }
+        const container = commentBox.querySelector('.reply-form-container');
+        if (container.firstChild) {
+            container.innerHTML = '';
+            return;
+        }
+        const form = document.createElement('form');
+        form.className = 'reply-form mt-2';
+        form.setAttribute('data-parent-id', id);
+        form.setAttribute('data-level', level);
+        const textGroup = document.createElement('div');
+        textGroup.className = 'mb-2';
+        const textarea = document.createElement('textarea');
+        textarea.className = 'form-control form-control-sm reply-text';
+        textarea.rows = 2;
+        textarea.placeholder = 'Your reply';
+        textarea.required = true;
+        textarea.maxLength = 300;
+        textGroup.appendChild(textarea);
+        const submitBtn = document.createElement('button');
+        submitBtn.type = 'submit';
+        submitBtn.className = 'btn btn-sm btn-primary';
+        submitBtn.textContent = 'Reply';
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'btn btn-sm btn-link text-danger cancel-reply-btn';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.addEventListener('click', () => {
+            container.innerHTML = '';
+        });
+        form.appendChild(textGroup);
+        form.appendChild(submitBtn);
+        form.appendChild(cancelBtn);
+        container.appendChild(form);
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const auth = document.body.dataset.auth;
+            const userId = auth && auth !== 'null' ? parseInt(auth) : null;
+            if (!userId) {
+            window.location.href = "/auth";
+            return;
+            }
+            const text = textarea.value.trim();
+            if (!text) return;
+            const commentData = {
+            article_id,
+            parent_comment_id: id,
+            content: text,
+            level: level + 1,
+            };
+            const newComment = await addComment(commentData);
+            if (newComment) {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = newComment;
+            let repliesContainer = commentBox.querySelector('.replies');
+            if (!repliesContainer) {
+                repliesContainer = document.createElement('div');
+                repliesContainer.className = 'replies mt-3';
+                commentBox.appendChild(repliesContainer);
+            }
+            repliesContainer.appendChild(wrapper);
+            container.innerHTML = '';
+            }
+        });
+        }
+
+        // --- Like (Article/Comment/Reply) ---
+        async function likeItem({ article_id = null, comment_id = null, reaction_type = 'like' }) {
+        const auth = document.body.dataset.auth;
+        const userId = auth && auth !== 'null' ? parseInt(auth) : null;
+        if (!userId) {
+            window.location.href = "/auth";
+            return;
+        }
+        try {
+            const res = await fetch('/reactions/like', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ article_id, comment_id, reaction_type })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Failed to toggle like');
+            return data;
+        } catch (err) {
+            console.error('Error toggling like:', err);
+            return { error: true, message: err.message };
+        }
+        }
+
+        // --- Delegate events for like, reply, view replies, and infinite scroll ---
+        document.getElementById('commentsList').addEventListener('click', async function (e) {
+        // Like comment/reply
+        if (e.target.closest('.like-btn')) {
+            const btn = e.target.closest('.like-btn');
+            const type = btn.dataset.type;
+            const id = parseInt(btn.dataset.id);
+            const res = await likeItem({
+            article_id: type === 'Article' ? id : null,
+            comment_id: type === 'Comment' ? id : null
+            });
+            if (!res.error) {
+            btn.classList.toggle('liked', res.liked);
+            if (res.liked) {
+                btn.querySelector('i').classList.replace('bi-heart', 'bi-heart-fill');
+            } else {
+                btn.querySelector('i').classList.replace('bi-heart-fill', 'bi-heart');
+            }
+            btn.querySelector('span').textContent = res.likeCount;
+            }
+        }
+        // Reply button
+        if (e.target.closest('.reply-btn')) {
+            let btn = e.target.closest('.reply-btn');
+            let id = parseInt(btn.getAttribute('data-id'));
+            let article_id = parseInt(btn.getAttribute('data-article'));
+            let level = parseInt(btn.getAttribute('data-level'));
+            showReplyForm(article_id, id, level, e.target.closest('.comment-box'));
+        }
+        // View replies
+        if (e.target.closest('.view-reply')) {
+            const btn = e.target.closest('.view-reply');
+            const id = parseInt(btn.getAttribute('data-id'));
+            const article_id = parseInt(btn.getAttribute('data-article'));
+            const level = parseInt(btn.getAttribute('data-level'));
+            const page = parseInt(btn.getAttribute('data-page')) || 1;
+            try {
+            const replies = await fetch('/reactions/replies', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ commentId: id, article_id, level, page })
+            }).then(res => res.text());
+            const container = btn.closest('.comment-box').querySelector('.replies');
+            container.innerHTML = replies;
+            btn.style.display = 'none';
+            } catch (err) {
+            console.error('Failed to load replies:', err);
+            }
+        }
+        // Load more replies (arrow down at end of replies)
+        if (e.target.closest('.load-more-replies')) {
+            const btn = e.target.closest('.load-more-replies');
+            const commentId = parseInt(btn.getAttribute('data-comment-id'));
+            const article_id = parseInt(btn.getAttribute('data-article'));
+            const level = parseInt(btn.getAttribute('data-level'));
+            let page = parseInt(btn.getAttribute('data-page')) || 1;
+            page++;
+            btn.setAttribute('data-page', page);
+            btn.disabled = true;
+            try {
+            const replies = await fetch('/reactions/replies', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ commentId, article_id, level, page })
+            }).then(res => res.text());
+            btn.insertAdjacentHTML('beforebegin', replies);
+            } catch (err) {
+            console.error('Failed to load more replies:', err);
+            }
+            btn.disabled = false;
+        }
+        });
+
+        // --- Infinite Scroll for Comments (arrow down at end) ---
+        let commentsPage = 1;
+        let loadingComments = false;
+        const commentsList = document.getElementById('commentsList');
+        commentsList.addEventListener('scroll', async function () {
+        if (loadingComments) return;
+        if (commentsList.scrollTop + commentsList.clientHeight >= commentsList.scrollHeight - 10) {
+            // Show loader
+            const loader = document.getElementById('commentsLoader');
+            loader.style.display = '';
+            loadingComments = true;
+            commentsPage++;
+            try {
+            const res = await fetch('/reactions/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ article_id: ${article.id}, page: commentsPage })
+            });
+            if (res.ok) {
+                const html = await res.text();
+                if (html.trim()) {
+                loader.insertAdjacentHTML('beforebegin', html);
+                } else {
+                loader.style.display = 'none';
+                }
+            }
+            } catch (err) {
+            console.error('Failed to load more comments:', err);
+            }
+            loadingComments = false;
+        }
+        });
+
+        // Manual load more comments (arrow down button)
+        document.getElementById('loadMoreComments')?.addEventListener('click', async function () {
+        if (loadingComments) return;
+        loadingComments = true;
+        commentsPage++;
+        try {
+            const res = await fetch('/reactions/comments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ article_id: ${article.id}, page: commentsPage })
+            });
+            if (res.ok) {
+            const html = await res.text();
+            if (html.trim()) {
+                document.getElementById('commentsLoader').insertAdjacentHTML('beforebegin', html);
+            } else {
+                document.getElementById('commentsLoader').style.display = 'none';
+            }
+            }
+        } catch (err) {
+            console.error('Failed to load more comments:', err);
+        }
+        loadingComments = false;
+        });
+
+        // --- Utility: Update Comments Count ---
+        function updateCommentsCount(delta) {
+        const el = document.getElementById('commentsCount');
+        if (el) el.textContent = parseInt(el.textContent) + delta;
+        }
+        </script>
+    </body>
+    </html>
+        `);
+    } catch (error) {
+        console.error('Error fetching category or articles:', error);
+        res.status(500).send('<h1>Internal Server Error</h1>');
+    }
+};

@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cab Dashboard - Driver & Rider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: #212529;
+            color: #fff;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            color: #fff;
+            background: #343a40;
+        }
+        .profile-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        .dashboard-header {
+            background: #fff;
+            border-bottom: 1px solid #dee2e6;
+            padding: 1rem 2rem;
+        }
+        .dashboard-content {
+            padding: 2rem;
+        }
+        .card {
+            border-radius: 1rem;
+        }
+        .table-responsive {
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .status-badge {
+            font-size: 0.9em;
+        }
+        .map-placeholder {
+            background: #e9ecef;
+            border-radius: 1rem;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 1.5rem;
+        }
+        .nav-tabs .nav-link.active {
+            background: #212529;
+            color: #fff;
+        }
+        .notification-dot {
+            width: 10px;
+            height: 10px;
+            background: #dc3545;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+        }
+        .modal-header {
+            background: #212529;
+            color: #fff;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(33,37,41,.25);
+        }
+        .rating-stars {
+            color: #ffc107;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input {display:none;}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #198754;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #dee2e6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <!-- Sidebar -->
+        <nav class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar d-flex flex-column align-items-center align-items-sm-start pt-2">
+            <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-4 d-none d-sm-inline">Cab Dashboard</span>
+            </a>
+            <div class="d-flex flex-column align-items-center mb-4 w-100">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile" class="profile-img mb-2">
+                <span class="fw-bold">John Doe</span>
+                <span class="text-success small">Online</span>
+                <div class="mt-2">
+                    <label class="switch">
+                        <input type="checkbox" checked id="onlineSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="ms-2 small">Go Online</span>
+                </div>
+            </div>
+            <ul class="nav nav-pills flex-column mb-auto w-100">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active" data-bs-toggle="tab">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#rides" class="nav-link" data-bs-toggle="tab">
+                        <i class="bi bi-car-front me-2"></i> My Rides
+                    </a>
+                </li>
+                <li>
+                    <a href="#earnings" class="nav-link" data-bs-toggle="tab">
+                        <i class="bi bi-currency-dollar me-2"></i> Earnings
+                    </a>
+                </li>
+                <li>
+                    <a href="#profile" class="nav-link" data-bs-toggle="tab">
+                        <i class="bi bi-person me-2"></i> Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="#notifications" class="nav-link" data-bs-toggle="tab">
+                        <i class="bi bi-bell me-2"></i> Notifications <span class="notification-dot"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#settings" class="nav-link" data-bs-toggle="tab">
+                        <i class="bi bi-gear me-2"></i> Settings
+                    </a>
+                </li>
+                <li>
+                    <a href="#support" class="nav-link" data-bs-toggle="tab">
+                        <i class="bi bi-question-circle me-2"></i> Support
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-danger mt-3">
+                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    </a>
+                </li>
+            </ul>
+            <hr class="w-100">
+            <div class="text-center w-100 small">
+                <span>&copy; 2024 Cab Website</span>
+            </div>
+        </nav>
+        <!-- Main Content -->
+        <div class="col py-0 px-0">
+            <div class="dashboard-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Welcome, John!</h4>
+                <div>
+                    <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#newRideModal">
+                        <i class="bi bi-plus-circle"></i> New Ride
+                    </button>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#switchRoleModal">
+                        <i class="bi bi-arrow-left-right"></i> Switch to Rider
+                    </button>
+                </div>
+            </div>
+            <div class="dashboard-content tab-content">
+                <!-- Dashboard Tab -->
+                <div class="tab-pane fade show active" id="dashboard">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <div class="card shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-car-front fs-2 text-primary"></i>
+                                    <h5 class="card-title mt-2">Total Rides</h5>
+                                    <h2 class="fw-bold">1,245</h2>
+                                    <span class="badge bg-success status-badge">+5% this week</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-currency-dollar fs-2 text-success"></i>
+                                    <h5 class="card-title mt-2">Earnings</h5>
+                                    <h2 class="fw-bold">$8,320</h2>
+                                    <span class="badge bg-info status-badge">+2% this week</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-star fs-2 text-warning"></i>
+                                    <h5 class="card-title mt-2">Rating</h5>
+                                    <h2 class="fw-bold">4.9</h2>
+                                    <span class="rating-stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-half"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card shadow-sm text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-clock-history fs-2 text-secondary"></i>
+                                    <h5 class="card-title mt-2">Active Hours</h5>
+                                    <h2 class="fw-bold">1,120</h2>
+                                    <span class="badge bg-secondary status-badge">+12h this week</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Recent Rides</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Ride ID</th>
+                                                    <th>Date</th>
+                                                    <th>Pickup</th>
+                                                    <th>Dropoff</th>
+                                                    <th>Fare</th>
+                                                    <th>Status</th>
+                                                    <th>Rating</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>#R1245</td>
+                                                    <td>2024-06-01</td>
+                                                    <td>Downtown</td>
+                                                    <td>Airport</td>
+                                                    <td>$32.50</td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>
+                                                        <span class="rating-stars">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>#R1244</td>
+                                                    <td>2024-05-31</td>
+                                                    <td>Central Park</td>
+                                                    <td>City Mall</td>
+                                                    <td>$18.00</td>
+                                                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                                    <td>
+                                                        <span class="rating-stars">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>#R1243</td>
+                                                    <td>2024-05-30</td>
+                                                    <td>University</td>
+                                                    <td>Stadium</td>
+                                                    <td>$25.75</td>
+                                                    <td><span class="badge bg-danger">Cancelled</span></td>
+                                                    <td>
+                                                        <span class="rating-stars">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                            <i class="bi bi-star"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>#R1242</td>
+                                                    <td>2024-05-29</td>
+                                                    <td>Market</td>
+                                                    <td>Library</td>
+                                                    <td>$12.00</td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>
+                                                        <span class="rating-stars">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>#R1241</td>
+                                                    <td>2024-05-28</td>
+                                                    <td>Hotel</td>
+                                                    <td>Conference Center</td>
+                                                    <td>$20.00</td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>
+                                                        <span class="rating-stars">
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star-fill"></i>
+                                                            <i class="bi bi-star"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-end bg-white">
+                                    <a href="#rides" class="btn btn-link p-0" data-bs-toggle="tab">View All Rides <i class="bi bi-arrow-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Earnings Overview</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="earningsChart" height="120"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Current Location</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="map-placeholder">
+                                        <i class="bi bi-geo-alt fs-1"></i> Map Placeholder
+                                    </div>
+                                    <div class="mt-3">
+                                        <span class="fw-bold">Status:</span>
+                                        <span class="badge bg-success">Online</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Upcoming Ride</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" class="profile-img me-3" alt="Rider">
+                                        <div>
+                                            <span class="fw-bold">Emily Clark</span>
+                                            <div class="small text-muted">Pickup: 10:30 AM</div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold">Pickup:</span> 123 Main St<br>
+                                        <span class="fw-bold">Dropoff:</span> 456 Oak Ave<br>
+                                        <span class="fw-bold">Fare:</span> $15.00
+                                    </div>
+                                    <div class="mt-3 d-flex gap-2">
+                                        <button class="btn btn-success btn-sm"><i class="bi bi-check-circle"></i> Start Ride</button>
+                                        <button class="btn btn-danger btn-sm"><i class="bi bi-x-circle"></i> Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- My Rides Tab -->
+                <div class="tab-pane fade" id="rides">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>My Rides</h5>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRideModal">
+                            <i class="bi bi-plus-circle"></i> New Ride
+                        </button>
+                    </div>
+                    <ul class="nav nav-tabs mb-3" id="ridesTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#allRides" type="button" role="tab">All</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completedRides" type="button" role="tab">Completed</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pendingRides" type="button" role="tab">Pending</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelledRides" type="button" role="tab">Cancelled</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="ridesTabContent">
+                        <div class="tab-pane fade show active" id="allRides" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ride ID</th>
+                                            <th>Date</th>
+                                            <th>Pickup</th>
+                                            <th>Dropoff</th>
+                                            <th>Fare</th>
+                                            <th>Status</th>
+                                            <th>Rider</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#R1245</td>
+                                            <td>2024-06-01</td>
+                                            <td>Downtown</td>
+                                            <td>Airport</td>
+                                            <td>$32.50</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Emily Clark
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#R1244</td>
+                                            <td>2024-05-31</td>
+                                            <td>Central Park</td>
+                                            <td>City Mall</td>
+                                            <td>$18.00</td>
+                                            <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/men/45.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Mike Lee
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#R1243</td>
+                                            <td>2024-05-30</td>
+                                            <td>University</td>
+                                            <td>Stadium</td>
+                                            <td>$25.75</td>
+                                            <td><span class="badge bg-danger">Cancelled</span></td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/women/46.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Sarah Kim
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#R1242</td>
+                                            <td>2024-05-29</td>
+                                            <td>Market</td>
+                                            <td>Library</td>
+                                            <td>$12.00</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/men/47.jpg" class="profile-img me-2" style="width:32px;height:32px;"> David Park
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#R1241</td>
+                                            <td>2024-05-28</td>
+                                            <td>Hotel</td>
+                                            <td>Conference Center</td>
+                                            <td>$20.00</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/women/48.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Lisa Wong
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Completed Rides -->
+                        <div class="tab-pane fade" id="completedRides" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ride ID</th>
+                                            <th>Date</th>
+                                            <th>Pickup</th>
+                                            <th>Dropoff</th>
+                                            <th>Fare</th>
+                                            <th>Rider</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#R1245</td>
+                                            <td>2024-06-01</td>
+                                            <td>Downtown</td>
+                                            <td>Airport</td>
+                                            <td>$32.50</td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Emily Clark
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#R1242</td>
+                                            <td>2024-05-29</td>
+                                            <td>Market</td>
+                                            <td>Library</td>
+                                            <td>$12.00</td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/men/47.jpg" class="profile-img me-2" style="width:32px;height:32px;"> David Park
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#R1241</td>
+                                            <td>2024-05-28</td>
+                                            <td>Hotel</td>
+                                            <td>Conference Center</td>
+                                            <td>$20.00</td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/women/48.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Lisa Wong
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Pending Rides -->
+                        <div class="tab-pane fade" id="pendingRides" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ride ID</th>
+                                            <th>Date</th>
+                                            <th>Pickup</th>
+                                            <th>Dropoff</th>
+                                            <th>Fare</th>
+                                            <th>Rider</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#R1244</td>
+                                            <td>2024-05-31</td>
+                                            <td>Central Park</td>
+                                            <td>City Mall</td>
+                                            <td>$18.00</td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/men/45.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Mike Lee
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Cancelled Rides -->
+                        <div class="tab-pane fade" id="cancelledRides" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ride ID</th>
+                                            <th>Date</th>
+                                            <th>Pickup</th>
+                                            <th>Dropoff</th>
+                                            <th>Fare</th>
+                                            <th>Rider</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#R1243</td>
+                                            <td>2024-05-30</td>
+                                            <td>University</td>
+                                            <td>Stadium</td>
+                                            <td>$25.75</td>
+                                            <td>
+                                                <img src="https://randomuser.me/api/portraits/women/46.jpg" class="profile-img me-2" style="width:32px;height:32px;"> Sarah Kim
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#rideDetailsModal"><i class="bi bi-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Earnings Tab -->
+                <div class="tab-pane fade" id="earnings">
+                    <div class="row g-4">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm mb-4">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Earnings Summary</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row text-center mb-4">
+                                        <div class="col">
+                                            <h6>Total Earnings</h6>
+                                            <h3 class="fw-bold text-success">$8,320</h3>
+                                        </div>
+                                        <div class="col">
+                                            <h6>This Month</h6>
+                                            <h3 class="fw-bold text-primary">$1,200</h3>
+                                        </div>
+                                        <div class="col">
+                                            <h6>This Week</h6>
+                                            <h3 class="fw-bold text-info">$320</h3>
+                                        </div>
+                                    </div>
+                                    <canvas id="earningsChart2" height="120"></canvas>
+                                </div>
+                            </div>
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Payout History</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                    <th>Method</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>2024-05-31</td>
+                                                    <td>$500</td>
+                                                    <td><span class="badge bg-success">Paid</span></td>
+                                                    <td>Bank Transfer</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2024-05-24</td>
+                                                    <td>$400</td>
+                                                    <td><span class="badge bg-success">Paid</span></td>
+                                                    <td>PayPal</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2024-05-17</td>
+                                                    <td>$350</td>
+                                                    <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                                    <td>Bank Transfer</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2024-05-10</td>
+                                                    <td>$300</td>
+                                                    <td><span class="badge bg-success">Paid</span></td>
+                                                    <td>PayPal</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-end bg-white">
+                                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawModal">
+                                        <i class="bi bi-wallet2"></i> Withdraw
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Earnings Breakdown</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Base Fare <span>$2,000</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Distance Fare <span>$4,500</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Time Fare <span>$1,200</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Bonuses <span>$620</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card shadow-sm mt-4">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Payment Methods</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <i class="bi bi-bank2 me-2"></i> Bank: <span class="fw-bold">**** 1234</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="bi bi-paypal me-2"></i> PayPal: <span class="fw-bold">john@email.com</span>
+                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
+                                        <i class="bi bi-plus-circle"></i> Add Method
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Tab -->
+                <div class="tab-pane fade" id="profile">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body text-center">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-img mb-3" style="width:100px;height:100px;">
+                                    <h5 class="fw-bold">John Doe</h5>
+                                    <span class="badge bg-success mb-2">Driver</span>
+                                    <div class="mb-2">
+                                        <i class="bi bi-envelope me-2"></i> john@email.com
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="bi bi-phone me-2"></i> +1 234 567 890
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="bi bi-geo-alt me-2"></i> New York, USA
+                                    </div>
+                                    <button class="btn btn-outline-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                        <i class="bi bi-pencil"></i> Edit Profile
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card shadow-sm mt-4">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Vehicle Info</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <i class="bi bi-car-front me-2"></i> Toyota Prius
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="bi bi-123 me-2"></i> Plate: <span class="fw-bold">NYC-1234</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="bi bi-palette me-2"></i> Color: Silver
+                                    </div>
+                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editVehicleModal">
+                                        <i class="bi bi-pencil"></i> Edit Vehicle
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Profile Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Full Name</label>
+                                                <input type="text" class="form-control" value="John Doe" disabled>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" class="form-control" value="john@email.com" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Phone</label>
+                                                <input type="text" class="form-control" value="+1 234 567 890" disabled>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Location</label>
+                                                <input type="text" class="form-control" value="New York, USA" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Bio</label>
+                                            <textarea class="form-control" rows="3" disabled>Experienced driver with 5+ years on the road. Passionate about safe and comfortable rides.</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Driver License</label>
+                                            <input type="text" class="form-control" value="D123456789" disabled>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Documents</label>
+                                            <ul class="list-group">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    License.pdf <span class="badge bg-success">Verified</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Insurance.pdf <span class="badge bg-success">Verified</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Registration.pdf <span class="badge bg-warning text-dark">Pending</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal" type="button">
+                                            <i class="bi bi-pencil"></i> Edit Profile
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notifications Tab -->
+                <div class="tab-pane fade" id="notifications">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Notifications</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-check-circle text-success me-2"></i> Your payout of $500 has been processed.</span>
+                                    <span class="small text-muted">2h ago</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-exclamation-circle text-warning me-2"></i> New ride request from Emily Clark.</span>
+                                    <span class="small text-muted">4h ago</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-x-circle text-danger me-2"></i> Ride #R1243 was cancelled by the rider.</span>
+                                    <span class="small text-muted">1d ago</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-star text-warning me-2"></i> You received a 5-star rating from Lisa Wong.</span>
+                                    <span class="small text-muted">2d ago</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Notification Preferences</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" checked id="emailNotif">
+                                        <label class="form-check-label" for="emailNotif">
+                                            Email Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" checked id="smsNotif">
+                                        <label class="form-check-label" for="smsNotif">
+                                            SMS Notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="pushNotif">
+                                        <label class="form-check-label" for="pushNotif">
+                                            Push Notifications
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Language</label>
+                                    <select class="form-select">
+                                        <option selected>English</option>
+                                        <option>Spanish</option>
+                                        <option>French</option>
+                                        <option>German</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Theme</label>
+                                    <select class="form-select">
+                                        <option selected>Light</option>
+                                        <option>Dark</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Support Tab -->
+                <div class="tab-pane fade" id="support">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Support</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Subject</label>
+                                    <input type="text" class="form-control" placeholder="Enter subject">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Message</label>
+                                    <textarea class="form-control" rows="4" placeholder="Describe your issue or question"></textarea>
+                                </div>
+                                <button class="btn btn-success" type="submit"><i class="bi bi-send"></i> Submit</button>
+                            </form>
+                            <hr>
+                            <div>
+                                <h6>Contact Us</h6>
+                                <div><i class="bi bi-envelope me-2"></i> support@cabwebsite.com</div>
+                                <div><i class="bi bi-phone me-2"></i> +1 800 123 4567</div>
+                                <div><i class="bi bi-chat-dots me-2"></i> Live Chat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <!-- New Ride Modal -->
+        <div class="modal fade" id="newRideModal" tabindex="-1" aria-labelledby="newRideModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="newRideModalLabel">Request New Ride</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Pickup Location</label>
+                            <input type="text" class="form-control" placeholder="Enter pickup location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dropoff Location</label>
+                            <input type="text" class="form-control" placeholder="Enter dropoff location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" rows="2" placeholder="Any special instructions?"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Request Ride</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Switch Role Modal -->
+        <div class="modal fade" id="switchRoleModal" tabindex="-1" aria-labelledby="switchRoleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="switchRoleModalLabel">Switch Role</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Do you want to switch to the Rider dashboard?</p>
+                        <button class="btn btn-primary">Switch to Rider</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Ride Details Modal -->
+        <div class="modal fade" id="rideDetailsModal" tabindex="-1" aria-labelledby="rideDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rideDetailsModalLabel">Ride Details</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <h6>Ride Info</h6>
+                                <ul class="list-group">
+                                    <li class="list-group-item">Ride ID: <span class="fw-bold">#R1245</span></li>
+                                    <li class="list-group-item">Date: <span class="fw-bold">2024-06-01</span></li>
+                                    <li class="list-group-item">Pickup: <span class="fw-bold">Downtown</span></li>
+                                    <li class="list-group-item">Dropoff: <span class="fw-bold">Airport</span></li>
+                                    <li class="list-group-item">Fare: <span class="fw-bold">$32.50</span></li>
+                                    <li class="list-group-item">Status: <span class="badge bg-success">Completed</span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Rider Info</h6>
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="profile-img me-3" style="width:60px;height:60px;">
+                                    <div>
+                                        <span class="fw-bold">Emily Clark</span>
+                                        <div class="small text-muted">emily@email.com</div>
+                                        <div class="small text-muted">+1 555 123 4567</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="fw-bold">Rating:</span>
+                                    <span class="rating-stars">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Ride Route</h6>
+                        <div class="map-placeholder mb-3">
+                            <i class="bi bi-geo-alt fs-1"></i> Map Placeholder
+                        </div>
+                        <h6>Feedback</h6>
+                        <div>
+                            <span class="fw-bold">Rider's Feedback:</span>
+                            <p>"Great ride! Very comfortable and on time."</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-outline-primary">Download Receipt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Withdraw Modal -->
+        <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="withdrawModalLabel">Withdraw Earnings</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control" placeholder="Enter amount" min="1" max="1000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select">
+                                <option selected>Bank Transfer</option>
+                                <option>PayPal</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" rows="2" placeholder="Any notes?"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Withdraw</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Add Payment Modal -->
+        <div class="modal fade" id="addPaymentModal" tabindex="-1" aria-labelledby="addPaymentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPaymentModalLabel">Add Payment Method</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Method</label>
+                            <select class="form-select">
+                                <option selected>Bank Transfer</option>
+                                <option>PayPal</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Account Details</label>
+                            <input type="text" class="form-control" placeholder="Enter account or email" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Method</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Edit Profile Modal -->
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" value="John Doe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="john@email.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control" value="+1 234 567 890" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" value="New York, USA" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-control" rows="3">Experienced driver with 5+ years on the road. Passionate about safe and comfortable rides.</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Edit Vehicle Modal -->
+        <div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editVehicleModalLabel">Edit Vehicle Info</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Car Model</label>
+                            <input type="text" class="form-control" value="Toyota Prius" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Plate Number</label>
+                            <input type="text" class="form-control" value="NYC-1234" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Color</label>
+                            <input type="text" class="form-control" value="Silver" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Upload Documents</label>
+                            <input type="file" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap 5 JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Chart.js for earnings chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+<script>
+    // Earnings Chart (Dashboard)
+    const ctx = document.getElementById('earningsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Earnings',
+                data: [120, 150, 170, 140, 180, 200, 220],
+                fill: true,
+                backgroundColor: 'rgba(25,135,84,0.1)',
+                borderColor: '#198754',
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Earnings Chart (Earnings Tab)
+    const ctx2 = document.getElementById('earningsChart2').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Earnings',
+                data: [300, 400, 250, 250],
+                backgroundColor: '#0d6efd'
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Sidebar tab navigation
+    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+        link.addEventListener('click', function() {
+            document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>

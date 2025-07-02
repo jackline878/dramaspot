@@ -1,0 +1,123 @@
+<!-- analytics.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Article Analytics Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-light">
+
+  <div class="container py-5">
+    <h2 class="mb-4 text-center">📊 Article Analytics Dashboard</h2>
+
+    <!-- Input for Article ID -->
+    <div class="mb-4 d-flex justify-content-center">
+      <input type="number" id="articleIdInput" class="form-control w-25 me-2" placeholder="Enter Article ID" />
+      <button class="btn btn-primary" onclick="fetchAnalytics()">Fetch Analytics</button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row text-center mb-4">
+      <div class="col-md-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5>Views</h5>
+            <h3 id="views">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5>Likes</h5>
+            <h3 id="likes">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5>Shares</h5>
+            <h3 id="shares">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow">
+          <div class="card-body">
+            <h5>Comments</h5>
+            <h3 id="comments">0</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="card shadow p-4">
+      <h5 class="mb-3">Interaction Chart</h5>
+      <canvas id="analyticsChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <script>
+    let chart;
+
+    function fetchAnalytics() {
+      const articleId = document.getElementById('articleIdInput').value;
+      if (!articleId) {
+        alert('Please enter an article ID.');
+        return;
+      }
+
+      fetch(`/api/interactions/analytics/${articleId}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('views').textContent = data.views;
+          document.getElementById('likes').textContent = data.likes;
+          document.getElementById('shares').textContent = data.shares;
+          document.getElementById('comments').textContent = data.comments;
+
+          renderChart(data);
+        })
+        .catch(err => {
+          console.error('Error fetching analytics:', err);
+          alert('Failed to fetch analytics.');
+        });
+    }
+
+    function renderChart(data) {
+      const ctx = document.getElementById('analyticsChart').getContext('2d');
+
+      const chartData = {
+        labels: ['Views', 'Likes', 'Shares', 'Comments'],
+        datasets: [{
+          label: 'Total',
+          data: [data.views, data.likes, data.shares, data.comments],
+          backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545'],
+          borderRadius: 5
+        }]
+      };
+
+      if (chart) {
+        chart.data = chartData;
+        chart.update();
+      } else {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          data: chartData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>

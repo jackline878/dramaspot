@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Section Content - Drama Spots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .content-card {
+            background: #fff;
+            border-radius: .5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-header {
+            background: #f1f3f5;
+            border-bottom: 1px solid #dee2e6;
+            padding: .75rem 1rem;
+            border-radius: .5rem .5rem 0 0;
+            font-weight: 500;
+        }
+
+        .content-controls {
+            float: right;
+        }
+
+        .content-controls button {
+            margin-left: 0.25rem;
+        }
+
+        .img-preview {
+            max-width: 100%;
+            max-height: 180px;
+            margin-top: 8px;
+            border-radius: 0.5rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/admin/">Drama Spots Admin</a>
+            <div class="ms-auto">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary me-2"><i
+                        class="bi bi-arrow-left"></i>
+                    Back</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        <h1 class="mb-4 fw-bold">Edit Section Content</h1>
+        <div id="alertContainer"></div>
+        <div id="sectionInfo" class="mb-4"></div>
+        <div id="contentsContainer"></div>
+        <button type="button" class="btn btn-primary" id="addContentBtn"><i class="bi bi-plus-circle"></i> Add
+            Content</button>
+    </main>
+
+    <!-- Content Templates -->
+    <template id="contentCardTemplate">
+        <div class="content-card fade-in mb-3" data-content-id="">
+            <div class="content-header d-flex align-items-center">
+                <span class="content-type-label"></span>
+                <div class="content-controls ms-auto">
+                    <button type="button" class="btn btn-sm btn-outline-success save-content" title="Save"><i
+                            class="bi bi-check"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-content" title="Delete"><i
+                            class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="card-body content-fields"></div>
+        </div>
+    </template>
+    <template id="contentTypeSelectTemplate">
+        <select class="form-select content-type-select mb-2">
+            <option value="">Select content type...</option>
+            <option value="head">Head</option>
+            <option value="list">List</option>
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="carousel">Carousel</option>
+            <option value="quote">Quote</option>
+            <option value="embed">Embed</option>
+            <option value="table">table</option>
+        </select>
+    </template>
+    <template id="contentFields-text">
+        <div>
+            <label class="form-label required">Text Content</label>
+            <textarea class="form-control content-text" rows="4" required></textarea>
+        </div>
+    </template>
+    <template id="contentFields-image">
+        <div>
+            <label class="form-label required">Image</label>
+            <input type="file" class="form-control content-image" accept="image/*">
+            <img class="img-preview d-none mt-2" alt="Image Preview">
+            <label class="form-label mt-2">Caption</label>
+            <input type="text" class="form-control content-caption" maxlength="120">
+        </div>
+    </template>
+    <template id="contentFields-head">
+        <div class="mb-3">
+            <label class="form-label required">Heading Text</label>
+            <input type="text" class="form-control content-head" maxlength="150">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Level</label>
+            <select class="form-select content-level">
+                <option value="2">Section Title</option>
+                <option value="4">Section subtitle</option>
+            </select>
+        </div>
+    </template>
+    <template id="contentFields-list">
+        <div class="mb-3">
+            <label class="form-label required">List Items (one per line)</label>
+            <textarea class="form-control content-list" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ordered List?</label>
+            <input class="content-is-ordered" type="checkbox">
+        </div>
+    </template>
+    <template id="contentFields-video">
+        <div>
+            <label class="form-label required">Video File</label>
+            <input type="file" class="form-control content-video" accept="video/*">
+            <label class="form-label mt-2">Caption</label>
+            <input type="text" class="form-control content-caption" maxlength="120">
+        </div>
+    </template>
+    <template id="contentFields-carousel">
+        <div>
+            <label class="form-label required">Carousel Media</label>
+            <input type="file" class="form-control content-carousel-media" accept="image/*,video/*" multiple>
+            <div class="carousel-preview mt-2"></div>
+            <label class="form-label mt-2">Captions (optional, one per media)</label>
+            <textarea class="form-control content-carousel-captions" rows="2"
+                placeholder="Enter captions separated by new lines"></textarea>
+        </div>
+    </template>
+    <template id="contentFields-quote">
+        <div>
+            <label class="form-label required">Quote</label>
+            <textarea class="form-control content-quote" rows="2" required></textarea>
+            <label class="form-label mt-2">Attribution</label>
+            <input type="text" class="form-control content-attribution" maxlength="80">
+        </div>
+    </template>
+    <template id="contentFields-embed">
+        <div class="mb-3">
+            <label class="form-label required">Embed URL (YouTube, Instagram, Twitter, etc.)</label>
+            <input type="url" class="form-control content-embed-url" placeholder="https://www.youtube.com/embed/..."
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Caption (optional)</label>
+            <input type="text" class="form-control content-embed-caption"
+                placeholder="e.g. Blake Lively showcases confidence in color">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Alignment (optional)</label>
+            <select class="form-select content-embed-align">
+                <option value="mx-auto" selected>Center</option>
+                <option value="ms-auto">Align Right</option>
+                <option value="me-auto">Align Left</option>
+                <option value="">No Alignment</option>
+            </select>
+        </div>
+    </template>
+    <template id="contentFields-table">
+        <div class="mb-5">
+            <table data-content class="table table-bordered mt-3 content-table">
+                <thead>
+                    <tr class="table-headers-row bg-primary text-white"></tr>
+                </thead>
+                <tbody class="table-body"></tbody>
+            </table>
+        </div>
+    </template>
+
+
+    <!-- Bootstrap 5 JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function getSectionId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('sectionId');
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+        }
+
+        async function fetchSection(sectionId) {
+            try {
+                const res = await fetch(`/article/section/${sectionId}`);
+                if (!res.ok) throw new Error('Section not found');
+                return await res.json();
+            } catch (e) {
+                showAlert('Failed to load section.', 'danger');
+                return null;
+            }
+        }
+
+        async function fetchContents(sectionId) {
+            try {
+                const res = await fetch(`/article/section/${sectionId}`);
+                if (!res.ok) throw new Error('Failed to load contents');
+                return await res.json();
+            } catch (e) {
+                showAlert('Failed to load contents.', 'danger');
+                return [];
+            }
+        }
+
+        function renderSectionInfo(section) {
+            document.getElementById('sectionInfo').innerHTML = `
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-1">Section #${section.id}</h5>
+                <div class="mb-1"><strong>Order:</strong> ${section.order || ''}</div>
+                <div><strong>Article:</strong> ${section.article.title || ''}</div>
+            </div>
+        </div>
+    `;
+        }
+
+        function renderContentCard(content, sectionId) {
+            const tmpl = document.getElementById('contentCardTemplate').content.cloneNode(true);
+            const card = tmpl.querySelector('.content-card');
+            card.dataset.contentId = content.id || '';
+            // Content type select
+
+            const enumTypes = ["head", "list", "text", "image", "video", "carousel", "quote", "embed", 'table'];
+            let firstKey = Object.keys(content)[0];
+            let firstValue = content[firstKey];
+
+            // Ensure firstKey is a valid enum type; if not, find the next valid one
+            if (!enumTypes.includes(firstKey)) {
+                firstKey = Object.keys(content).find(k => enumTypes.includes(k)) || '';
+                firstValue = content[firstKey];
+            }
+
+            const typeSelectTmpl = document.getElementById('contentTypeSelectTemplate').content.cloneNode(true);
+            const typeSelect = typeSelectTmpl.querySelector('select');
+            typeSelect.value = firstKey || '';
+            card.querySelector('.content-type-label').appendChild(typeSelect);
+            // Render fields
+            renderContentFields(card, typeSelect.value, content);
+            typeSelect.onchange = () => renderContentFields(card, typeSelect.value, {});
+            // Save
+            card.querySelector('.save-content').onclick = () => saveContent(card, sectionId);
+            // Delete
+            card.querySelector('.delete-content').onclick = () => deleteContent(card, sectionId);
+            return card;
+        }
+
+        function renderContentFields(card, type, content) {
+            const fieldsContainer = card.querySelector('.content-fields');
+            fieldsContainer.innerHTML = '';
+            if (!type) return;
+            const tmpl = document.getElementById('contentFields-' + type);
+            if (!tmpl) return;
+            const fields = tmpl.content.cloneNode(true);
+            // Populate fields if editing
+            if (type === 'text' && content) {
+                fields.querySelector('.content-text').value = content.text || '';
+            }
+
+            if (type === 'table' && content) {
+
+                const table = fields.querySelector('.content-table');
+
+                // Add headers
+                if (content.headers && content.headers.length) {
+                    content.headers.forEach(header => createHeaderInput(table, header));
+                }
+
+                createHeaderInput(table); // extra empty for dynamic add
+
+                // Add rows
+
+                if (content.rows && content.rows.length) {
+                    content.rows.forEach(row => createRow(table, row));
+                }
+                createRow(table); // extra empty for dynamic add
+
+                updateTableContent(table);
+            }
+            if (type === 'image' && content) {
+                fields.querySelector('.content-caption').value = content.caption || '';
+                // No file, but can show preview if image_url exists
+                if (content.image) {
+                    const imgPreview = fields.querySelector('.img-preview');
+                    imgPreview.src = content.image;
+                    imgPreview.classList.remove('d-none');
+                }
+            }
+            if (type === 'video' && content) {
+                fields.querySelector('.content-caption').value = content.caption || '';
+            }
+            if (type === 'carousel' && content) {
+                fields.querySelector('.content-carousel-captions').value = (content["captions"] || []).join('\n');
+
+                const previewDiv = fields.querySelector('.carousel-preview');
+
+                previewDiv.innerHTML = '';
+                content.carousel = [];
+                content.carousel = Array.from(content["images"]);
+                previewDiv.dataset.carousel = JSON.stringify(content.carousel);
+                Array.from(content["images"]).forEach(imgxx => {
+                    // Image wrapper
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.display = 'inline-block';
+                    wrapper.style.marginRight = '0.5rem';
+                    wrapper.style.marginBottom = '0.5rem';
+
+                    // Image element
+                    const img = document.createElement('img');
+                    img.className = 'rounded';
+                    img.style.maxHeight = '80px';
+                    img.src = imgxx;
+                    img.dataset.status = 'active';
+
+                    // Cancel icon (×)
+                    const cancelIcon = document.createElement('span');
+                    cancelIcon.innerHTML = '&times;';
+                    cancelIcon.style.position = 'absolute';
+                    cancelIcon.style.top = '2px';
+                    cancelIcon.style.right = '6px';
+                    cancelIcon.style.cursor = 'pointer';
+                    cancelIcon.style.color = '#fff';
+                    cancelIcon.style.fontSize = '18px';
+                    cancelIcon.style.background = 'rgba(0, 0, 0, 0.6)';
+                    cancelIcon.style.borderRadius = '50%';
+                    cancelIcon.style.width = '20px';
+                    cancelIcon.style.height = '20px';
+                    cancelIcon.style.textAlign = 'center';
+                    cancelIcon.style.lineHeight = '18px';
+                    cancelIcon.title = 'Remove image';
+
+                    // Undo button
+                    const undoBtn = document.createElement('button');
+                    undoBtn.textContent = 'Undo';
+                    undoBtn.className = 'btn btn-sm btn-light btn-undo';
+                    undoBtn.style.position = 'absolute';
+                    undoBtn.style.bottom = '4px';
+                    undoBtn.style.left = '4px';
+                    undoBtn.style.display = 'none'; // Hidden by default
+                    undoBtn.style.padding = '0 6px';
+                    undoBtn.style.fontSize = '12px';
+
+                    // Cancel logic
+                    cancelIcon.addEventListener('click', () => {
+                        img.dataset.status = 'deleted';
+                        img.style.opacity = '0.3';
+                        cancelIcon.style.display = 'none';
+                        undoBtn.style.display = 'inline-block';
+                        content.carousel = content.carousel.filter(item => item !== imgxx);
+                        previewDiv.dataset.carousel = JSON.stringify(content.carousel);
+                    });
+
+                    // Undo logic
+                    undoBtn.addEventListener('click', () => {
+                        img.dataset.status = 'active';
+                        img.style.opacity = '1';
+                        cancelIcon.style.display = 'inline-block';
+                        undoBtn.style.display = 'none';
+                        content.carousel.push(imgxx);
+                        previewDiv.dataset.carousel = JSON.stringify(content.carousel);
+                    });
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(cancelIcon);
+                    wrapper.appendChild(undoBtn);
+                    previewDiv.appendChild(wrapper);
+
+                });
+
+
+            }
+            if (type === 'quote' && content) {
+                fields.querySelector('.content-quote').value = content.quote || '';
+                fields.querySelector('.content-attribution').value = content.attribution || '';
+            }
+            if (type === 'head' && content) {
+                fields.querySelector('.content-head').value = content.head || '';
+                fields.querySelector('.content-level').value = content.level || '';
+            }
+            if (type === 'list' && content) {
+                fields.querySelector('.content-list').value = (content.items || []).join('\n');
+                fields.querySelector('.content-is-ordered').checked = content.is_ordered || false;
+            }
+            if (type === 'embed' && content) {
+                fields.querySelector('.content-embed-url').value = content.url || '';
+                fields.querySelector('.content-embed-caption').value = content.caption || '';
+                fields.querySelector('.content-embed-align').value = content.align || 'mx-auto';
+            }
+
+            // Image preview for image
+            if (type === 'image') {
+                const imgInput = fields.querySelector('.content-image');
+                const imgPreview = fields.querySelector('.img-preview');
+                imgInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = e => {
+                            imgPreview.src = e.target.result;
+                            imgPreview.classList.remove('d-none');
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        imgPreview.classList.add('d-none');
+                    }
+                });
+            }
+
+
+            // Carousel preview
+            if (type === 'carousel') {
+                const mediaInput = fields.querySelector('.content-carousel-media');
+                const previewDiv = fields.querySelector('.carousel-preview');
+                mediaInput.addEventListener('change', function () {
+                    Array.from(this.files).forEach(file => {
+                        if (file.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.className = 'rounded me-2 mb-2';
+                            img.style.maxHeight = '80px';
+                            const reader = new FileReader();
+                            reader.onload = e => img.src = e.target.result;
+                            reader.readAsDataURL(file);
+                            previewDiv.appendChild(img);
+                        } else if (file.type.startsWith('video/')) {
+                            const vid = document.createElement('video');
+                            vid.className = 'rounded me-2 mb-2';
+                            vid.style.maxHeight = '80px';
+                            vid.controls = true;
+                            const reader = new FileReader();
+                            reader.onload = e => vid.src = e.target.result;
+                            reader.readAsDataURL(file);
+                            previewDiv.appendChild(vid);
+                        }
+                    });
+                });
+            }
+            fieldsContainer.appendChild(fields);
+        }
+
+        async function saveContent(card, sectionId) {
+            const contentId = card.dataset.contentId;
+            const type = card.querySelector('.content-type-select').value;
+            if (!type) {
+                showAlert('Please select a content type.', 'warning');
+                return;
+            }
+            let content = {};
+            const fields = card.querySelector('.content-fields');
+            if (type === 'text') {
+                content = { text: fields.querySelector('.content-text').value };
+            } else if (type === 'table') {
+                const table = fields.querySelector('.content-table');
+
+                const headersRow = table.querySelector('.table-headers-row');
+                const tableBody = table.querySelector('.table-body');
+
+                const headers = [...headersRow.querySelectorAll('input')]
+                    .map(input => input.value.trim())
+                    .filter((h, i, arr) => i < arr.length - 1);
+
+                const rows = [...tableBody.querySelectorAll('tr')]
+                    .map(tr => {
+                        return [...tr.querySelectorAll('input')]
+                            .map(input => input.value.trim())
+                            .filter((d, i, arr) => i < arr.length - 1); // remove last cell of each row
+                    })
+                    .filter(row => row.some(cell => cell !== '')); // keep only non-empty rows
+
+
+                content = { table: {}, headers, rows };
+
+            } else if (type === 'image') {
+                content = { caption: fields.querySelector('.content-caption').value };
+            } else if (type === 'video') {
+                content = { caption: fields.querySelector('.content-caption').value };
+            } else if (type === 'carousel') {
+                content = { captions: fields.querySelector('.content-carousel-captions').value.split('\n').map(s => s.trim()) };
+            } else if (type === 'quote') {
+                content = {
+                    quote: fields.querySelector('.content-quote').value,
+                    attribution: fields.querySelector('.content-attribution').value
+                };
+            } else if (type === 'head') {
+                content = {
+                    head: fields.querySelector('.content-head').value,
+                    level: fields.querySelector('.content-level').value
+                };
+            } else if (type === 'list') {
+                content = {
+                    items: fields.querySelector('.content-list').value.split('\n').map(s => s.trim()),
+                    is_ordered: fields.querySelector('.content-is-ordered').checked
+                };
+            } else if (type === 'embed') {
+                content = {
+                    url: fields.querySelector('.content-embed-url')?.value || '',
+                    caption: fields.querySelector('.content-embed-caption')?.value || '',
+                    align: fields.querySelector('.content-embed-align')?.value || 'mx-auto'
+                };
+            }
+
+            // Prepare FormData for file uploads
+            const formData = new FormData();
+            formData.append('type', type);
+            formData.append('content', JSON.stringify(content));
+            // Handle file fields
+            if (type === 'image') {
+                const imgInput = fields.querySelector('.content-image');
+                if (imgInput.files[0]) formData.append('image', imgInput.files[0]);
+            }
+            if (type === 'video') {
+                const vidInput = fields.querySelector('.content-video');
+                if (vidInput.files[0]) formData.append('video', vidInput.files[0]);
+            }
+            if (type === 'carousel') {
+                const previewDiv = fields.querySelector('.carousel-preview');
+                formData.append('carousel_links', previewDiv.dataset.carousel);
+
+                const mediaInput = fields.querySelector('.content-carousel-media');
+                Array.from(mediaInput.files).forEach((file, i) => {
+                    formData.append('carousel_media', file);
+                });
+            }
+            // Save (POST for new, PUT for update)
+            try {
+                let url = `/article/sections/${sectionId}/contents`;
+                let method = 'POST';
+                if (contentId) {
+                    url += `/${contentId}`;
+                    method = 'PUT';
+                }
+                const res = await fetch(url, { method, body: formData });
+                if (!res.ok) throw new Error('Save failed');
+                showAlert('Content saved!', 'success');
+                // Reload contents
+                loadContents(sectionId);
+            } catch (e) {
+                showAlert('Failed to save content.', 'danger');
+            }
+        }
+
+        async function deleteContent(card, sectionId) {
+            const contentId = card.dataset.contentId;
+            if (!contentId) {
+                card.remove();
+                return;
+            }
+            if (!confirm('Delete this content?')) return;
+            try {
+                const res = await fetch(`/article/contents/${contentId}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Delete failed');
+                showAlert('Content deleted.', 'success');
+                loadContents(sectionId);
+            } catch (e) {
+                showAlert('Failed to delete content.', 'danger');
+            }
+        }
+
+        function addNewContentCard(sectionId) {
+            const card = renderContentCard({ type: '', content: {} }, sectionId);
+            document.getElementById('contentsContainer').appendChild(card);
+        }
+
+        async function loadContents(sectionId) {
+            const data = await fetchContents(sectionId);
+            const contents = data["SectionContents"]
+            const container = document.getElementById('contentsContainer');
+            container.innerHTML = '';
+            contents.forEach(content => {
+                const card = renderContentCard(content.content, sectionId);
+                container.appendChild(card);
+            });
+        }
+
+
+        function updateTableContent(table) {
+            const headersRow = table.querySelector('.table-headers-row');
+            const tableBody = table.querySelector('.table-body');
+
+            const headers = [...headersRow.querySelectorAll('input')].map(input => input.value.trim());
+            const rows = [...tableBody.querySelectorAll('tr')].map(tr => {
+                return [...tr.querySelectorAll('input')].map(input => input.value.trim());
+            });
+
+            const data = { headers, rows };
+            table.setAttribute('data-content', JSON.stringify(data));
+        }
+
+        function createHeaderInput(table, value = '') {
+            const headersRow = table.querySelector('.table-headers-row');
+            const tableBody = table.querySelector('.table-body');
+            const th = document.createElement('th');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control header-text';
+            input.value = value;
+
+            input.addEventListener('input', () => {
+                updateTableContent(table);
+
+                const inputs = headersRow.querySelectorAll('input');
+                if (input === inputs[inputs.length - 1] && input.value.trim() !== '') {
+                    createHeaderInput(table);
+                    updateAllRowsOnHeaderChange(table);
+                }
+            });
+
+            th.classList.add('bg-primary', 'text-white');
+            th.appendChild(input);
+            headersRow.appendChild(th);
+
+            tableBody.querySelectorAll('tr').forEach(row => {
+                const td = document.createElement('td');
+                const tdInput = createCellInput(table);
+                td.appendChild(tdInput);
+                row.appendChild(td);
+            });
+
+            updateTableContent(table);
+        }
+
+        function createCellInput(table, value = '') {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control td-text';
+            input.value = value;
+
+            input.addEventListener('input', () => {
+                updateTableContent(table);
+                const row = input.closest('tr');
+                const inputs = row.querySelectorAll('input');
+                const isLastRow = row === table.querySelector('.table-body').lastElementChild;
+                const anyFilled = [...inputs].some(inp => inp.value.trim() !== '');
+                if (isLastRow && anyFilled) {
+                    createRow(table);
+                }
+            });
+
+            return input;
+        }
+
+        function createRow(table, rowData = []) {
+            const headersRow = table.querySelector('.table-headers-row');
+            const tableBody = table.querySelector('.table-body');
+            const headerCount = headersRow.querySelectorAll('input').length;
+
+            const tr = document.createElement('tr');
+            for (let i = 0; i < headerCount; i++) {
+                const td = document.createElement('td');
+                const tdInput = createCellInput(table, rowData[i] || '');
+                td.appendChild(tdInput);
+                tr.appendChild(td);
+            }
+            tableBody.appendChild(tr);
+            updateTableContent(table);
+        }
+
+        function updateAllRowsOnHeaderChange(table) {
+            const tableBody = table.querySelector('.table-body');
+            const headersCount = table.querySelectorAll('.table-headers-row input').length;
+
+            tableBody.querySelectorAll('tr').forEach(row => {
+                while (row.children.length < headersCount) {
+                    const td = document.createElement('td');
+                    const tdInput = createCellInput(table);
+                    td.appendChild(tdInput);
+                    row.appendChild(td);
+                }
+            });
+        }
+
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const sectionId = getSectionId();
+            if (!sectionId) {
+                showAlert('No sectionId provided in URL.', 'danger');
+                return;
+            }
+            const section = await fetchSection(sectionId);
+            if (!section) return;
+            renderSectionInfo(section);
+            loadContents(sectionId);
+            document.getElementById('addContentBtn').onclick = () => addNewContentCard(sectionId);
+        });
+    </script>
+</body>
+
+</html>

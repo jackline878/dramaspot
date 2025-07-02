@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Grace Community Church</title>
+    <meta name="description" content="Welcome to Grace Community Church. Join us for worship, fellowship, and community events.">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700|Lora:400,700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e67e22;
+            --accent: #f1c40f;
+            --light: #f9f9f9;
+            --dark: #222;
+            --gray: #7f8c8d;
+            --max-width: 1200px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: var(--accent);
+        }
+        header {
+            background: var(--primary);
+            color: #fff;
+            padding: 0;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+        .navbar .logo {
+            font-family: 'Lora', serif;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--accent);
+        }
+        .navbar nav {
+            display: flex;
+            gap: 2rem;
+        }
+        .navbar nav a {
+            color: #fff;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            padding-bottom: 2px;
+        }
+        .navbar nav a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+        .navbar nav a:hover::after {
+            width: 100%;
+        }
+        .navbar .cta-btn {
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .navbar .cta-btn:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .hero {
+            background: linear-gradient(rgba(44,62,80,0.7), rgba(44,62,80,0.7)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            color: #fff;
+            text-align: center;
+            padding: 6rem 2rem 5rem 2rem;
+        }
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        .hero .hero-btns a {
+            display: inline-block;
+            background: var(--secondary);
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .hero .hero-btns a:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .section {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        .section-title {
+            font-family: 'Lora', serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .about {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+            justify-content: center;
+        }
+        .about-img {
+            flex: 1 1 350px;
+            min-width: 300px;
+            max-width: 400px;
+        }
+        .about-img img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(44,62,80,0.15);
+        }
+        .about-content {
+            flex: 2 1 400px;
+            min-width: 300px;
+        }
+        .about-content h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        .about-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+        .about-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .about-content ul li {
+            margin-bottom: 0.7rem;
+            font-size: 1.05rem;
+            color: var(--dark);
+        }
+        .about-content ul li i {
+            color: var(--secondary);
+            margin-right: 0.5rem;
+        }
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .service-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+        .service-card:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+        }
+        .service-card i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        .service-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 0.7rem;
+        }
+        .service-card p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        .events-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .event-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: box-shadow 0.2s;
+        }
+        .event-card:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+        }
+        .event-date {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        .event-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .event-desc {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        .event-location {
+            font-size: 0.98rem;
+            color: var(--dark);
+            margin-top: 0.5rem;
+        }
+        .event-btn {
+            align-self: flex-start;
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+        .event-btn:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .sermons {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .sermon-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: box-shadow 0.2s;
+        }
+        .sermon-card:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+        }
+        .sermon-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .sermon-meta {
+            font-size: 0.98rem;
+            color: var(--gray);
+        }
+        .sermon-audio {
+            margin-top: 0.7rem;
+        }
+        .ministries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .ministry-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+        .ministry-card:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+        }
+        .ministry-card i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        .ministry-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 0.7rem;
+        }
+        .ministry-card p {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        .testimonials {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .testimonial-card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: box-shadow 0.2s;
+        }
+        .testimonial-card:hover {
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+        }
+        .testimonial-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid var(--secondary);
+        }
+        .testimonial-card p {
+            font-style: italic;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        .testimonial-card .name {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .testimonial-card .role {
+            color: var(--secondary);
+            font-size: 0.98rem;
+        }
+        .newsletter {
+            background: var(--primary);
+            color: #fff;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: 20px;
+            margin-top: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+        }
+        .newsletter h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        .newsletter p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .newsletter form {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .newsletter input[type="email"] {
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            width: 250px;
+            max-width: 100%;
+            outline: none;
+        }
+        .newsletter button {
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .newsletter button:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .contact-section {
+            margin-top: 4rem;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+            padding: 3rem 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .contact-section h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+        .contact-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
+        .contact-form .form-group {
+            flex: 1 1 300px;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .contact-form label {
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        .contact-form input,
+        .contact-form textarea {
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            outline: none;
+            resize: vertical;
+        }
+        .contact-form textarea {
+            min-height: 120px;
+        }
+        .contact-form button {
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+            align-self: flex-start;
+        }
+        .contact-form button:hover {
+            background: var(--accent);
+            color: var(--primary);
+        }
+        .contact-info {
+            margin-top: 2rem;
+            text-align: center;
+            color: var(--gray);
+        }
+        .contact-info i {
+            color: var(--secondary);
+            margin-right: 0.5rem;
+        }
+        .map {
+            margin-top: 2rem;
+            width: 100%;
+            height: 350px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.08);
+        }
+        footer {
+            background: var(--primary);
+            color: #fff;
+            padding: 3rem 2rem 1rem 2rem;
+            margin-top: 4rem;
+        }
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            justify-content: space-between;
+        }
+        .footer-col {
+            flex: 1 1 220px;
+            min-width: 200px;
+        }
+        .footer-col h3 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .footer-col ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .footer-col ul li {
+            margin-bottom: 0.7rem;
+        }
+        .footer-col ul li a {
+            color: #fff;
+            font-size: 1rem;
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .footer-social a {
+            color: var(--accent);
+            font-size: 1.5rem;
+            transition: color 0.2s;
+        }
+        .footer-social a:hover {
+            color: var(--secondary);
+        }
+        .footer-bottom {
+            text-align: center;
+            color: #ccc;
+            margin-top: 2rem;
+            font-size: 0.98rem;
+        }
+        @media (max-width: 900px) {
+            .about, .footer-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .about-img, .about-content {
+                max-width: 100%;
+            }
+        }
+        @media (max-width: 700px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .section {
+                padding: 2.5rem 1rem;
+            }
+            .newsletter {
+                padding: 2rem 1rem;
+            }
+            .contact-section {
+                padding: 2rem 1rem;
+            }
+            .footer-content {
+                gap: 1.5rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .newsletter h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div class="logo">Grace Community Church</div>
+            <nav>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#events">Events</a>
+                <a href="#sermons">Sermons</a>
+                <a href="#ministries">Ministries</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <a href="#contact" class="cta-btn">Join Us</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Welcome to Grace Community Church</h1>
+        <p>Experience the love of Christ, grow in faith, and connect with a caring community. Join us for worship, fellowship, and service.</p>
+        <div class="hero-btns">
+            <a href="#services">Our Services</a>
+            <a href="#contact">Plan a Visit</a>
+        </div>
+    </section>
+
+    <section class="section" id="about">
+        <h2 class="section-title">About Us</h2>
+        <div class="about">
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80" alt="Church Building">
+            </div>
+            <div class="about-content">
+                <h2>Our Mission</h2>
+                <p>
+                    At Grace Community Church, our mission is to glorify God by making disciples of Jesus Christ through worship, teaching, and loving service. We are a welcoming, multi-generational church family committed to spiritual growth and community outreach.
+                </p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Christ-centered worship and teaching</li>
+                    <li><i class="fas fa-check-circle"></i> Vibrant children and youth ministries</li>
+                    <li><i class="fas fa-check-circle"></i> Community outreach and missions</li>
+                    <li><i class="fas fa-check-circle"></i> Supportive small groups and Bible studies</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="services">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services">
+            <div class="service-card">
+                <i class="fas fa-church"></i>
+                <h3>Sunday Worship</h3>
+                <p>Join us every Sunday at 10:00 AM for uplifting worship, inspiring messages, and fellowship.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-bible"></i>
+                <h3>Bible Study</h3>
+                <p>Weekly Bible studies for all ages to deepen your understanding of God's Word and grow in faith.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-users"></i>
+                <h3>Small Groups</h3>
+                <p>Connect with others in small groups for prayer, support, and spiritual growth throughout the week.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-child"></i>
+                <h3>Children's Ministry</h3>
+                <p>Fun, safe, and engaging programs for children to learn about Jesus and build lasting friendships.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-hands-helping"></i>
+                <h3>Community Outreach</h3>
+                <p>Serving our neighbors through food drives, volunteering, and local missions projects.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-music"></i>
+                <h3>Worship Team</h3>
+                <p>Join our worship team and use your musical gifts to glorify God and lead others in praise.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="events">
+        <h2 class="section-title">Upcoming Events</h2>
+        <div class="events-list">
+            <div class="event-card">
+                <div class="event-date">Sun, June 16</div>
+                <div class="event-title">Father's Day Service & BBQ</div>
+                <div class="event-desc">Celebrate Father's Day with a special service at 10:00 AM, followed by a community BBQ and games for all ages.</div>
+                <div class="event-location"><i class="fas fa-map-marker-alt"></i> Church Lawn</div>
+                <a href="#contact" class="event-btn">RSVP</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">Wed, June 19</div>
+                <div class="event-title">Midweek Prayer Night</div>
+                <div class="event-desc">Join us for a time of prayer and worship at 7:00 PM. All are welcome to come and seek God together.</div>
+                <div class="event-location"><i class="fas fa-map-marker-alt"></i> Sanctuary</div>
+                <a href="#contact" class="event-btn">Learn More</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">Sat, June 22</div>
+                <div class="event-title">Youth Group Retreat</div>
+                <div class="event-desc">A weekend retreat for middle and high school students. Fun, faith, and friendship in the great outdoors!</div>
+                <div class="event-location"><i class="fas fa-map-marker-alt"></i> Camp Grace</div>
+                <a href="#contact" class="event-btn">Sign Up</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">Sun, June 30</div>
+                <div class="event-title">Baptism Sunday</div>
+                <div class="event-desc">Celebrate new life in Christ! If you are interested in being baptized, please contact us for more information.</div>
+                <div class="event-location"><i class="fas fa-map-marker-alt"></i> Main Sanctuary</div>
+                <a href="#contact" class="event-btn">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="sermons">
+        <h2 class="section-title">Latest Sermons</h2>
+        <div class="sermons">
+            <div class="sermon-card">
+                <div class="sermon-title">Walking in Faith</div>
+                <div class="sermon-meta">Pastor John Smith &middot; June 9, 2024</div>
+                <audio class="sermon-audio" controls>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div class="sermon-card">
+                <div class="sermon-title">The Power of Prayer</div>
+                <div class="sermon-meta">Pastor Jane Doe &middot; June 2, 2024</div>
+                <audio class="sermon-audio" controls>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div class="sermon-card">
+                <div class="sermon-title">Hope in Uncertain Times</div>
+                <div class="sermon-meta">Pastor John Smith &middot; May 26, 2024</div>
+                <audio class="sermon-audio" controls>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            <div class="sermon-card">
+                <div class="sermon-title">Serving Others Like Jesus</div>
+                <div class="sermon-meta">Pastor Jane Doe &middot; May 19, 2024</div>
+                <audio class="sermon-audio" controls>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="ministries">
+        <h2 class="section-title">Our Ministries</h2>
+        <div class="ministries">
+            <div class="ministry-card">
+                <i class="fas fa-child"></i>
+                <h3>Children's Ministry</h3>
+                <p>Engaging programs for kids to learn about Jesus in a fun and safe environment.</p>
+            </div>
+            <div class="ministry-card">
+                <i class="fas fa-user-friends"></i>
+                <h3>Youth Ministry</h3>
+                <p>Helping teens grow in faith, build friendships, and serve the community.</p>
+            </div>
+            <div class="ministry-card">
+                <i class="fas fa-female"></i>
+                <h3>Women's Ministry</h3>
+                <p>Encouraging women through Bible study, prayer, and fellowship events.</p>
+            </div>
+            <div class="ministry-card">
+                <i class="fas fa-male"></i>
+                <h3>Men's Ministry</h3>
+                <p>Equipping men to lead and serve through discipleship and outreach.</p>
+            </div>
+            <div class="ministry-card">
+                <i class="fas fa-hands"></i>
+                <h3>Prayer Ministry</h3>
+                <p>Interceding for our church, community, and world through regular prayer gatherings.</p>
+            </div>
+            <div class="ministry-card">
+                <i class="fas fa-globe"></i>
+                <h3>Missions</h3>
+                <p>Supporting local and global missions to share the love of Christ with all people.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="testimonials">
+        <h2 class="section-title">What People Are Saying</h2>
+        <div class="testimonials">
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Testimonial 1">
+                <p>"Grace Community Church has become my second family. The love and support I've received here is truly a blessing."</p>
+                <div class="name">Emily R.</div>
+                <div class="role">Member</div>
+            </div>
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Testimonial 2">
+                <p>"The children's ministry is amazing! My kids look forward to church every week."</p>
+                <div class="name">Michael T.</div>
+                <div class="role">Parent</div>
+            </div>
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Testimonial 3">
+                <p>"I found hope and purpose through the sermons and small groups. Thank you for welcoming me."</p>
+                <div class="name">Sarah L.</div>
+                <div class="role">Visitor</div>
+            </div>
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="Testimonial 4">
+                <p>"Serving in the outreach ministry has changed my life. It's a joy to give back to our community."</p>
+                <div class="name">James P.</div>
+                <div class="role">Volunteer</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <h2>Stay Connected</h2>
+        <p>Subscribe to our newsletter for the latest updates, events, and encouragement from Grace Community Church.</p>
+        <form>
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">Subscribe</button>
+        </form>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <h2>Contact Us</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+        <div class="contact-info">
+            <p><i class="fas fa-map-marker-alt"></i> 123 Grace Ave, Springfield, USA</p>
+            <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+            <p><i class="fas fa-envelope"></i> info@gracecommunity.org</p>
+        </div>
+        <div class="map">
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-0.1357%2C51.4975%2C-0.1277%2C51.5015&amp;layer=mapnik" style="border:0; width:100%; height:100%;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>Grace Community Church</h3>
+                <p>123 Grace Ave<br>Springfield, USA</p>
+                <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                <p><i class="fas fa-envelope"></i> info@gracecommunity.org</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#sermons">Sermons</a></li>
+                    <li><a href="#ministries">Ministries</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Service Times</h3>
+                <ul>
+                    <li>Sunday Worship: 10:00 AM</li>
+                    <li>Bible Study: Wed 7:00 PM</li>
+                    <li>Youth Group: Fri 6:30 PM</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-square"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Grace Community Church. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

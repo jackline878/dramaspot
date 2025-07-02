@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Article - Drama Spots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            border: 1px solid #dee2e6;
+            border-radius: .5rem;
+            margin-bottom: 1.5rem;
+            background: #fdfdfe;
+        }
+
+        .section-header {
+            background: #f1f3f5;
+            border-bottom: 1px solid #dee2e6;
+            padding: .75rem 1rem;
+            border-radius: .5rem .5rem 0 0;
+            font-weight: 500;
+        }
+
+        .carousel-preview img {
+            max-height: 120px;
+            margin-right: 8px;
+        }
+
+        .hashtag-badge {
+            margin: 2px 4px 2px 0;
+        }
+
+        .required:after {
+            content: "*";
+            color: #dc3545;
+            margin-left: 2px;
+        }
+
+        .drag-handle {
+            cursor: grab;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .section-controls {
+            float: right;
+        }
+
+        .section-controls button {
+            margin-left: 0.5rem;
+        }
+
+        .content-controls {
+            float: right;
+        }
+
+        .content-controls button {
+            margin-left: 0.25rem;
+        }
+
+        .img-preview {
+            max-width: 100%;
+            max-height: 180px;
+            margin-top: 8px;
+            border-radius: 0.5rem;
+        }
+
+        .form-check-inline {
+            margin-right: 1.5rem;
+        }
+
+        .sticky-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            background: #fff;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #hashtagSuggestions {
+            top: 100%;
+            /* places it right below the input */
+            background: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-topbar shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/admin/">Drama Spots Admin</a>
+            <div class="ms-auto">
+                <a href="/admin/articles.html" class="btn btn-outline-secondary me-2"><i class="bi bi-arrow-left"></i>
+                    Back to Articles</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4">
+        <h1 class="mb-4 fw-bold">Create New Article</h1>
+        <form id="articleForm" class="needs-validation" enctype="multipart/form-data" novalidate>
+            <!-- Article Core Fields -->
+            <div class="form-section">
+                <h4 class="mb-3">Article Details</h4>
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label for="title" class="form-label required">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" maxlength="180" required>
+                        <div class="invalid-feedback">Title is required.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="categoryId" class="form-label required">Category</label>
+                        <!-- Trigger button -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#categoryModal">
+                            Select Category
+                        </button>
+                        <div id="allSelectedCategories" class="mt-2">
+                        </div>
+                        <input type="hidden" name="subcategoryIds" id="subcategoryIds">
+                        <div class="invalid-feedback">Category is required.</div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="excerpt" class="form-label required">Excerpt</label>
+                        <textarea class="form-control" id="excerpt" name="excerpt" rows="2" maxlength="300"
+                            required></textarea>
+                        <div class="form-text">Short summary, max 300 characters.</div>
+                        <div class="invalid-feedback">Excerpt is required.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="status" class="form-label required">Status</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                        </select>
+                        <div class="invalid-feedback">Status is required.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="published_at" class="form-label">Publish Date</label>
+                        <input type="datetime-local" class="form-control" id="published_at" name="published_at">
+                        <div class="form-text">Leave blank to publish immediately.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="read_duration" class="form-label">Read Duration (min)</label>
+                        <input type="number" class="form-control" id="read_duration" name="read_duration" min="1"
+                            max="60" placeholder="e.g. 5">
+                        <div class="form-text">Estimated reading time.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="image" class="form-label">Article Image</label>
+                        <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                        <img id="imagePreview" class="img-preview d-none" alt="Image Preview">
+                        <div class="form-text">Optional. JPG, PNG, GIF. Max 2MB.</div>
+                    </div>
+                    <div class="col-md-6 position-relative">
+                        <label for="hashtags" class="form-label">Hashtags</label>
+                        <input type="text" class="form-control" id="hashtagsInput" placeholder="Type and press Enter">
+
+                        <!-- Suggestions dropdown -->
+                        <div id="hashtagSuggestions" class="list-group position-absolute w-100"
+                            style="z-index: 1000; display: none;"></div>
+
+                        <div id="hashtagsList" class="mt-2"></div>
+                        <input type="hidden" name="hashtags" id="hashtags">
+                        <div class="form-text">Add up to 8 hashtags (e.g. #celebrity, #gossip).</div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Article Sections -->
+            <div class="form-section">
+                <div id="sectionsContainer"></div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Article Sections</h4>
+                    <button type="button" class="btn btn-primary" id="addSectionBtn"><i class="bi bi-plus-circle"></i>
+                        Add Section</button>
+                </div>
+            </div>
+            <!-- Submit -->
+            <div class="form-section text-end">
+                <button type="submit" class="btn btn-success btn-lg px-5"><i class="bi bi-check-circle"></i> Create
+                    Article</button>
+            </div>
+        </form>
+        <!-- Success/Error Alerts -->
+        <div id="alertContainer" class="mt-4"></div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Category & Subcategory</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body d-flex" style="max-height: 400px;">
+                    <!-- Categories list -->
+                    <div class="list-group me-3 overflow-auto" style="width: 200px;" id="categoryList">
+                        <!-- Categories will be injected here -->
+                    </div>
+
+                    <!-- Subcategories section -->
+                    <div class="flex-fill" id="subcategoryContainer">
+                        <p class="text-muted">Select a category to view subcategories</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="saveSelection" class="btn btn-success" data-bs-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section/Content Templates (hidden) -->
+    <template id="sectionTemplate">
+        <div class="section-card fade-in" data-section-index="">
+            <div class="section-header d-flex align-items-center">
+                <span class="drag-handle me-2" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                <span class="section-title">Section <span class="section-number"></span></span>
+                <div class="section-controls ms-auto">
+                    <button type="button" class="btn btn-sm btn-outline-secondary move-up" title="Move Up"><i
+                            class="bi bi-arrow-up"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary move-down" title="Move Down"><i
+                            class="bi bi-arrow-down"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-section" title="Remove Section"><i
+                            class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="section-body p-3">
+                <div class="mb-3">
+                    <label class="form-label required">Section Order</label>
+                    <input type="number" class="form-control section-order" min="1" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Section Contents</label>
+                    <div class="contents-container"></div>
+                    <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-content-btn"><i
+                            class="bi bi-plus-circle"></i> Add Content</button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="contentTemplate">
+        <div class="content-item card mb-3 fade-in" data-content-index="">
+            <div class="card-header d-flex align-items-center">
+                <span class="drag-handle me-2" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                <span class="content-type-label"></span>
+                <div class="content-controls ms-auto">
+                    <button type="button" class="btn btn-sm btn-outline-secondary move-up" title="Move Up"><i
+                            class="bi bi-arrow-up"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary move-down" title="Move Down"><i
+                            class="bi bi-arrow-down"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-content" title="Remove Content"><i
+                            class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="card-body content-fields"></div>
+        </div>
+    </template>
+    <template id="contentTypeSelectTemplate">
+        <select class="form-select content-type-select mb-2">
+            <option value="">Select content type...</option>
+            <option value="head">Head</option>
+            <option value="list">List</option>
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="carousel">Carousel</option>
+            <option value="quote">Quote</option>
+            <option value="embed">Embed</option>
+        </select>
+    </template>
+    <template id="contentFields-text">
+        <div>
+            <label class="form-label required">Text Content</label>
+            <textarea class="form-control content-text" rows="4" required></textarea>
+        </div>
+    </template>
+    <template id="contentFields-image">
+        <div>
+            <label class="form-label required">Image</label>
+            <input type="file" class="form-control content-image" accept="image/*" required>
+            <img class="img-preview d-none mt-2" alt="Image Preview">
+            <label class="form-label mt-2">Caption</label>
+            <input type="text" class="form-control content-caption" maxlength="120">
+        </div>
+    </template>
+    <template id="contentFields-head">
+        <div class="mb-3">
+            <label class="form-label required">Heading Text</label>
+            <input type="text" class="form-control  content-head" id="headText" maxlength="150">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Level</label>
+            <select class="form-select  content-level" id="headLevel">
+                <option value="1">H1</option>
+                <option value="2">H2</option>
+                <option value="3">H3</option>
+                <option value="4">H4</option>
+            </select>
+        </div>
+    </template>
+    <template id="contentFields-list">
+        <div class="mb-3">
+            <label class="form-label required">List Items (one per line)</label>
+            <textarea class="form-control content-list" id="listItems" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ordered List?</label>
+            <input class="content-is-ordered" type="checkbox" id="listOrdered">
+        </div>
+    </template>
+    <template id="contentFields-video">
+        <div>
+            <label class="form-label required">Video File</label>
+            <input type="file" class="form-control content-video" accept="video/*" required>
+            <label class="form-label mt-2">Caption</label>
+            <input type="text" class="form-control content-caption" maxlength="120">
+        </div>
+    </template>
+    <template id="contentFields-carousel">
+        <div>
+            <label class="form-label required">Carousel Media</label>
+            <input type="file" class="form-control content-carousel-media" accept="image/*,video/*" multiple required>
+            <div class="carousel-preview mt-2"></div>
+            <label class="form-label mt-2">Captions (optional, one per media)</label>
+            <textarea class="form-control content-carousel-captions" rows="2"
+                placeholder="Enter captions separated by new lines"></textarea>
+        </div>
+    </template>
+    <template id="contentFields-quote">
+        <div>
+            <label class="form-label required">Quote</label>
+            <textarea class="form-control content-quote" rows="2" required></textarea>
+            <label class="form-label mt-2">Attribution</label>
+            <input type="text" class="form-control content-attribution" maxlength="80">
+        </div>
+    </template>
+    <template id="contentFields-embed">
+        <div>
+            <label class="form-label required">Embed Code (iframe, tweet, etc.)</label>
+            <textarea class="form-control content-embed" rows="3" required></textarea>
+        </div>
+    </template>
+    <!-- Bootstrap 5 JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SortableJS for drag-and-drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+
+        // --- CATEGORY LOADING (simulate fetch) ---
+
+        let categories = [];
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/categories/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Failed to load categories:', error);
+                return [];
+            }
+        }
+
+        async function loadTags(value) {
+            try {
+                const response = await fetch(`/categories/hashtags?q=${value}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Failed to load hashtags:', error);
+                return [];
+            }
+        }
+
+        let selectedCategories = [];
+
+        let data = {};
+
+        let subCategoriesHidden = document.getElementById('subcategoryIds');
+        async function initCategories() {
+            const loadedCategories = await loadCategories();
+            if (loadedCategories && loadedCategories.length > 0) {
+                for (const category of loadedCategories) {
+                    data[category.name] = category.subcategories || [];
+                }
+            }
+
+
+            const categoryList = document.getElementById("categoryList");
+            const subcategoryContainer = document.getElementById("subcategoryContainer");
+            let selectedSubcategory = null;
+
+            // Populate category list
+            Object.keys(data).forEach((category, index) => {
+                const button = document.createElement("button");
+                button.className = `list-group-item list-group-item-action ${index === 0 ? 'active' : ''}`;
+                button.textContent = category;
+                button.dataset.category = category;
+                categoryList.appendChild(button);
+
+                // Auto-load the first category
+                if (index === 0) loadSubcategories(category);
+            });
+
+            // Handle category click
+            categoryList.addEventListener("click", (e) => {
+                if (e.target.matches(".list-group-item")) {
+                    document.querySelectorAll("#categoryList .list-group-item").forEach(btn => btn.classList.remove("active"));
+                    e.target.classList.add("active");
+                    loadSubcategories(e.target.dataset.category);
+                }
+            });
+        }
+
+        // Load subcategories with radio buttons
+        function loadSubcategories(category) {
+            const subs = data[category];
+            subcategoryContainer.innerHTML = `
+    <h6>${category} Subcategories</h6>
+    <form id="subcategoryForm" class="mt-2">
+      ${subs.map(sub => `
+        <div class="form-check">
+          <input class="form-check-input" 
+                 ${selectedCategories.some(cat => parseInt(cat.id) === parseInt(sub.id)) ? 'checked' : ''} 
+                 type="checkbox" 
+                 id="sub-${sub.id}" 
+                 value="${sub.id}" 
+                 data-name="${sub.name}">
+          <label class="form-check-label" for="sub-${sub.id}">
+            ${sub.name}
+          </label>
+        </div>
+      `).join('')}
+    </form>
+  `;
+
+            document.querySelector("#subcategoryForm").addEventListener("change", () => {
+                const checkboxes = document.querySelectorAll("#subcategoryForm .form-check-input");
+
+                const selected = Array.from(checkboxes)
+                    .filter(input => input.checked)
+                    .map(input => ({
+                        id: parseInt(input.value),
+                        name: input.dataset.name
+                    }));
+
+                const unselected = Array.from(checkboxes)
+                    .filter(input => !input.checked)
+                    .map(input => ({
+                        id: parseInt(input.value),
+                        name: input.dataset.name
+                    }));
+
+                const removeCategories = selectedCategories.filter(cat => unselected.some(un => parseInt(un.id) === parseInt(cat.id)));
+                // Remove unselected categories from selectedCategories
+                removeCategories.forEach(catToRemove => {
+                    selectedCategories = selectedCategories.filter(cat => cat.id !== catToRemove.id);
+                });
+
+
+                selected.forEach(sub => {
+                    if (!selectedCategories.some(cat => cat.id === sub.id)) {
+                        selectedCategories.push(sub);
+                    }
+                });
+
+                // Update UI to reflect selected subcategories
+                document.getElementById("allSelectedCategories").innerHTML = `
+      <ul class="list-inline mt-2">
+        ${selectedCategories.map(cat => `<li class="list-inline-item"><span class="badge bg-secondary">${cat.name}</span></li>`).join('')}
+      </ul>
+    `;
+                subCategoriesHidden.value = JSON.stringify(selectedCategories.map(cat => cat.id));
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initCategories();
+            const catSelect = document.getElementById('categoryId');
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.name;
+                catSelect.appendChild(opt);
+            });
+        });
+
+        // --- HASHTAGS ---
+        let hashtags = [];
+        const hashtagsInput = document.getElementById('hashtagsInput');
+        const hashtagsList = document.getElementById('hashtagsList');
+        const hashtagsHidden = document.getElementById('hashtags');
+        
+        const suggestionBox = document.getElementById("hashtagSuggestions");
+
+        hashtagsInput.addEventListener("input", async() => {
+            const value = hashtagsInput.value.toLowerCase();
+            
+            const filtered = await loadTags(value);
+
+            if (!value || filtered.length === 0) {
+                suggestionBox.style.display = "none";
+                return;
+            }
+
+            suggestionBox.innerHTML = filtered
+                .map(tag => `<a href="#" class="list-group-item list-group-item-action">#${tag}</a>`)
+                .join('');
+            suggestionBox.style.display = "block";
+        });
+
+        // Handle selection
+        suggestionBox.addEventListener("click", (e) => {
+            if (e.target.tagName === 'A') {
+                e.preventDefault();
+                const selectedTag = e.target.textContent;
+                addHashtag(selectedTag);
+                hashtagsInput.value = '';
+                suggestionBox.style.display = 'none';
+            }
+        });
+
+        hashtagsInput.addEventListener('keydown', function (e) {
+            if ((e.key === 'Enter' || e.key === ',') && this.value.trim()) {
+                e.preventDefault();
+                addHashtag(this.value.trim());
+                this.value = '';
+                suggestionBox.style.display = 'none';
+            }
+        });
+
+        function addHashtag(tag) {
+            tag = tag.replace(/^#/, '').replace(/\s+/g, '').toLowerCase();
+            if (!tag || hashtags.includes(tag) || hashtags.length >= 8) return;
+            hashtags.push(tag);
+            renderHashtags();
+        }
+        function removeHashtag(tag) {
+            hashtags = hashtags.filter(t => t !== tag);
+            renderHashtags();
+        }
+        function renderHashtags() {
+            hashtagsList.innerHTML = '';
+            hashtags.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-primary hashtag-badge';
+                badge.textContent = '#' + tag;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'btn-close btn-close-white btn-sm ms-1';
+                btn.onclick = () => removeHashtag(tag);
+                badge.appendChild(btn);
+                hashtagsList.appendChild(badge);
+            });
+            hashtagsHidden.value = JSON.stringify(hashtags);
+        }
+
+        // --- ARTICLE IMAGE PREVIEW ---
+        document.getElementById('image').addEventListener('change', function (e) {
+            const file = this.files[0];
+            const preview = document.getElementById('imagePreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('d-none');
+            }
+        });
+
+        // --- SECTION/CONTENT DYNAMIC HANDLING ---
+        let sectionIndex = 0;
+        const sectionsContainer = document.getElementById('sectionsContainer');
+        document.getElementById('addSectionBtn').addEventListener('click', () => addSection());
+
+        function addSection(order = null, contents = []) {
+            const tmpl = document.getElementById('sectionTemplate').content.cloneNode(true);
+            const sectionCard = tmpl.querySelector('.section-card');
+            sectionCard.dataset.sectionIndex = sectionIndex;
+            sectionCard.querySelector('.section-number').textContent = sectionIndex + 1;
+            const orderInput = sectionCard.querySelector('.section-order');
+            orderInput.value = order !== null ? order : sectionIndex + 1;
+            // Section controls
+            sectionCard.querySelector('.move-up').onclick = () => moveSection(sectionCard, -1);
+            sectionCard.querySelector('.move-down').onclick = () => moveSection(sectionCard, 1);
+            sectionCard.querySelector('.remove-section').onclick = () => removeSection(sectionCard);
+            // Add content
+            const contentsContainer = sectionCard.querySelector('.contents-container');
+            sectionCard.querySelector('.add-content-btn').onclick = () => addContent(contentsContainer, sectionIndex);
+            // Add initial contents if any
+            if (Array.isArray(contents)) {
+                contents.forEach(content => addContent(contentsContainer, sectionIndex, content));
+            }
+            sectionsContainer.appendChild(sectionCard);
+            sectionIndex++;
+            updateSectionNumbers();
+            makeSectionsSortable();
+        }
+        function removeSection(sectionCard) {
+            sectionCard.remove();
+            updateSectionNumbers();
+        }
+        function moveSection(sectionCard, direction) {
+            const parent = sectionsContainer;
+            const sections = Array.from(parent.children);
+            const idx = sections.indexOf(sectionCard);
+            if (idx < 0) return;
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= sections.length) return;
+            parent.insertBefore(sectionCard, direction > 0 ? sections[newIdx].nextSibling : sections[newIdx]);
+            updateSectionNumbers();
+        }
+        function updateSectionNumbers() {
+            Array.from(sectionsContainer.children).forEach((section, i) => {
+                section.querySelector('.section-number').textContent = i + 1;
+                section.querySelector('.section-order').value = i + 1;
+            });
+        }
+        function makeSectionsSortable() {
+            if (sectionsContainer.sortable) return;
+            sectionsContainer.sortable = Sortable.create(sectionsContainer, {
+                handle: '.drag-handle',
+                animation: 150,
+                onEnd: updateSectionNumbers
+            });
+        }
+
+        // --- CONTENT HANDLING ---
+        function addContent(contentsContainer, sectionIdx, contentData = null) {
+            const tmpl = document.getElementById('contentTemplate').content.cloneNode(true);
+            const contentItem = tmpl.querySelector('.content-item');
+            contentItem.dataset.contentIndex = contentsContainer.children.length;
+            // Content type select
+            let type = contentData ? contentData.type : '';
+            let content = contentData ? contentData.content : {};
+            const typeSelectTmpl = document.getElementById('contentTypeSelectTemplate').content.cloneNode(true);
+            const typeSelect = typeSelectTmpl.querySelector('select');
+            contentItem.querySelector('.content-type-label').appendChild(typeSelect);
+            typeSelect.value = type;
+            typeSelect.onchange = () => renderContentFields(contentItem, typeSelect.value, null);
+            // Content controls
+            contentItem.querySelector('.move-up').onclick = () => moveContent(contentItem, -1);
+            contentItem.querySelector('.move-down').onclick = () => moveContent(contentItem, 1);
+            contentItem.querySelector('.remove-content').onclick = () => contentItem.remove();
+            // Render fields if type is set
+            renderContentFields(contentItem, type, content);
+            contentsContainer.appendChild(contentItem);
+            makeContentsSortable(contentsContainer);
+        }
+        function moveContent(contentItem, direction) {
+            const parent = contentItem.parentElement;
+            const items = Array.from(parent.children);
+            const idx = items.indexOf(contentItem);
+            if (idx < 0) return;
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= items.length) return;
+            parent.insertBefore(contentItem, direction > 0 ? items[newIdx].nextSibling : items[newIdx]);
+        }
+        function makeContentsSortable(contentsContainer) {
+            if (contentsContainer.sortable) return;
+            contentsContainer.sortable = Sortable.create(contentsContainer, {
+                handle: '.drag-handle',
+                animation: 150
+            });
+        }
+        function renderContentFields(contentItem, type, content) {
+            const fieldsContainer = contentItem.querySelector('.content-fields');
+            fieldsContainer.innerHTML = '';
+            if (!type) return;
+            const tmpl = document.getElementById('contentFields-' + type);
+            if (!tmpl) return;
+            const fields = tmpl.content.cloneNode(true);
+            // Populate fields if editing
+            if (type === 'text' && content) {
+                fields.querySelector('.content-text').value = content.text || '';
+            }
+            if (type === 'image' && content) {
+                // No file, but can set caption
+                fields.querySelector('.content-caption').value = content.caption || '';
+            }
+
+            if (type === 'video' && content) {
+                fields.querySelector('.content-caption').value = content.caption || '';
+            }
+            if (type === 'carousel' && content) {
+                // No file, but can set captions
+                fields.querySelector('.content-carousel-captions').value = (content.captions || []).join('\n');
+            }
+            if (type === 'quote' && content) {
+                fields.querySelector('.content-quote').value = content.quote || '';
+                fields.querySelector('.content-attribution').value = content.attribution || '';
+            }
+            if (type === 'head' && content) {
+                fields.querySelector('.content-head').value = content.head || '';
+                fields.querySelector('.content-level').value = content.level || '';
+            }
+            if (type === 'list' && content) {
+
+                fields.querySelector('.content-list').value = content.quote || '';
+                fields.querySelector('.content-is-ordered').checked = content.is_ordered || false;
+            }
+            if (type === 'embed' && content) {
+                fields.querySelector('.content-embed').value = content.embed || '';
+            }
+            // Image preview for image
+            if (type === 'image') {
+                const imgInput = fields.querySelector('.content-image');
+                const imgPreview = fields.querySelector('.img-preview');
+                imgInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = e => {
+                            imgPreview.src = e.target.result;
+                            imgPreview.classList.remove('d-none');
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        imgPreview.classList.add('d-none');
+                    }
+                });
+            }
+            // Carousel preview
+            if (type === 'carousel') {
+                const mediaInput = fields.querySelector('.content-carousel-media');
+                const previewDiv = fields.querySelector('.carousel-preview');
+                mediaInput.addEventListener('change', function () {
+                    previewDiv.innerHTML = '';
+                    Array.from(this.files).forEach(file => {
+                        if (file.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.className = 'rounded me-2 mb-2';
+                            img.style.maxHeight = '80px';
+                            const reader = new FileReader();
+                            reader.onload = e => img.src = e.target.result;
+                            reader.readAsDataURL(file);
+                            previewDiv.appendChild(img);
+                        } else if (file.type.startsWith('video/')) {
+                            const vid = document.createElement('video');
+                            vid.className = 'rounded me-2 mb-2';
+                            vid.style.maxHeight = '80px';
+                            vid.controls = true;
+                            const reader = new FileReader();
+                            reader.onload = e => vid.src = e.target.result;
+                            reader.readAsDataURL(file);
+                            previewDiv.appendChild(vid);
+                        }
+                    });
+                });
+            }
+            fieldsContainer.appendChild(fields);
+        }
+
+        // --- FORM SUBMISSION ---
+        document.getElementById('articleForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const form = this;
+            form.classList.add('was-validated');
+            if (!form.checkValidity()) return;
+            // Gather fields
+            const formData = new FormData();
+            formData.append('title', form.title.value.trim());
+            formData.append('excerpt', form.excerpt.value.trim());
+            formData.append('status', form.status.value);
+            formData.append('read_duration', form.read_duration.value || '0');
+            formData.append('published_at', form.published_at.value);
+            formData.append('subcategories', subCategoriesHidden.value);
+            formData.append('hashtags', hashtagsHidden.value);
+            // Article image
+            if (form.image.files[0]) {
+                formData.append('image', form.image.files[0]);
+            }
+            // Sections
+            const sections = [];
+            Array.from(sectionsContainer.children).forEach((sectionCard, sIdx) => {
+                const order = parseInt(sectionCard.querySelector('.section-order').value, 10);
+                const contents = [];
+                const contentsContainer = sectionCard.querySelector('.contents-container');
+                Array.from(contentsContainer.children).forEach((contentItem, cIdx) => {
+                    const type = contentItem.querySelector('.content-type-select').value;
+                    let content = {};
+                    if (type === 'text') {
+                        content = { text: contentItem.querySelector('.content-text').value };
+                    } else if (type === 'image') {
+                        const imgInput = contentItem.querySelector('.content-image');
+                        if (imgInput.files[0]) {
+                            formData.append(`section${sIdx}-content${cIdx}-image`, imgInput.files[0]);
+                        }
+                        content = { caption: contentItem.querySelector('.content-caption').value };
+                    } else if (type === 'video') {
+                        const vidInput = contentItem.querySelector('.content-video');
+                        if (vidInput.files[0]) {
+                            formData.append(`section${sIdx}-content${cIdx}-video`, vidInput.files[0]);
+                        }
+                        content = { caption: contentItem.querySelector('.content-caption').value };
+                    } else if (type === 'carousel') {
+                        const mediaInput = contentItem.querySelector('.content-carousel-media');
+                        const captions = contentItem.querySelector('.content-carousel-captions').value.split('\n').map(s => s.trim());
+                        Array.from(mediaInput.files).forEach((file, i) => {
+                            formData.append(`section${sIdx}-content${cIdx}-carrousel-image`, file);
+                        });
+                        formData.append(`section${sIdx}-content${cIdx}-captions`, JSON.stringify(captions));
+                        content = {}; // Will be handled in backend
+                    } else if (type === 'quote') {
+                        content = {
+                            quote: contentItem.querySelector('.content-quote').value,
+                            attribution: contentItem.querySelector('.content-attribution').value
+                        };
+                    } else if (type === 'head') {
+                        content = {
+                            head: contentItem.querySelector('.content-head').value,
+                            level: contentItem.querySelector('.content-level').value
+                        };
+                    } else if (type === 'list') {
+                        content = {
+                            items: contentItem.querySelector('.content-list').value.split('\n').map(s => s.trim()),
+                            is_ordered: contentItem.querySelector('.content-is-ordered').checked
+                        };
+                    } else if (type === 'embed') {
+                        content = { embed: contentItem.querySelector('.content-embed').value };
+                    } else if (type === 'embed') {
+                        content = { embed: contentItem.querySelector('.content-embed').value };
+                    }
+                    contents.push({ type, content: JSON.stringify(content) });
+                });
+                sections.push({ order, contents });
+            });
+            formData.append('sections', JSON.stringify(sections));
+            // Submit (simulate AJAX)
+            showAlert('Submitting article...', 'info');
+            try {
+                // Replace with actual backend endpoint
+                const res = await fetch('/article', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showAlert('Article created successfully!', 'success');
+                    form.reset();
+                    hashtags = [];
+                    renderHashtags();
+                    sectionsContainer.innerHTML = '';
+                } else {
+                    showAlert(data.error || 'Failed to create article.', 'danger');
+                }
+            } catch (err) {
+                showAlert('Network error. Please try again.', 'danger');
+            }
+        });
+
+        // --- ALERTS ---
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        }
+    </script>
+</body>
+
+</html>

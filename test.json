@@ -1,0 +1,11 @@
+{
+
+  "table": {},
+  "headers": ["Platform", "Best For", "Tips"],
+  "rows": [
+    ["Instagram", "Comments & Stories", "Use voice notes or quick videos in replies"],
+    ["Twitter/X", "Casual, witty replies", "Jump into fan threads organically"],
+    ["TikTok", "Duets, comments", "React to fan edits or stitch reactions"],
+    ["Threads", "More thoughtful replies", "Treat it like micro-blogging"]
+  ]
+}
