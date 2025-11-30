@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Music - Celebrity Blog</title>
+
+    <!--SEO TAGS -->
+    <title>Dramaspots - Get free MP3 Music &amp;MP4 Video Downloads Online</title>
+    <meta name="title" content="Dramaspots - Free MP3 Music &amp; MP4 Video Downloads Online">
+    <meta name="description"
+        content="Stream and download MP3 songs and MP4 videos for free at dramaspots.com/music. No Account needed. Get high-quality and fast downloads on any device.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Dramaspots">
+    <meta property="og:title" content="Dramaspots - Free MP3 Music &amp; MP4 Video Downloads Online">
+    <meta property="og:description"
+        content="Stream and download MP3 songs and MP4 videos for free at dramaspots.com/music. No Account needed. Get high-quality and fast downloads on any device.">
+    <meta property="og:locale" content="en_ZA">
+    <meta property="og:image" content="https://dramaspots.com/assets/logo1.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Dramaspots - Free MP3 Music &amp; MP4 Video Downloads Online">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:url" content="https://dramaspots.com/music">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@dramaSpot254">
+    <meta name="twitter:title" content="Dramaspots - Free MP3 Music &amp; MP4 Video Downloads Online">
+    <meta name="twitter:description"
+        content="Stream and download MP3 songs and MP4 videos for free at dramaspots.com/music. No Account needed. Get high-quality and fast downloads on any device.">
+    <meta name="twitter:creator" content="@dramaSpot254">
+    <meta name="twitter:image" content="https://dramaspots.com/assets/logo1.png">
+    <meta name="twitter:label1" content="Author">
+    <meta name="twitter:data1" content="Dramaspots">
+    <meta name="twitter:label2" content="Estimated Reading Time">
+    <meta name="twitter:data2" content="2 minutes">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dramaspots.com/music">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/logo1.png" sizes="32x32">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/logo1.png">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Music | Drama Spots",
+    "description": "Stream and download MP3 songs and MP4 videos for free at dramaspots.com/music. No Account needed. Get high-quality and fast downloads on any device.",
+    "url": "https://dramaspots.com/music"
+  }
+  </script>
+    <!-- JSON-LD Structured Data: Breadcrumb -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://dramaspots.com"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Music",
+              "item": "https://dramaspots.com/music"
+            }
+          ]
+        }
+        </script>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f8f9fa;
+        }
+
+        .btn-primary,
+        .bg-primary {
+            background: #d11e5a !important;
+            border: #d11e5a;
+        }
+
+        .text-primary {
+            color: #d11e5a !important;
+        }
+
+        .music-card {
+            transition: box-shadow 0.2s;
+        }
+
+        .music-card:hover {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .music-thumb {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: .5rem .5rem 0 0;
+        }
+
+        .music-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1b1b1d;
+            margin-bottom: .25rem;
+        }
+
+        .music-meta {
+            font-size: .95rem;
+            color: #1b1b1d;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+
+        .search-bar {
+            max-width: 500px;
+        }
+
+        .filter-select {
+            min-width: 140px;
+        }
+
+        @media (max-width: 575.98px) {
+            .music-thumb {
+                height: 120px;
+            }
+        }
+
+        .music-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .music-link:hover .music-title {
+            color: #0d6efd;
+        }
+
+        .badge-genre {
+            background: #e9ecef;
+            color: #1b1b1d;
+            font-size: .85em;
+            margin-right: .25em;
+        }
+
+        .music-card-footer {
+            background: #f1f3f5;
+            border-top: 1px solid #e9ecef;
+            font-size: .9em;
+        }
+
+        .music-controls {
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+        }
+
+        .music-controls button {
+            border: none;
+            background: none;
+            color: #0d6efd;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .music-controls button:focus {
+            outline: none;
+        }
+
+        .music-year {
+            font-weight: 500;
+            color: #1b1b1d;
+        }
+
+        .music-artist {
+            color: #1b1b1d;
+        }
+
+        .music-list-header {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1b1b1d;
+        }
+
+        .music-sort-label {
+            font-weight: 500;
+            margin-right: .5rem;
+        }
+
+        .music-pagination-info {
+            font-size: .95em;
+            color: #1b1b1d;
+            margin-top: .5rem;
+        }
+
+        .music-breadcrumb {
+            background: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .music-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
+            content: ">";
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.966);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+            transition: opacity 0.2s ease;
+        }
+
+        .music-section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #d11e5a;
+        }
+
+        .btn-outline-primary {
+            color: #d11e5a;
+            border-color: #d11e5a;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #d11e5a;
+            border-color: #d11e5a;
+            color: #fff;
+        }
+
+        .sectionss {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+
+        .sectionss .col {
+            flex: 0 0 260px;
+        }
+
+        .sectionss::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        .music-slider-thumb {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+
+            color: #1b1b1d;
+        }
+
+        .music-slider-duration {
+            font-size: .95em;
+            color: #1b1b1d;
+        }
+
+        .pad-3 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .lists .card {
+            background: #d11e5a;
+            color: #fff;
+            border: none;
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+
+        .lists .card:hover {
+            background: #b71c4a;
+            box-shadow: 0 4px 16px rgba(209, 30, 90, 0.12);
+        }
+
+        .lists .card-title {
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .rows {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .rows>col {
+            flex: 1 1 auto;
+        }
+
+        @media (max-width: 768px) {
+            .sectionss .card {
+                margin-bottom: 1rem;
+            }
+
+            .sectionss .card-title {
+                font-size: 0.75rem;
+            }
+
+            .sectionss .card-text {
+                font-size: 0.75rem;
+            }
+
+
+            .music-slider-card {
+                width: 25%;
+                border-radius: 1rem;
+            }
+
+            .music-slider-card:hover {
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+            }
+
+            .music-slider-thumb {
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+            }
+
+            .music-slider-title {
+                font-size: 0.65rem;
+                font-weight: 600;
+                color: #1b1b1d;
+                margin-bottom: .25rem;
+            }
+
+            .music-slider-duration {
+                font-size: .55em;
+                color: #1b1b1d;
+            }
+        }
+    </style>
+
+    <style>
+        #list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .card-box {
+            flex: 1 1 calc(100% - 2rem);
+            max-width: 100%;
+        }
+
+        @media (min-width: 576px) {
+            .card-box {
+                flex: 1 1 calc(50% - 2rem);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .card-box {
+                flex: 1 1 calc(33.333% - 2rem);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .card-box {
+                flex: 1 1 calc(25% - 2rem);
+            }
+        }
+
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-color-0 {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+        }
+
+        .card-color-1 {
+            background: linear-gradient(to right, #ff6a00, #ee0979);
+        }
+
+        .card-color-2 {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+        }
+
+        .card-color-3 {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+        }
+
+        .card-color-4 {
+            background: linear-gradient(to right, #f7971e, #ffd200);
+        }
+
+        .card-bodyss {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            color: white;
+            border-radius: 12px;
+        }
+
+        a.text-decoration-none {
+            text-decoration: none !important;
+        }
+
+        .text_primary {
+            color: rgb(71, 110, 216) !important;
+        }
+
+        .btn-outline_primary {
+            color: rgb(71, 110, 216) !important;
+            border-color: rgb(71, 110, 216) !important;
+        }
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Drama Spots</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/music/my-playlist">My PlayList</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#genres">Genres</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#moods">Moods</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container pb-5">
+        <h1 class=" pt-2 fw-bolder">Music</h1>
+        <!-- Search, Sort, Filter, and Music List (legacy) -->
+        <form id="searchForm" class="d-flex search-bar position-relative my-2">
+            <input class="form-control me-2" type="search" id="searchInput"
+                placeholder="Search by title, artist, genre..." aria-label="submit Search music" autocomplete="off">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+
+            <!-- Suggestions Dropdown -->
+            <ul id="suggestionsBox" class="list-group position-absolute w-100 mt-5 shadow"
+                style="z-index: 1000; display: none;"></ul>
+        </form>
+
+        <div class="align-center m-2">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+<!-- big -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4436674424567426"
+     data-ad-slot="4449861684"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        </div>
+
+        <!-- New Releases Section -->
+        <section id="releasesSection" class="mb-5" style="display: none;">
+            <div class="music-section-title mb-3">New Releases</div>
+            <div class="row flex-wrap g-1 sectionss" id="newReleasesRow">
+                <!-- JS will populate -->
+            </div>
+        </section>
+
+        <div class="loader w-100 d-flex justify-content-center align-items-center" id="loadingOverlay">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+                <div class="align-center m-2">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+<!-- big -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4436674424567426"
+     data-ad-slot="4449861684"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        </div>
+        <!-- Featured Section -->
+        <section id="featuredSection" class="mb-5" style="display: none;">
+            <div class="music-section-title mb-3">Featured</div>
+            <div class="row flex-wrap g-1 sectionss" id="featuredRow">
+                <!-- JS will populate -->
+            </div>
+        </section>
+
+                <div class="align-center m-2">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+<!-- big -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4436674424567426"
+     data-ad-slot="4449861684"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        </div>
+
+        <!-- Genres Section -->
+        <div id="genres" class="pad-3">
+            <div class="mans d-flex justify-content-center pt-5">
+                <h2 class="text-center mb-4">
+                    <i class="fa-solid fa-music"></i>
+                    Genres
+                </h2>
+            </div>
+            <div class="container text-center mb-2">
+                <p>Explore Music Genres That Move You: From Classic Rock to Modern Pop. Discover a World of Diverse
+                    Sounds and Find the Perfect Genre to Match Your Musical Taste.
+                </p>
+            </div>
+            <div class="container py-4 lists">
+                <div class="rows" id="genresRows">
+                    <!-- JS will populate genres here -->
+                </div>
+            </div>
+        </div>
+                <div class="align-center m-2">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+<!-- big -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4436674424567426"
+     data-ad-slot="4449861684"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        </div>
+
+        <!-- Moods Section -->
+        <div id="moods" class="pad-3 pb-5">
+            <div class="mans d-flex justify-content-center pt-5">
+                <h2 class="text-center mb-4">
+                    <i class="fa-solid fa-music"></i>
+                    Moods
+                </h2>
+            </div>
+            <div class="container text-center mb-2">
+                <p>Discover Your Perfect Musical Mood: From Energetic Workouts to Peaceful Sleep. Find Curated Playlists
+                    That Match Every Moment of Your Day and Every State of Mind.
+                </p>
+            </div>
+            <div class="container  lists">
+                <div class="rows" id="moodsRows">
+                    <!-- JS will populate moods here -->
+                </div>
+            </div>
+        </div>
+                <div class="align-center m-2">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+<!-- big -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4436674424567426"
+     data-ad-slot="4449861684"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-danger text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Brand & Description -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Dramaspot</h6>
+                    <p class="small">
+                        Your #1 source for the latest in celebrity relationships, breakups, and Hollywood news.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Sections</h6>
+                    <ul class="list-unstyled small">
+                        <li class="my-2"><a href="/" class="footer-link text-white text-decoration-none">Home</a></li>
+                        <li class="my-2"><a href="/category/Relationships%20&%20Love%20Life"
+                                class="footer-link text-white text-decoration-none">Relationships & Love Life</a></li>
+                        <li class="my-2"><a href="/category/Red%20Carpet%20&%20Events"
+                                class="footer-link text-white text-decoration-none">Red Carpet & Events</a></li>
+                        <li class="my-2"><a href="/category/News" class="footer-link text-white text-decoration-none">News</a></li>
+                        <li class="my-2"><a href="/about" class="footer-link text-white text-decoration-none">About</a></li>
+                        <li class="my-2"><a href="/contact" class="footer-link text-white text-decoration-none">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Pages -->
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Legal</h6>
+                    <ul class="list-unstyled small">
+                        <li class="my-2"><a href="/terms" class="footer-link text-white text-decoration-none">Terms & Conditions</a>
+                        </li>
+                        <li class="my-2"><a href="/privacy" class="footer-link text-white text-decoration-none">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Signup -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold">Newsletter</h6>
+                    <form id="subsciptionForm" action="/newsletter/subscribe" method="POST"
+                        class="d-flex flex-column gap-2">
+                        <input name="email" type="email" class="form-control" placeholder="Your email" required>
+                        <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="border-light my-4">
+
+            <!-- Contact & Socials -->
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start small">
+                    <p class="mb-0">Email: <a href="mailto:dramaspots254@gmail.com"
+                            class="text-white">dramaspots254@gmail.com</a></p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="https://x.com/dramaSpot254" class="text-white text-decoration-none me-3"><i
+                            class="fab fa-x-twitter text-dark"></i> X</a>
+                    <a href="https://www.instagram.com/dramaspots254/" class="text-white text-decoration-none me-3"><i
+                            class="bi bi-instagram"></i> Instagram</a>
+                    <a href="https://www.youtube.com/@dramaspot-w2r" class="text-white text-decoration-none"><i
+                            class="bi bi-youtube "></i> YouTube</a>
+                    <a href="https://www.tiktok.com/@dramaspots254" class="text-white text-decoration-none"><i
+                            class="bi bi-tiktok text-dark"></i> Tiktok</a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center small mt-3">
+                &copy; 2025 Dramaspot. All rights reserved | Developed By <a class="text-light"
+                    href="https://lonatech.onrender.com/">Lonatech solutions</a>.
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Genres and moods arrays
+        const genres = [
+            { name: "African", slug: "african" },
+            { name: "Arabic", slug: "arabic" },
+            { name: "Blues", slug: "blues" },
+            { name: "Bollywood & Indian", slug: "bollywood-indian" },
+            { name: "Classical", slug: "classical" },
+            { name: "Country & Americana", slug: "country-americana" },
+            { name: "Dance & Electronic", slug: "dance-electronic" },
+            { name: "Decades", slug: "decades" },
+            { name: "Family", slug: "family" },
+            { name: "Folk & Acoustic", slug: "folk-acoustic" },
+            { name: "German hip-hop", slug: "german-hip-hop" },
+            { name: "German pop", slug: "german-pop" },
+            { name: "Hip-Hop", slug: "hip-hop" },
+            { name: "Indie & Alternative", slug: "indie-alternative" },
+            { name: "J-Pop", slug: "j-pop" },
+            { name: "Jazz", slug: "jazz" },
+            { name: "K-Pop", slug: "k-pop" },
+            { name: "Latin", slug: "latin" },
+            { name: "Mandopop & Cantopop", slug: "mandopop-cantopop" },
+            { name: "Metal", slug: "metal" },
+            { name: "Pop", slug: "pop" },
+            { name: "R & B & Soul", slug: "rb-soul" },
+            { name: "Reggae & Caribbean", slug: "reggae-caribbean" },
+            { name: "Rock", slug: "rock" },
+            { name: "Schlager", slug: "schlager" },
+            { name: "Soundtracks & Musicals", slug: "soundtracks-musicals" }
+        ];
+
+        const moods = [
+            { name: "Chill", slug: "chill" },
+            { name: "Commute", slug: "commute" },
+            { name: "Energize", slug: "energize" },
+            { name: "Feel good", slug: "feel-good" },
+            { name: "Focus", slug: "focus" },
+            { name: "Party", slug: "party" },
+            { name: "Romance", slug: "romance" },
+            { name: "Sad", slug: "sad" },
+            { name: "Sleep", slug: "sleep" },
+            { name: "Summer", slug: "summer" },
+            { name: "Workout", slug: "workout" }
+        ];
+
+        function renderList(arr, containerId, baseUrl, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            arr.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col mt-3';
+                col.innerHTML = `
+                    <a href="/music/${baseUrl}/${item.slug}" class="text-decoration-none">
+                        <div class="card rounded-3">
+                            <div class="card-bodyss d-flex align-items-center justify-content-center p-3">
+                                <span class="card-title mb-0 text-light">${item.name}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // Music sections (unchanged)
+        let musicSections = {
+            "New Releases": [],
+            "Featured": []
+        };
+        function renderMusicSlider(section, containerId) {
+            const row = document.getElementById(containerId);
+            row.innerHTML = '';
+
+            musicSections[section].forEach((item, i) => {
+    const col = document.createElement('div');
+    col.className = 'col-md-3 col-6';
+    col.innerHTML = `
+        <div class="card h-100 shadow-sm">
+            <img src="${item.img}" class="card-img-top" alt="${item.title}">
+            <div class="card-body">
+                <h5 class="card-title mb-1">${item.title}</h5>
+                <p class="card-text text-muted mb-2">
+                    <i class="far fa-clock"></i>&nbsp;${item.duration}
+                </p>
+                <div class="my-2 d-flex gap-2 align-items-center">
+                    <button class="btn btn-sm btn-outline-primary share-btn" data-platform="facebook"
+                        data-title="${item.title}" data-link="https://dramaspots.com/music/${item.link}" data-img="${item.img}">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-dark share-btn" data-platform="twitter"
+                        data-title="${item.title}" data-link="https://dramaspots.com/music/${item.link}" data-img="${item.img}">
+                        <i class="fab fa-x-twitter"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success share-btn" data-platform="whatsapp"
+                        data-title="${item.title}" data-link="https://dramaspots.com/music/${item.link}" data-img="${item.img}">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+                <a href="/music/${item.link}" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="fa-solid fa-play"></i> Listen
+                </a>
+            </div>
+        </div>
+    `;
+
+    row.appendChild(col);
+
+    // 👉 Insert ad after every 3rd item
+    if ((i + 1) % 3 === 0) {
+        const adCol = document.createElement('div');
+        adCol.className = 'col-md-3 col-6'; // keep same grid width
+        adCol.innerHTML = `
+            <div class="card h-100 ad-card d-flex justify-content-center align-items-center">
+                <ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="fluid"
+     data-ad-layout-key="-6l+dq-1j-5g+pt"
+     data-ad-client="ca-pub-4436674424567426"
+     data-ad-slot="5762943351"></ins>
+            </div>
+        `;
+        row.appendChild(adCol);
+
+        try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (e) {
+            console.warn("AdSense error:", e);
+        }
+    }
+});
+
+// Event listeners for share buttons (after loop so they attach once)
+document.querySelectorAll('.share-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const platform = button.getAttribute('data-platform');
+        const title = encodeURIComponent(button.getAttribute('data-title'));
+        const link = encodeURIComponent(button.getAttribute('data-link'));
+        const img = encodeURIComponent(button.getAttribute('data-img'));
+
+        let url = '';
+        switch (platform) {
+            case 'facebook':
+                url = `https://www.facebook.com/sharer/sharer.php?u=${link}&quote=${title}`;
+                break;
+            case 'twitter':
+                url = `https://twitter.com/intent/tweet?url=${link}&text=${title}`;
+                break;
+            case 'whatsapp':
+                url = `https://wa.me/?text=${title}%0A${link}`;
+                break;
+        }
+
+        if (url) {
+            window.open(url, '_blank', 'noopener,noreferrer,width=600,height=500');
+        }
+    });
+});
+
+
+            
+            if (containerId === 'newReleasesRow') {
+                document.getElementById('releasesSection').style.display = 'block'; // Show new releases section
+            } else if (containerId === 'featuredRow') {
+                document.getElementById('featuredSection').style.display = 'block'; // Show featured section
+            }
+            document.getElementById('loadingOverlay').classList.add('d-none'); // Hide loading overlay
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            currentSearch = document.getElementById('searchInput').value.trim();
+            currentPage = 1;
+            renderMusicList();
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.music-controls button')) {
+                e.preventDefault();
+                const btn = e.target.closest('button');
+                if (btn.title === 'Play') {
+                    const link = btn.getAttribute('data-link');
+                    window.location.href = `/music/${link}`;
+                } else if (btn.title === 'Add to Favorites') {
+                    alert('Add to Favorites functionality is not implemented in this demo.');
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            // Render genres and moods dynamically
+            renderList(genres, 'genresRows', 'genre', 'genre');
+            renderList(moods, 'moodsRows', 'mood', 'mood');
+
+            // Music sections
+            musicSections = await fetch('/music/songs/home').then(res => res.json());
+            renderMusicSlider("New Releases", "newReleasesRow");
+            renderMusicSlider("Featured", "featuredRow");
+        });
+   
+    </script>
+    <script>
+        const input = document.getElementById('searchInput');
+        const suggestionsBox = document.getElementById('suggestionsBox');
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                window.location.href = `/music/search?query=${query}`;
+            } else {
+                alert('Please enter a search term');
+            }
+        });
+
+        input.addEventListener('input', () => {
+            const query = input.value.trim();
+            if (query.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            // Remove old JSONP script
+            const oldScript = document.getElementById('jsonpScript');
+            if (oldScript) oldScript.remove();
+
+            // Create JSONP request
+            const script = document.createElement('script');
+            script.id = 'jsonpScript';
+            script.src = `https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+            document.body.appendChild(script);
+        });
+
+        // JSONP callback
+        function handleSuggestions(data) {
+            const suggestions = data[1]; // Array of [suggestion, number]
+            suggestionsBox.innerHTML = '';
+
+            if (!Array.isArray(suggestions) || suggestions.length === 0) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            suggestions.forEach(([text]) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item list-group-item-action';
+                li.textContent = text;
+                li.addEventListener('click', () => {
+                    input.value = text;
+                    suggestionsBox.style.display = 'none';
+                    window.location.href = `/music/search?query=${text}`;
+                });
+                suggestionsBox.appendChild(li);
+            });
+
+            suggestionsBox.style.display = 'block';
+        }
+
+
+        // Hide suggestions on outside click
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('searchForm').contains(e.target)) {
+                suggestionsBox.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

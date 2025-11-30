@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cab User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: #343a40;
+            color: #fff;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            color: #fff;
+            background: #495057;
+        }
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #fff;
+        }
+        .dashboard-card {
+            border-radius: 1rem;
+        }
+        .table-responsive {
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .modal-header {
+            background: #343a40;
+            color: #fff;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #495057;
+        }
+        .nav-tabs .nav-link.active {
+            background: #343a40;
+            color: #fff;
+        }
+        .nav-tabs .nav-link {
+            color: #343a40;
+        }
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #dc3545;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+        }
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 1rem 0;
+            background: #23272b;
+            text-align: center;
+        }
+        .sidebar-footer a {
+            color: #adb5bd;
+            text-decoration: none;
+        }
+        .sidebar-footer a:hover {
+            color: #fff;
+        }
+        .settings-icon {
+            font-size: 1.2rem;
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            color: #0d6efd;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .avatar-sm {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .form-switch .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .progress-bar {
+            background-color: #0d6efd;
+        }
+        .activity-timeline {
+            list-style: none;
+            padding-left: 0;
+        }
+        .activity-timeline li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .activity-timeline li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            background: #0d6efd;
+            border-radius: 50%;
+        }
+        .activity-timeline li:last-child {
+            margin-bottom: 0;
+        }
+        .activity-timeline .timestamp {
+            font-size: 0.85rem;
+            color: #adb5bd;
+        }
+        .sidebar .nav-link .bi {
+            margin-right: 0.5rem;
+        }
+        @media (max-width: 991.98px) {
+            .sidebar {
+                min-height: auto;
+                position: static;
+            }
+            .sidebar-footer {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar -->
+            <nav class="col-auto col-lg-2 px-0 sidebar d-flex flex-column position-relative">
+                <div class="d-flex flex-column align-items-center py-4">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="profile-img mb-2">
+                    <h5 class="mb-0">John Doe</h5>
+                    <span class="text-muted small">Premium User</span>
+                </div>
+                <ul class="nav nav-pills flex-column mb-auto px-2">
+                    <li class="nav-item">
+                        <a href="#dashboard" class="nav-link active" data-bs-toggle="tab">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#bookings" class="nav-link" data-bs-toggle="tab">
+                            <i class="bi bi-car-front"></i> My Bookings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#payments" class="nav-link" data-bs-toggle="tab">
+                            <i class="bi bi-wallet2"></i> Payments
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" class="nav-link" data-bs-toggle="tab">
+                            <i class="bi bi-person"></i> Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" class="nav-link" data-bs-toggle="tab">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#support" class="nav-link" data-bs-toggle="tab">
+                            <i class="bi bi-life-preserver"></i> Support
+                        </a>
+                    </li>
+                </ul>
+                <div class="sidebar-footer">
+                    <a href="#"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                </div>
+            </nav>
+            <!-- Main Content -->
+            <main class="col px-0 tab-content">
+                <!-- Dashboard Tab -->
+                <div class="tab-pane fade show active" id="dashboard">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+                        <a class="navbar-brand fw-bold" href="#">Cab Dashboard</a>
+                        <ul class="navbar-nav ms-auto align-items-center">
+                            <li class="nav-item position-relative">
+                                <a class="nav-link" href="#" data-bs-toggle="dropdown">
+                                    <i class="bi bi-bell fs-5"></i>
+                                    <span class="notification-badge">3</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle"></i> New ride booked</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-credit-card"></i> Payment received</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="bi bi-car-front"></i> Driver assigned</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item ms-3">
+                                <a class="nav-link" href="#"><img src="https://randomuser.me/api/portraits/men/32.jpg" class="avatar-sm" alt="User"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="container-fluid py-4">
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-3">
+                                <div class="card dashboard-card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-car-front card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Total Rides</h6>
+                                            <h4 class="mb-0">128</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card dashboard-card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-cash-stack card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Total Spent</h6>
+                                            <h4 class="mb-0">$2,340</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card dashboard-card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-star-fill card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Avg. Rating</h6>
+                                            <h4 class="mb-0">4.8</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card dashboard-card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-clock-history card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Upcoming Rides</h6>
+                                            <h4 class="mb-0">2</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recent Bookings Table -->
+                        <div class="row g-4">
+                            <div class="col-lg-8">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Recent Bookings</h5>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Date</th>
+                                                    <th>Pickup</th>
+                                                    <th>Drop</th>
+                                                    <th>Driver</th>
+                                                    <th>Status</th>
+                                                    <th>Fare</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>128</td>
+                                                    <td>2024-06-10</td>
+                                                    <td>Central Park</td>
+                                                    <td>Times Square</td>
+                                                    <td>
+                                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" class="avatar-sm me-2" alt="Driver">
+                                                        Mike
+                                                    </td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>$18.50</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>127</td>
+                                                    <td>2024-06-09</td>
+                                                    <td>5th Ave</td>
+                                                    <td>Brooklyn</td>
+                                                    <td>
+                                                        <img src="https://randomuser.me/api/portraits/women/65.jpg" class="avatar-sm me-2" alt="Driver">
+                                                        Anna
+                                                    </td>
+                                                    <td><span class="badge bg-warning text-dark">Scheduled</span></td>
+                                                    <td>$25.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>126</td>
+                                                    <td>2024-06-08</td>
+                                                    <td>Wall Street</td>
+                                                    <td>Harlem</td>
+                                                    <td>
+                                                        <img src="https://randomuser.me/api/portraits/men/23.jpg" class="avatar-sm me-2" alt="Driver">
+                                                        John
+                                                    </td>
+                                                    <td><span class="badge bg-danger">Cancelled</span></td>
+                                                    <td>$0.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>125</td>
+                                                    <td>2024-06-07</td>
+                                                    <td>JFK Airport</td>
+                                                    <td>Manhattan</td>
+                                                    <td>
+                                                        <img src="https://randomuser.me/api/portraits/men/12.jpg" class="avatar-sm me-2" alt="Driver">
+                                                        Steve
+                                                    </td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>$42.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>124</td>
+                                                    <td>2024-06-06</td>
+                                                    <td>Queens</td>
+                                                    <td>Bronx</td>
+                                                    <td>
+                                                        <img src="https://randomuser.me/api/portraits/women/34.jpg" class="avatar-sm me-2" alt="Driver">
+                                                        Lisa
+                                                    </td>
+                                                    <td><span class="badge bg-success">Completed</span></td>
+                                                    <td>$30.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card-footer text-end bg-white">
+                                        <a href="#bookings" class="btn btn-outline-primary btn-sm" data-bs-toggle="tab">View All</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Activity Timeline -->
+                            <div class="col-lg-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Recent Activity</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="activity-timeline">
+                                            <li>
+                                                <div>Ride completed from Central Park to Times Square</div>
+                                                <div class="timestamp">10 Jun, 2024 - 10:30 AM</div>
+                                            </li>
+                                            <li>
+                                                <div>Payment of $18.50 processed</div>
+                                                <div class="timestamp">10 Jun, 2024 - 10:35 AM</div>
+                                            </li>
+                                            <li>
+                                                <div>Ride scheduled from 5th Ave to Brooklyn</div>
+                                                <div class="timestamp">09 Jun, 2024 - 08:00 PM</div>
+                                            </li>
+                                            <li>
+                                                <div>Ride cancelled from Wall Street to Harlem</div>
+                                                <div class="timestamp">08 Jun, 2024 - 07:15 PM</div>
+                                            </li>
+                                            <li>
+                                                <div>Profile updated</div>
+                                                <div class="timestamp">07 Jun, 2024 - 05:10 PM</div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Quick Actions -->
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-plus-circle card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Book a New Ride</h6>
+                                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#bookRideModal">Book Now</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-wallet2 card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Add Funds</h6>
+                                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFundsModal">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi bi-chat-dots card-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Contact Support</h6>
+                                            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#supportModal">Message</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bookings Tab -->
+                <div class="tab-pane fade" id="bookings">
+                    <div class="container-fluid py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">My Bookings</h4>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookRideModal"><i class="bi bi-plus-circle"></i> Book New Ride</button>
+                        </div>
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Date</th>
+                                                <th>Pickup</th>
+                                                <th>Drop</th>
+                                                <th>Driver</th>
+                                                <th>Status</th>
+                                                <th>Fare</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>128</td>
+                                                <td>2024-06-10</td>
+                                                <td>Central Park</td>
+                                                <td>Times Square</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" class="avatar-sm me-2" alt="Driver">
+                                                    Mike
+                                                </td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td>$18.50</td>
+                                                <td>
+                                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>127</td>
+                                                <td>2024-06-09</td>
+                                                <td>5th Ave</td>
+                                                <td>Brooklyn</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/women/65.jpg" class="avatar-sm me-2" alt="Driver">
+                                                    Anna
+                                                </td>
+                                                <td><span class="badge bg-warning text-dark">Scheduled</span></td>
+                                                <td>$25.00</td>
+                                                <td>
+                                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>126</td>
+                                                <td>2024-06-08</td>
+                                                <td>Wall Street</td>
+                                                <td>Harlem</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/men/23.jpg" class="avatar-sm me-2" alt="Driver">
+                                                    John
+                                                </td>
+                                                <td><span class="badge bg-danger">Cancelled</span></td>
+                                                <td>$0.00</td>
+                                                <td>
+                                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>125</td>
+                                                <td>2024-06-07</td>
+                                                <td>JFK Airport</td>
+                                                <td>Manhattan</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/men/12.jpg" class="avatar-sm me-2" alt="Driver">
+                                                    Steve
+                                                </td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td>$42.00</td>
+                                                <td>
+                                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal">Details</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>124</td>
+                                                <td>2024-06-06</td>
+                                                <td>Queens</td>
+                                                <td>Bronx</td>
+                                                <td>
+                                                    <img src="https://randomuser.me/api/portraits/women/34.jpg" class="avatar-sm me-2" alt="Driver">
+                                                    Lisa
+                                                </td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td>$30.00</td>
+                                                <td>
+                                                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal">Details</button>
+                                                </td>
+                                            </tr>
+                                            <!-- More rows can be added here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Payments Tab -->
+                <div class="tab-pane fade" id="payments">
+                    <div class="container-fluid py-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">Payment History</h4>
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addFundsModal"><i class="bi bi-wallet2"></i> Add Funds</button>
+                        </div>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-wallet2 card-icon me-3"></i>
+                                            <div>
+                                                <h6 class="mb-1">Wallet Balance</h6>
+                                                <h4 class="mb-0">$120.00</h4>
+                                            </div>
+                                        </div>
+                                        <div class="progress mt-3" style="height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addFundsModal">Top Up</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-credit-card-2-front card-icon me-3"></i>
+                                            <div>
+                                                <h6 class="mb-1">Last Payment</h6>
+                                                <h4 class="mb-0">$18.50</h4>
+                                                <span class="text-muted small">10 Jun, 2024</span>
+                                            </div>
+                                        </div>
+                                        <div class="text-end mt-2">
+                                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#paymentDetailsModal">Details</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-cash-stack card-icon me-3"></i>
+                                            <div>
+                                                <h6 class="mb-1">Total Spent</h6>
+                                                <h4 class="mb-0">$2,340</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Payment Table -->
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Transactions</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Method</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1008</td>
+                                            <td>2024-06-10</td>
+                                            <td>Ride Payment</td>
+                                            <td>-$18.50</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>Wallet</td>
+                                            <td>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#paymentDetailsModal">Details</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>1007</td>
+                                            <td>2024-06-09</td>
+                                            <td>Wallet Top Up</td>
+                                            <td>+$50.00</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>Credit Card</td>
+                                            <td>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#paymentDetailsModal">Details</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>1006</td>
+                                            <td>2024-06-08</td>
+                                            <td>Ride Payment</td>
+                                            <td>-$25.00</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>Wallet</td>
+                                            <td>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#paymentDetailsModal">Details</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>1005</td>
+                                            <td>2024-06-07</td>
+                                            <td>Ride Payment</td>
+                                            <td>-$42.00</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>Wallet</td>
+                                            <td>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#paymentDetailsModal">Details</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>1004</td>
+                                            <td>2024-06-06</td>
+                                            <td>Wallet Top Up</td>
+                                            <td>+$100.00</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                            <td>PayPal</td>
+                                            <td>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#paymentDetailsModal">Details</button>
+                                            </td>
+                                        </tr>
+                                        <!-- More rows can be added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Profile Tab -->
+                <div class="tab-pane fade" id="profile">
+                    <div class="container-fluid py-4">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body text-center">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="profile-img mb-3" alt="User">
+                                        <h5>John Doe</h5>
+                                        <span class="text-muted">Premium User</span>
+                                        <div class="mt-3">
+                                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal"><i class="bi bi-pencil"></i> Edit Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow-sm mt-4">
+                                    <div class="card-body">
+                                        <h6>Contact Info</h6>
+                                        <ul class="list-unstyled mb-0">
+                                            <li><i class="bi bi-envelope me-2"></i> johndoe@email.com</li>
+                                            <li><i class="bi bi-phone me-2"></i> +1 234 567 8901</li>
+                                            <li><i class="bi bi-geo-alt me-2"></i> New York, USA</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Profile Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Full Name</label>
+                                                    <input type="text" class="form-control" value="John Doe" disabled>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" value="johndoe@email.com" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Phone</label>
+                                                    <input type="text" class="form-control" value="+1 234 567 8901" disabled>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Address</label>
+                                                    <input type="text" class="form-control" value="New York, USA" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Membership</label>
+                                                <input type="text" class="form-control" value="Premium" disabled>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Bio</label>
+                                                <textarea class="form-control" rows="3" disabled>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi vel consectetur.</textarea>
+                                            </div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal"><i class="bi bi-pencil"></i> Edit</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card shadow-sm mt-4">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Change Password</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Current Password</label>
+                                                    <input type="password" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">New Password</label>
+                                                    <input type="password" class="form-control">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Confirm Password</label>
+                                                    <input type="password" class="form-control">
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-outline-primary">Update Password</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings">
+                    <div class="container-fluid py-4">
+                        <h4 class="mb-4">Settings</h4>
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Notification Preferences</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="emailNotif" checked>
+                                        <label class="form-check-label" for="emailNotif">Email Notifications</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="smsNotif">
+                                        <label class="form-check-label" for="smsNotif">SMS Notifications</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="pushNotif" checked>
+                                        <label class="form-check-label" for="pushNotif">Push Notifications</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Privacy</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="showProfile" checked>
+                                        <label class="form-check-label" for="showProfile">Show my profile to drivers</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" id="shareLocation" checked>
+                                        <label class="form-check-label" for="shareLocation">Share my location for better service</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-primary">Update Privacy</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-0">Account</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal"><i class="bi bi-trash"></i> Delete Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Support Tab -->
+                <div class="tab-pane fade" id="support">
+                    <div class="container-fluid py-4">
+                        <h4 class="mb-4">Support</h4>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">Contact Support</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label class="form-label">Subject</label>
+                                                <input type="text" class="form-control" placeholder="Subject">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Message</label>
+                                                <textarea class="form-control" rows="4" placeholder="Describe your issue"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Send Message</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-white">
+                                        <h5 class="mb-0">FAQs</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="accordion" id="faqAccordion">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faq1">
+                                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                                                        How do I book a ride?
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        Go to the 'Book a New Ride' section and fill in your pickup and drop locations.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faq2">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                                        How can I add funds to my wallet?
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        Go to the 'Payments' tab and click on 'Add Funds' to top up your wallet.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faq3">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                                        How do I contact support?
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        Use the contact form on this page or email us at support@cabwebsite.com.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="faq4">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                                        Can I cancel a ride?
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body">
+                                                        Yes, you can cancel a scheduled ride from the 'My Bookings' tab.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- More FAQs can be added here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- Modals -->
+    <!-- Book Ride Modal -->
+    <div class="modal fade" id="bookRideModal" tabindex="-1" aria-labelledby="bookRideModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookRideModalLabel"><i class="bi bi-plus-circle"></i> Book a New Ride</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Pickup Location</label>
+                                <input type="text" class="form-control" placeholder="Enter pickup location" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Drop Location</label>
+                                <input type="text" class="form-control" placeholder="Enter drop location" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Cab Type</label>
+                                <select class="form-select" required>
+                                    <option value="">Select cab type</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="mini">Mini</option>
+                                    <option value="luxury">Luxury</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Payment Method</label>
+                                <select class="form-select" required>
+                                    <option value="">Select payment method</option>
+                                    <option value="wallet">Wallet</option>
+                                    <option value="credit">Credit Card</option>
+                                    <option value="paypal">PayPal</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Additional Notes</label>
+                                <textarea class="form-control" rows="2" placeholder="Any special instructions?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Book Ride</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Add Funds Modal -->
+    <div class="modal fade" id="addFundsModal" tabindex="-1" aria-labelledby="addFundsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFundsModalLabel"><i class="bi bi-wallet2"></i> Add Funds</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control" placeholder="Enter amount" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select" required>
+                                <option value="">Select payment method</option>
+                                <option value="credit">Credit Card</option>
+                                <option value="paypal">PayPal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Funds</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Booking Details Modal -->
+    <div class="modal fade" id="bookingDetailsModal" tabindex="-1" aria-labelledby="bookingDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingDetailsModalLabel"><i class="bi bi-info-circle"></i> Booking Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Booking ID</dt>
+                        <dd class="col-sm-9">128</dd>
+                        <dt class="col-sm-3">Date</dt>
+                        <dd class="col-sm-9">2024-06-10</dd>
+                        <dt class="col-sm-3">Pickup</dt>
+                        <dd class="col-sm-9">Central Park</dd>
+                        <dt class="col-sm-3">Drop</dt>
+                        <dd class="col-sm-9">Times Square</dd>
+                        <dt class="col-sm-3">Driver</dt>
+                        <dd class="col-sm-9">
+                            <img src="https://randomuser.me/api/portraits/men/45.jpg" class="avatar-sm me-2" alt="Driver">
+                            Mike
+                        </dd>
+                        <dt class="col-sm-3">Status</dt>
+                        <dd class="col-sm-9"><span class="badge bg-success">Completed</span></dd>
+                        <dt class="col-sm-3">Fare</dt>
+                        <dd class="col-sm-9">$18.50</dd>
+                        <dt class="col-sm-3">Payment Method</dt>
+                        <dd class="col-sm-9">Wallet</dd>
+                        <dt class="col-sm-3">Notes</dt>
+                        <dd class="col-sm-9">N/A</dd>
+                    </dl>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Payment Details Modal -->
+    <div class="modal fade" id="paymentDetailsModal" tabindex="-1" aria-labelledby="paymentDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentDetailsModalLabel"><i class="bi bi-credit-card"></i> Payment Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Transaction ID</dt>
+                        <dd class="col-sm-8">1008</dd>
+                        <dt class="col-sm-4">Date</dt>
+                        <dd class="col-sm-8">2024-06-10</dd>
+                        <dt class="col-sm-4">Type</dt>
+                        <dd class="col-sm-8">Ride Payment</dd>
+                        <dt class="col-sm-4">Amount</dt>
+                        <dd class="col-sm-8">-$18.50</dd>
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8"><span class="badge bg-success">Completed</span></dd>
+                        <dt class="col-sm-4">Method</dt>
+                        <dd class="col-sm-8">Wallet</dd>
+                    </dl>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel"><i class="bi bi-pencil"></i> Edit Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" value="John Doe" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="johndoe@email.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" value="+1 234 567 8901" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" value="New York, USA" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-control" rows="3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque euismod, nisi vel consectetur.</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Support Modal -->
+    <div class="modal fade" id="supportModal" tabindex="-1" aria-labelledby="supportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="supportModalLabel"><i class="bi bi-chat-dots"></i> Contact Support</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <input type="text" class="form-control" placeholder="Subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" rows="4" placeholder="Describe your issue" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteAccountModalLabel"><i class="bi bi-trash"></i> Delete Account</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete">
+                        <label class="form-check-label" for="confirmDelete">
+                            I understand the consequences.
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="deleteAccountBtn" disabled>Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enable delete button only if checkbox is checked
+        document.addEventListener('DOMContentLoaded', function() {
+            var confirmDelete = document.getElementById('confirmDelete');
+            var deleteBtn = document.getElementById('deleteAccountBtn');
+            if (confirmDelete && deleteBtn) {
+                confirmDelete.addEventListener('change', function() {
+                    deleteBtn.disabled = !this.checked;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

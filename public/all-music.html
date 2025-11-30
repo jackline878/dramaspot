@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Music - Celebrity Blog</title>
+    <meta name="description"
+        content="Browse and discover music tracks with thumbnails, search, sort, and filter by genre, year, and more. Responsive, professional music listing page.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: #f8f9fa;
+        }
+        .btn-primary,
+        .bg-primary {
+            background: #d11e5a !important;
+            border: #d11e5a;
+        }
+
+        .text-primary {
+            color: #d11e5a !important;
+        }
+
+        .music-card {
+            transition: box-shadow 0.2s;
+        }
+
+        .music-card:hover {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .music-thumb {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: .5rem .5rem 0 0;
+        }
+
+        .music-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: .25rem;
+        }
+
+        .music-meta {
+            font-size: .95rem;
+            color: #6c757d;
+        }
+
+        .pagination {
+            justify-content: center;
+        }
+
+        .search-bar {
+            max-width: 500px;
+        }
+
+        .filter-select {
+            min-width: 140px;
+        }
+
+        @media (max-width: 575.98px) {
+            .music-thumb {
+                height: 120px;
+            }
+        }
+
+        .music-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .music-link:hover .music-title {
+            color: #0d6efd;
+        }
+
+        .badge-genre {
+            background: #e9ecef;
+            color: #495057;
+            font-size: .85em;
+            margin-right: .25em;
+        }
+
+        .music-card-footer {
+            background: #f1f3f5;
+            border-top: 1px solid #e9ecef;
+            font-size: .9em;
+        }
+
+        .music-controls {
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+        }
+
+        .music-controls button {
+            border: none;
+            background: none;
+            color: #0d6efd;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .music-controls button:focus {
+            outline: none;
+        }
+
+        .music-year {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .music-artist {
+            color: #495057;
+        }
+
+        .music-list-header {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #212529;
+        }
+
+        .music-sort-label {
+            font-weight: 500;
+            margin-right: .5rem;
+        }
+
+        .music-pagination-info {
+            font-size: .95em;
+            color: #6c757d;
+            margin-top: .5rem;
+        }
+
+        .music-breadcrumb {
+            background: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .music-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
+            content: ">";
+        }
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.966);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+            /* Above most elements */
+            transition: opacity 0.2s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Drama Spots</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category/News">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Trending</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="/category/Exclusives">Exclusives
+                            <span class="exclusive-badge">Hot</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/auth">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container pb-5">
+        <h4 class="text-primary pt-2">Music</h4>
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-6 mb-2 mb-md-0">
+                <form id="searchForm" class="d-flex search-bar">
+                    <input class="form-control me-2" type="search" id="searchInput"
+                        placeholder="Search by title, artist, genre..." aria-label="Search">
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+            </div>
+            <div class="col-md-6 d-flex justify-content-md-end flex-wrap gap-2">
+                <div class="d-flex align-items-center">
+                    <label for="sortSelect" class="music-sort-label">Sort by:</label>
+                    <select class="form-select filter-select" id="sortSelect">
+                        <option value="title-asc">Title (A-Z)</option>
+                        <option value="title-desc">Title (Z-A)</option>
+                        <option value="year-desc">Year (Newest)</option>
+                        <option value="year-asc">Year (Oldest)</option>
+                        <option value="artist-asc">Artist (A-Z)</option>
+                        <option value="artist-desc">Artist (Z-A)</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center">
+                    <label for="genreSelect" class="music-sort-label">Genre:</label>
+                    <select class="form-select filter-select" id="genreSelect">
+                        <option value="">All</option>
+                        <!-- Genres will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="d-flex align-items-center">
+                    <label for="yearSelect" class="music-sort-label">Year:</label>
+                    <select class="form-select filter-select" id="yearSelect">
+                        <option value="">All</option>
+                        <!-- Years will be populated dynamically -->
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="musicList" class="row g-4">
+            <!-- Music cards will be rendered here -->
+        </div>
+        <div class="d-flex flex-column align-items-center mt-4">
+            <nav>
+                <ul class="pagination" id="pagination">
+                    <!-- Pagination will be rendered here -->
+                </ul>
+            </nav>
+            <div class="music-pagination-info" id="paginationInfo"></div>
+        </div>
+    </main>
+    <footer class="bg-white border-top py-4 mt-5">
+        <div class="container text-center">
+            <div class="mb-2">
+                <a href="/" class="text-decoration-none fw-bold text-dark">Celebrity Blog</a>
+            </div>
+            <div class="small text-muted">
+                &copy; 2024 Celebrity Blog. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <script>
+        // Sample music data (replace with real data or fetch from API)
+        const musicData = [
+            {
+                id: 1,
+                title: "Shape of You",
+                artist: "Ed Sheeran",
+                year: 2017,
+                genre: "Pop",
+                thumbnail: "https://i.pinimg.com/1200x/51/92/86/519286bc1f175f1d3c7847cd37215d44.jpg",
+                slug: "shape-of-you-ed-sheeran"
+            },
+            {
+                id: 2,
+                title: "Blinding Lights",
+                artist: "The Weeknd",
+                year: 2020,
+                genre: "Synthpop",
+                thumbnail: "https://i.imgur.com/2.jpg",
+                slug: "blinding-lights-the-weeknd"
+            },
+            {
+                id: 3,
+                title: "Bohemian Rhapsody",
+                artist: "Queen",
+                year: 1975,
+                genre: "Rock",
+                thumbnail: "https://i.imgur.com/3.jpg",
+                slug: "bohemian-rhapsody-queen"
+            },
+            {
+                id: 4,
+                title: "Bad Guy",
+                artist: "Billie Eilish",
+                year: 2019,
+                genre: "Pop",
+                thumbnail: "https://i.pinimg.com/1200x/51/92/86/519286bc1f175f1d3c7847cd37215d44.jpg",
+                slug: "bad-guy-billie-eilish"
+            },
+            {
+                id: 5,
+                title: "Imagine",
+                artist: "John Lennon",
+                year: 1971,
+                genre: "Soft Rock",
+                thumbnail: "https://i.imgur.com/5.jpg",
+                slug: "imagine-john-lennon"
+            },
+            {
+                id: 6,
+                title: "Uptown Funk",
+                artist: "Mark Ronson ft. Bruno Mars",
+                year: 2014,
+                genre: "Funk",
+                thumbnail: "https://i.imgur.com/6.jpg",
+                slug: "uptown-funk-mark-ronson-bruno-mars"
+            },
+            {
+                id: 7,
+                title: "Rolling in the Deep",
+                artist: "Adele",
+                year: 2010,
+                genre: "Soul",
+                thumbnail: "https://i.imgur.com/7.jpg",
+                slug: "rolling-in-the-deep-adele"
+            },
+            {
+                id: 8,
+                title: "Smells Like Teen Spirit",
+                artist: "Nirvana",
+                year: 1991,
+                genre: "Grunge",
+                thumbnail: "https://i.imgur.com/8.jpg",
+                slug: "smells-like-teen-spirit-nirvana"
+            },
+            {
+                id: 9,
+                title: "Billie Jean",
+                artist: "Michael Jackson",
+                year: 1982,
+                genre: "Pop",
+                thumbnail: "https://i.imgur.com/9.jpg",
+                slug: "billie-jean-michael-jackson"
+            },
+            {
+                id: 10,
+                title: "Hey Jude",
+                artist: "The Beatles",
+                year: 1968,
+                genre: "Rock",
+                thumbnail: "https://i.imgur.com/10.jpg",
+                slug: "hey-jude-the-beatles"
+            },
+            // ... add more items to reach 100+ for pagination demo
+        ];
+
+        // Generate more sample data for pagination demo
+        for (let i = 11; i <= 120; i++) {
+            musicData.push({
+                id: i,
+                title: `Sample Song ${i}`,
+                artist: `Artist ${i % 10}`,
+                year: 2000 + (i % 25),
+                genre: ["Pop", "Rock", "Jazz", "Hip-Hop", "Classical", "Funk", "Soul", "Synthpop", "Grunge", "Soft Rock"][i % 10],
+                thumbnail: `https://i.imgur.com/${(i % 10) + 1}.jpg`,
+                slug: `sample-song-${i}-artist-${i % 10}`
+            });
+        }
+
+        // Pagination and state
+        const PAGE_SIZE = 30;
+        let currentPage = 1;
+        let filteredMusic = [...musicData];
+        let currentSort = 'title-asc';
+        let currentGenre = '';
+        let currentYear = '';
+        let currentSearch = '';
+
+        // Populate genre and year filters
+        function populateFilters() {
+            const genres = Array.from(new Set(musicData.map(m => m.genre))).sort();
+            const years = Array.from(new Set(musicData.map(m => m.year))).sort((a, b) => b - a);
+
+            const genreSelect = document.getElementById('genreSelect');
+            genreSelect.innerHTML = '<option value="">All</option>';
+            genres.forEach(genre => {
+                const opt = document.createElement('option');
+                opt.value = genre;
+                opt.textContent = genre;
+                genreSelect.appendChild(opt);
+            });
+
+            const yearSelect = document.getElementById('yearSelect');
+            yearSelect.innerHTML = '<option value="">All</option>';
+            years.forEach(year => {
+                const opt = document.createElement('option');
+                opt.value = year;
+                opt.textContent = year;
+                yearSelect.appendChild(opt);
+            });
+        }
+
+        // Filtering, sorting, and searching
+        function applyFilters() {
+            filteredMusic = musicData.filter(m => {
+                let matches = true;
+                if (currentGenre && m.genre !== currentGenre) matches = false;
+                if (currentYear && m.year.toString() !== currentYear) matches = false;
+                if (currentSearch) {
+                    const search = currentSearch.toLowerCase();
+                    if (
+                        !m.title.toLowerCase().includes(search) &&
+                        !m.artist.toLowerCase().includes(search) &&
+                        !m.genre.toLowerCase().includes(search)
+                    ) matches = false;
+                }
+                return matches;
+            });
+
+            // Sorting
+            filteredMusic.sort((a, b) => {
+                switch (currentSort) {
+                    case 'title-asc':
+                        return a.title.localeCompare(b.title);
+                    case 'title-desc':
+                        return b.title.localeCompare(a.title);
+                    case 'year-asc':
+                        return a.year - b.year;
+                    case 'year-desc':
+                        return b.year - a.year;
+                    case 'artist-asc':
+                        return a.artist.localeCompare(b.artist);
+                    case 'artist-desc':
+                        return b.artist.localeCompare(a.artist);
+                    default:
+                        return 0;
+                }
+            });
+        }
+
+        // Render music cards
+        function renderMusicList() {
+            applyFilters();
+            const musicList = document.getElementById('musicList');
+            musicList.innerHTML = '';
+
+            const startIdx = (currentPage - 1) * PAGE_SIZE;
+            const endIdx = Math.min(startIdx + PAGE_SIZE, filteredMusic.length);
+            const pageMusic = filteredMusic.slice(startIdx, endIdx);
+
+            if (pageMusic.length === 0) {
+                musicList.innerHTML = `<div class="col-12 text-center text-muted py-5">No music found.</div>`;
+                document.getElementById('pagination').innerHTML = '';
+                document.getElementById('paginationInfo').textContent = '';
+                return;
+            }
+
+            pageMusic.forEach(music => {
+                const col = document.createElement('div');
+                col.className = 'col-12 col-sm-6 col-md-4 col-lg-3';
+                col.innerHTML = `
+  <a href="/music/${music.slug}.html" class="music-link text-decoration-none">
+    <div class="card music-card h-100 border-0 shadow-sm overflow-hidden rounded-4 p-0">
+      
+<div class="card-body text-white d-flex flex-column justify-content-end position-relative p-3"
+           style="background-image: 
+                  linear-gradient(to top right, rgba(0, 0, 0, 0.99), rgba(0, 0, 0, 0.6)),
+                  url('${music.thumbnail}');
+                  background-size: cover;
+                  background-position: center;
+                  min-height: 220px;">
+        <!-- Content above overlay -->
+        <div class="position-relative z-1">
+          <h5 class="card-title p-2 rounded-2 mb-2 fw-bolder fst-italic">${music.title}</h5>
+          <div class="music-meta mb-1 small">
+            <span class="fw-semibold">${music.artist}</span>
+          </div>
+          <div>
+            <span class="badge bg-primary bg-opacity-75 text-white">${music.genre}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer bg-white d-flex justify-content-between align-items-center px-3 py-2 border-top small">
+        <span class="text-muted">${music.year}</span>
+        <div class="music-controls">
+          <button class="btn btn-sm btn-light border rounded-circle me-1" title="Play">
+            <i class="bi bi-play-circle-fill text-primary"></i>
+          </button>
+          <button class="btn btn-sm btn-light border rounded-circle justify-center" title="Add to Favorites">
+            <i class="bi bi-heart-fill text-danger"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </a>
+`;
+
+                musicList.appendChild(col);
+            });
+
+            renderPagination();
+        }
+
+        // Render pagination controls
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredMusic.length / PAGE_SIZE);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            function createPageItem(page, label = null, active = false, disabled = false) {
+                const li = document.createElement('li');
+                li.className = `page-item${active ? ' active' : ''}${disabled ? ' disabled' : ''}`;
+                const a = document.createElement('a');
+                a.className = 'page-link';
+                a.href = '#';
+                a.textContent = label || page;
+                a.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!disabled && currentPage !== page) {
+                        currentPage = page;
+                        renderMusicList();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+                li.appendChild(a);
+                return li;
+            }
+
+            // Previous
+            pagination.appendChild(createPageItem(currentPage - 1, '«', false, currentPage === 1));
+
+            // Page numbers (show up to 5 pages around current)
+            let start = Math.max(1, currentPage - 2);
+            let end = Math.min(totalPages, currentPage + 2);
+            if (currentPage <= 3) end = Math.min(5, totalPages);
+            if (currentPage >= totalPages - 2) start = Math.max(1, totalPages - 4);
+
+            if (start > 1) {
+                pagination.appendChild(createPageItem(1));
+                if (start > 2) {
+                    const li = document.createElement('li');
+                    li.className = 'page-item disabled';
+                    li.innerHTML = `<span class="page-link">...</span>`;
+                    pagination.appendChild(li);
+                }
+            }
+
+            for (let i = start; i <= end; i++) {
+                pagination.appendChild(createPageItem(i, null, i === currentPage));
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) {
+                    const li = document.createElement('li');
+                    li.className = 'page-item disabled';
+                    li.innerHTML = `<span class="page-link">...</span>`;
+                    pagination.appendChild(li);
+                }
+                pagination.appendChild(createPageItem(totalPages));
+            }
+
+            // Next
+            pagination.appendChild(createPageItem(currentPage + 1, '»', false, currentPage === totalPages));
+
+            // Pagination info
+            const info = document.getElementById('paginationInfo');
+            info.textContent = `Showing ${filteredMusic.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–${Math.min(currentPage * PAGE_SIZE, filteredMusic.length)} of ${filteredMusic.length} music tracks`;
+        }
+
+        // Event listeners
+        document.getElementById('sortSelect').addEventListener('change', function () {
+            currentSort = this.value;
+            currentPage = 1;
+            renderMusicList();
+        });
+
+        document.getElementById('genreSelect').addEventListener('change', function () {
+            currentGenre = this.value;
+            currentPage = 1;
+            renderMusicList();
+        });
+
+        document.getElementById('yearSelect').addEventListener('change', function () {
+            currentYear = this.value;
+            currentPage = 1;
+            renderMusicList();
+        });
+
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            currentSearch = document.getElementById('searchInput').value.trim();
+            currentPage = 1;
+            renderMusicList();
+        });
+
+        // Responsive: reset page on window resize if needed
+        window.addEventListener('resize', function () {
+            renderMusicList();
+        });
+
+        // Initial load
+        populateFilters();
+        renderMusicList();
+
+        // Optional: handle play/favorite button clicks (demo only)
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.music-controls button')) {
+                e.preventDefault();
+                const btn = e.target.closest('button');
+                if (btn.title === 'Play') {
+                    alert('Play functionality is not implemented in this demo.');
+                } else if (btn.title === 'Add to Favorites') {
+                    alert('Add to Favorites functionality is not implemented in this demo.');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

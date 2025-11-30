@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add or Update Celebrity - Admin Panel</title>
+    <meta name="description" content="Admin panel to add or update celebrity profiles for Celebrity Blog.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            background: #fff;
+            border-right: 1px solid #dee2e6;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .btn-primary,
+        .bg-primary {
+            background: #d11e5a !important;
+            border: #d11e5a;
+        }
+
+        .text-primary {
+            color: #d11e5a !important;
+        }
+
+        .bi {
+            color: #d11e5a !important;
+        }
+
+        .nav-link {
+            color: #d11e5a !important;
+        }
+
+        .nav-link.active,
+        .sidebar .nav-link.active {
+            background: #e9ecef;
+            font-weight: bold;
+            color: #d11e5a;
+        }
+
+        .form-section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #d11e5a;
+        }
+
+        .form-card {
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .profile-img-preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #d11e5a;
+            margin-bottom: 1rem;
+        }
+
+        .cover-img-preview {
+            width: 500px;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+
+        .required:after {
+            content: "*";
+            color: #d11e5a;
+            margin-left: 2px;
+        }
+
+        .close-btn {
+            display: none;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                width: 260px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 9999;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                transition: margin-left 0.3s ease;
+            }
+
+            .sidebar.hide {
+                margin-left: -260px !important;
+            }
+
+            .close-btn {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+
+            .profile-img-preview {
+                width: 80px;
+                height: 80px;
+            }
+
+            .cover-img-preview {
+                width: 100%;
+                height: 100px;
+            }
+
+            .form-section-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: #e9ecef;
+            color: #d11e5a;
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .tag .remove-tag {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .input-group-text {
+            background: #f8f9fa;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .form-control:focus {
+            border-color: #d11e5a;
+            box-shadow: 0 0 0 0.2rem rgba(209, 30, 90, .15);
+        }
+
+        .alert-success,
+        .alert-danger {
+            margin-top: 1rem;
+        }
+
+        .form-footer {
+            border-top: 1px solid #dee2e6;
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        input {
+            min-width: 60px;
+            border: 1px solid #ccc;
+            padding: 2px 4px;
+            font-size: 14px;
+            transition: width 0.2s ease;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            vertical-align: top;
+        }
+
+        textarea {
+            width: 100%;
+            /* expands to container */
+            min-height: 30px;
+            resize: none;
+            overflow: hidden;
+            font-size: 14px;
+            padding: 4px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-primary" href="/admin/"><i class="bi bi-chevron-left"></i> Admin
+                Home</a>
+        </div>
+    </nav>
+    <div class="">
+        <div class="rows">
+            <!-- Main Content -->
+            <main class="col-lg-12 col-md-12 px-0 pb-4">
+                <form id="celebrityForm" class="px-0 px-md-0" enctype="multipart/form-data" autocomplete="off">
+                    <h1 class="fw-bold mx-3 mb-3 text-primary" id="formTitle">Add Celebrity</h1>
+                    <div id="formAlert"></div>
+                    <!-- Basic Info -->
+                    <section id="basic" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-person-circle"></i> Basic Info</div>
+                            <div class="g-3">
+                                <div class=" text-center">
+                                    <img src="https://via.placeholder.com/120x120.png?text=Photo" alt="Profile Preview"
+                                        onclick="document.getElementById('ProfileImage').click()"
+                                        class="profile-img-preview" id="profileImgPreview">
+                                    <div class="my-2">
+                                        <input type="text" class="form-control" id="profilePic" name="profilePic"
+                                            placeholder="https://example.com/photo.jpg">
+                                        <small class="text-muted">profile photo</small>
+                                    </div>
+                                    <input hidden class="form-control" type="file" id="ProfileImage" name="image"
+                                        onchange="previewImage(event)" accept="image/*">
+                                </div>
+                                <div class="text-center">
+                                    <div class="my-2">
+                                        <input type="text" class="form-control text-info" id="link" name="link"
+                                            placeholder="https://....e.g instagram, tiktok">
+                                        <small class="text-muted">Link To profile</small>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <img src="https://via.placeholder.com/120x120.png?text=Photo" alt="Cover Preview"
+                                        class="cover-img-preview" id="coverImgPreview">
+                                    <div class="mt-2">
+                                        <input type="text" class="form-control" id="coverPic" name="coverPic"
+                                            placeholder="https://example.com/photo.jpg">
+                                        <small class="text-muted">cover photo</small>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label required" for="fullName">Full Name</label>
+                                            <input type="text" class="form-control" id="fullName" name="fullName"
+                                                required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="stageName">Stage Name / Nickname</label>
+                                            <input type="text" class="form-control" id="stageName" name="stageName">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label required" for="dateOfBirth">Date of Birth</label>
+                                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"
+                                                required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="placeOfBirth">Place of Birth</label>
+                                            <input type="text" class="form-control" id="placeOfBirth"
+                                                name="placeOfBirth">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label" for="nationality">Nationality</label>
+                                            <input type="text" class="form-control" id="nationality" name="nationality">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label required" for="profession">Profession(s)</label>
+                                            <input type="text" class="form-control" id="profession" name="profession"
+                                                placeholder="e.g. Singer, Actor" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" for="bio">Short Bio</label>
+                                            <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
+                                            <small class="text-muted">Max 400 characters</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Career -->
+                    <section id="career" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-graph-up-arrow"></i> Career</div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="careerBackground">Career Background</label>
+                                    <textarea class="form-control" id="careerBackground" name="careerBackground"
+                                        rows="2"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="careerStatus">Current Status</label>
+                                    <input type="text" class="form-control" id="careerStatus" name="careerStatus"
+                                        placeholder="e.g. Active, Retired">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="careerStart">How It Started</label>
+                                    <textarea class="form-control" id="careerStart" name="careerStart"
+                                        rows="2"></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="careerBreakthrough">Breakthrough Moment</label>
+                                    <textarea class="form-control" id="careerBreakthrough" name="careerBreakthrough"
+                                        rows="2"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="careerAchievements">Notable Achievements</label>
+                                    <div class="tag-input" id="careerAchievementsInput"></div>
+
+                                    <div class="row g-2 align-items-end mt-2">
+                                        <div class="col-md-3">
+                                            <input type="number" class="form-control" id="careerAchievementYear"
+                                                placeholder="Year">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="careerAchievementTitle"
+                                                placeholder="Title">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <textarea class="form-control" id="careerAchievementDesc"
+                                                placeholder="Description"></textarea>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addAchievement">
+                                                <i class="bi bi-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for form submission -->
+                                    <input type="hidden" id="careerAchievements" name="careerAchievements">
+                                </div>
+
+
+                                <div class="col-12">
+                                    <label class="form-label" for="careerTimeline">Career Timeline</label>
+                                    <div id="careerTimelineInputs"></div>
+                                    <div class="row g-2 align-items-end mt-2">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control" id="timelineYear"
+                                                placeholder="Year">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control" id="timelineTitle"
+                                                placeholder="Title">
+                                        </div>
+                                        <div class="col-6">
+                                            <textarea name="timelineEvent" type="text" class="form-control"
+                                                id="timelineEvent" placeholder="Event"></textarea>
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addTimeline"><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Works -->
+                    <section id="works" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-star-fill"></i> Major Works / Projects</div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="albums">Albums / Songs / Movies</label>
+                                    <div id="albumsInput"></div>
+                                    <div class="row g-2 align-items-end mt-2">
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="albumTitle" placeholder="Title">
+                                        </div>
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="albumUrl" placeholder="url">
+                                        </div>
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="albumDescription"
+                                                placeholder="description">
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" class="form-control" id="albumYear" placeholder="Year">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-outline-primary w-100" id="addAlbum"><i
+                                                    class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="concerts">Major Concerts / Shows</label>
+                                    <div id="concertsInput"></div>
+                                    <div class="row g-2 align-items-end mt-2">
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="concertName" placeholder="Name">
+                                        </div>
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="concertDesc"
+                                                placeholder="Description">
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" class="form-control" id="concertYear"
+                                                placeholder="Year">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addConcert"><i class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label mt-3" for="brands">Businesses / Brands</label>
+                                        <div id="brandsInput" class="mb-3"></div>
+
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-4">
+                                                <input type="text" class="form-control" id="brandName"
+                                                    placeholder="Brand Name">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" class="form-control" id="brandYear"
+                                                    placeholder="Year Started">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <textarea class="form-control" id="brandDescription"
+                                                    placeholder="Description"></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-primary w-100"
+                                                    id="addBrandBtn">
+                                                    <i class="bi bi-plus"></i> Add
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden input to hold JSON data for form -->
+                                        <input type="hidden" id="brands" name="brands">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Awards -->
+                    <section id="awards" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-trophy-fill"></i> Awards & Recognition</div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="awardsList">Awards</label>
+                                    <div id="awardsInput"></div>
+                                    <div class="row g-2 align-items-end mt-2">
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="awardName"
+                                                placeholder="Award Name">
+                                        </div>
+                                        <div class="col-7">
+                                            <input type="text" class="form-control" id="awardDesc"
+                                                placeholder="Award Description">
+                                        </div>
+                                        <div class="col-3">
+                                            <input type="number" class="form-control" id="awardYear" placeholder="Year">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-outline-primary w-100" id="addAward"><i
+                                                    class="bi bi-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-12">
+                                        <label class="form-label mt-3" for="nominations">Nominations / Honorary
+                                            Titles</label>
+                                        <div id="nominationsInput" class="mb-3"></div>
+
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-5">
+                                                <input type="text" class="form-control" id="nominationTitle"
+                                                    placeholder="Title (e.g., Best Actor)">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <textarea class="form-control" id="nominationDesc"
+                                                    placeholder="Description or reason"></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-primary w-100"
+                                                    id="addNominationBtn">
+                                                    <i class="bi bi-plus"></i> Add
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden input for backend -->
+                                        <input type="hidden" id="nominations" name="nominations">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label mt-3" for="records">Records Set / Broken</label>
+                                        <div id="recordsInput" class="mb-3"></div>
+
+                                        <div class="row g-2 align-items-end">
+                                            <div class="col-md-5">
+                                                <input type="text" class="form-control" id="recordTitle"
+                                                    placeholder="Record Title">
+                                            </div>
+                                            <div class="col-md-5">
+                                                <textarea class="form-control" id="recordDesc"
+                                                    placeholder="Description of the record"></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-outline-primary w-100"
+                                                    id="addRecordBtn">
+                                                    <i class="bi bi-plus"></i> Add
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden input for form submission -->
+                                        <input type="hidden" id="records" name="records">
+                                    </div>
+
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mt-3" for="awardGallery">Award Gallery (Image URLs)</label>
+                                    <div id="awardGalleryInput" class="mb-3"></div>
+
+                                    <div class="row g-2 align-items-end">
+                                        <div class="col-md-6">
+                                            <input type="url" class="form-control" id="awardImageUrl"
+                                                placeholder="Image URL">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" id="awardImageCaption"
+                                                placeholder="Caption">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addAwardImageBtn">
+                                                <i class="bi bi-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for storing JSON -->
+                                    <input type="hidden" id="awardGallery" name="awardGallery">
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Personal Life -->
+                    <section id="personal" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-heart-fill"></i> Personal Life</div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="relationshipStatus">Relationship Status</label>
+                                    <input type="text" class="form-control" id="relationshipStatus"
+                                        name="relationshipStatus">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="children">Children</label>
+                                    <input type="text" class="form-control" id="children" name="children">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="family">Family Background</label>
+                                    <input type="text" class="form-control" id="family" name="family">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="friends">Close Friendships / Collaborations</label>
+                                    <input type="text" class="form-control" id="friends" name="friends">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mt-3" for="personalInsights">Publicly Shared
+                                        Insights</label>
+                                    <div id="personalInsightsList" class="mb-3"></div>
+
+                                    <div class="row g-2 align-items-end">
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="insightTitle"
+                                                placeholder="Insight Title">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <textarea class="form-control" id="insightDesc"
+                                                placeholder="Insight Description"></textarea>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addInsightBtn">
+                                                <i class="bi bi-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for form submission -->
+                                    <input type="hidden" id="personalInsights" name="personalInsights">
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Net Worth -->
+                    <section id="networths" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-cash-stack"></i> Net Worth / Lifestyle</div>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label" for="networth">Estimated Net Worth (in Dollars)</label>
+                                    <input type="number" class="form-control" id="networth" name="networth" min="0"
+                                        step="0.01">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mt-3" for="assets">Assets</label>
+                                    <div id="assetsList" class="mb-3"></div>
+
+                                    <div class="row g-2 align-items-end">
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="assetName"
+                                                placeholder="Asset Name (e.g., Private Jet)">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="number" class="form-control" id="assetWorth"
+                                                placeholder="Estimated Worth">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addAssetBtn">
+                                                <i class="bi bi-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for backend submission -->
+                                    <input type="hidden" id="assets" name="assets">
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label mt-3" for="philanthropy">Philanthropy</label>
+                                    <div id="philanthropyInput" class="mb-3"></div>
+
+                                    <div class="row g-2 align-items-end">
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" id="philanthropyTitle"
+                                                placeholder="Philanthropy Title (e.g., Cancer Relief Fund)">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <textarea class="form-control" id="philanthropyDesc"
+                                                placeholder="Description or contribution details"></textarea>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-outline-primary w-100"
+                                                id="addPhilanthropyBtn">
+                                                <i class="bi bi-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden input for form submission -->
+                                    <input type="hidden" id="philanthropy" name="philanthropy">
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                    <!-- News -->
+                    <section id="news" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-newspaper"></i> Recent News / Trends</div>
+                            <label class="form-label" for="newsList">Latest Updates</label>
+                            <div class="tag-input" id="newsInput"></div>
+                            <input type="text" class="form-control mt-2" id="newsList"
+                                placeholder="Type and press Enter">
+                        </div>
+                    </section>
+                    <!-- Fun Facts -->
+                    <section id="funfacts" class="form-card card mb-4">
+                        <div class="card-body">
+                            <div class="form-section-title"><i class="bi bi-lightbulb-fill"></i> Fun Facts</div>
+                            <div class="col-12">
+                                <div id="funFactsInput" class="mb-3"></div>
+
+                                <div class="row g-2 align-items-end">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="funFactKey"
+                                            placeholder="Fact Title (e.g. Favorite Food)">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="funFactValue"
+                                            placeholder="Fact Detail (e.g. Sushi)">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-outline-primary w-100" id="addFunFactBtn">
+                                            <i class="bi bi-plus"></i> Add
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Hidden input to store the JSON -->
+                                <input type="hidden" id="funFacts" name="funFacts">
+                            </div>
+
+                        </div>
+                    </section>
+                    <!-- Submit -->
+                    <div class="form-footer text-end">
+                        <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                            <i class="bi bi-save"></i> Save Celebrity
+                        </button>
+                    </div>
+                </form>
+                <footer class="mt-5 pt-4 border-top text-center text-muted">
+                    <p>&copy; 2024 Celebrity Blog. All rights reserved.</p>
+                </footer>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        function updateHiddenJson(id, arr) {
+            const el = document.getElementById(id);
+            if (el) el.value = JSON.stringify(arr, null, 2);
+        }
+
+        // ---------------- FUN FACTS ----------------
+        let funFactsArr = [];
+
+        function renderFunFacts() {
+            const container = document.getElementById('funFactsInput');
+            container.innerHTML = '';
+
+            funFactsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+      <input type="text" class="form-control form-control-sm w-100" value="${item.key}" placeholder="Key">
+      <input type="text" class="form-control form-control-sm w-100" value="${item.value}" placeholder="Value">
+      <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+    `;
+
+                const keyInput = row.children[0];
+                const valueInput = row.children[1];
+                const removeBtn = row.children[2];
+
+                keyInput.oninput = () => { funFactsArr[idx].key = keyInput.value; updateHiddenJson('funFacts', funFactsArr); };
+                valueInput.oninput = () => { funFactsArr[idx].value = valueInput.value; updateHiddenJson('funFacts', funFactsArr); };
+                removeBtn.onclick = () => { funFactsArr.splice(idx, 1); renderFunFacts(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('funFacts', funFactsArr);
+        }
+
+        document.getElementById('addFunFactBtn').onclick = () => {
+            const key = document.getElementById('funFactKey').value.trim();
+            const value = document.getElementById('funFactValue').value.trim();
+            if (key && value) {
+                funFactsArr.push({ key, value });
+                renderFunFacts();
+                document.getElementById('funFactKey').value = '';
+                document.getElementById('funFactValue').value = '';
+            }
+        };
+
+        // ---------------- PHILANTHROPY ----------------
+        let philanthropyArr = [];
+
+        function renderPhilanthropy() {
+            const container = document.getElementById('philanthropyInput');
+            container.innerHTML = '';
+
+            philanthropyArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+<textarea class="form-control form-control-sm w-100" placeholder="Title">${item.title}</textarea>
+  <textarea class="form-control form-control-sm w-100" placeholder="Description">${item.description}</textarea>
+
+      <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+    `;
+
+                const titleInput = row.children[0];
+                const descInput = row.children[1];
+                const removeBtn = row.children[2];
+
+                titleInput.oninput = () => { philanthropyArr[idx].title = titleInput.value; updateHiddenJson('philanthropy', philanthropyArr); };
+                descInput.oninput = () => { philanthropyArr[idx].description = descInput.value; updateHiddenJson('philanthropy', philanthropyArr); };
+                removeBtn.onclick = () => { philanthropyArr.splice(idx, 1); renderPhilanthropy(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('philanthropy', philanthropyArr);
+        }
+
+        document.getElementById('addPhilanthropyBtn').onclick = () => {
+            const title = document.getElementById('philanthropyTitle').value.trim();
+            const description = document.getElementById('philanthropyDesc').value.trim();
+            if (title && description) {
+                philanthropyArr.push({ title, description });
+                renderPhilanthropy();
+                document.getElementById('philanthropyTitle').value = '';
+                document.getElementById('philanthropyDesc').value = '';
+            }
+        };
+
+        // ---------------- ASSETS ----------------
+        let assetsArr = [];
+
+        function renderAssets() {
+            const container = document.getElementById('assetsList');
+            container.innerHTML = '';
+
+            assetsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+<textarea class="form-control form-control-sm w-100" placeholder="Asset name">${item.name}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Worth">${item.worth}</textarea>
+
+      <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+    `;
+
+                const nameInput = row.children[0];
+                const worthInput = row.children[1];
+                const removeBtn = row.children[2];
+
+                nameInput.oninput = () => { assetsArr[idx].name = nameInput.value; updateHiddenJson('assets', assetsArr); };
+                worthInput.oninput = () => { assetsArr[idx].worth = worthInput.value; updateHiddenJson('assets', assetsArr); };
+                removeBtn.onclick = () => { assetsArr.splice(idx, 1); renderAssets(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('assets', assetsArr);
+        }
+
+        document.getElementById('addAssetBtn').onclick = () => {
+            const name = document.getElementById('assetName').value.trim();
+            const worth = document.getElementById('assetWorth').value.trim();
+            if (name && worth) {
+                assetsArr.push({ name, worth });
+                renderAssets();
+                document.getElementById('assetName').value = '';
+                document.getElementById('assetWorth').value = '';
+            }
+        };
+
+        // ---------------- PERSONAL INSIGHTS ----------------
+        let personalInsightsArr = [];
+
+        function renderPersonalInsights() {
+            const container = document.getElementById('personalInsightsList');
+            container.innerHTML = '';
+
+            personalInsightsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+<textarea class="form-control form-control-sm w-100" placeholder="Title">${item.title}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Description">${item.description}</textarea>
+
+      <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+    `;
+
+                const titleInput = row.children[0];
+                const descInput = row.children[1];
+                const removeBtn = row.children[2];
+
+                titleInput.oninput = () => { personalInsightsArr[idx].title = titleInput.value; updateHiddenJson('personalInsights', personalInsightsArr); };
+                descInput.oninput = () => { personalInsightsArr[idx].description = descInput.value; updateHiddenJson('personalInsights', personalInsightsArr); };
+                removeBtn.onclick = () => { personalInsightsArr.splice(idx, 1); renderPersonalInsights(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('personalInsights', personalInsightsArr);
+        }
+
+        document.getElementById('addInsightBtn').onclick = () => {
+            const title = document.getElementById('insightTitle').value.trim();
+            const description = document.getElementById('insightDesc').value.trim();
+            if (title && description) {
+                personalInsightsArr.push({ title, description });
+                renderPersonalInsights();
+                document.getElementById('insightTitle').value = '';
+                document.getElementById('insightDesc').value = '';
+            }
+        };
+
+        // ---------------- RECORDS ----------------
+        let recordsArr = [];
+
+        function renderRecords() {
+            const container = document.getElementById('recordsInput');
+            container.innerHTML = '';
+
+            recordsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+      <textarea class="form-control form-control-sm w-100" placeholder="Title" rows="2">${item.title}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Description" rows="3">${item.description}</textarea>
+<button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+    `;
+
+                const titleInput = row.children[0];
+                const descInput = row.children[1];
+                const removeBtn = row.children[2];
+
+                titleInput.oninput = () => { recordsArr[idx].title = titleInput.value; updateHiddenJson('records', recordsArr); };
+                descInput.oninput = () => { recordsArr[idx].description = descInput.value; updateHiddenJson('records', recordsArr); };
+                removeBtn.onclick = () => { recordsArr.splice(idx, 1); renderRecords(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('records', recordsArr);
+        }
+
+        document.getElementById('addRecordBtn').onclick = () => {
+            const title = document.getElementById('recordTitle').value.trim();
+            const description = document.getElementById('recordDesc').value.trim();
+            if (title && description) {
+                recordsArr.push({ title, description });
+                renderRecords();
+                document.getElementById('recordTitle').value = '';
+                document.getElementById('recordDesc').value = '';
+            }
+        };
+
+        // ---------------- NOMINATIONS ----------------
+        let nominationsArr = [];
+
+        function renderNominations() {
+            const container = document.getElementById('nominationsInput');
+            container.innerHTML = '';
+
+            nominationsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+<textarea class="form-control form-control-sm w-100" placeholder="Title">${item.title}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Description">${item.description}</textarea>
+<button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle fs-5"></i></button>
+    `;
+
+                const titleInput = row.children[0];
+                const descInput = row.children[1];
+                const removeBtn = row.children[2];
+
+                titleInput.oninput = () => { nominationsArr[idx].title = titleInput.value; updateHiddenJson('nominations', nominationsArr); };
+                descInput.oninput = () => { nominationsArr[idx].description = descInput.value; updateHiddenJson('nominations', nominationsArr); };
+                removeBtn.onclick = () => { nominationsArr.splice(idx, 1); renderNominations(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('nominations', nominationsArr);
+        }
+
+        document.getElementById('addNominationBtn').onclick = () => {
+            const title = document.getElementById('nominationTitle').value.trim();
+            const description = document.getElementById('nominationDesc').value.trim();
+            if (title && description) {
+                nominationsArr.push({ title, description });
+                renderNominations();
+                document.getElementById('nominationTitle').value = '';
+                document.getElementById('nominationDesc').value = '';
+            }
+        };
+        // Profile image preview
+        document.getElementById('profilePic').addEventListener('input', function (e) {
+            document.getElementById('profileImgPreview').src = e.target.value;
+        });
+        document.getElementById('coverPic').addEventListener('input', function (e) {
+            document.getElementById('coverImgPreview').src = e.target.value;
+        });
+
+        // Tag input helpers
+        function tagInput(inputId, containerId) {
+            const input = document.getElementById(inputId);
+            const container = document.getElementById(containerId);
+            let tags = [];
+            input.addEventListener('keydown', function (e) {
+                if ((e.key === 'Enter' || e.key === ',') && input.value.trim()) {
+                    e.preventDefault();
+                    addTag(input.value.trim());
+                    input.value = '';
+                }
+            });
+            function addTag(val) {
+                if (val && !tags.includes(val)) {
+                    tags.push(val);
+                    render();
+                }
+            }
+            function removeTag(idx) {
+                tags.splice(idx, 1);
+                render();
+            }
+            function render() {
+                container.innerHTML = '';
+                tags.forEach((tag, idx) => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'tag';
+                    tagEl.innerHTML = `${tag} <span class="remove-tag" data-idx="${idx}">&times;</span>`;
+                    container.appendChild(tagEl);
+                });
+                container.querySelectorAll('.remove-tag').forEach(btn => {
+                    btn.onclick = () => removeTag(Number(btn.dataset.idx));
+                });
+            }
+            return {
+                get: () => tags.slice(),
+                set: (arr) => { tags = arr.slice(); render(); }
+            };
+        }
+        const newsTag = tagInput('newsList', 'newsInput');
+
+        let awardGalleryArr = [];
+
+        function renderAwardGallery() {
+            const container = document.getElementById('awardGalleryInput');
+            container.innerHTML = '';
+
+            awardGalleryArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+     <textarea class="form-control form-control-sm w-100" placeholder="Caption">${item.caption}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Image URL">${item.url}</textarea>
+<img src="${item.url}" width="50" height="50" class="rounded" style="object-fit: cover;">
+      <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+    `;
+
+                const captionInput = row.children[0];
+                const urlInput = row.children[1];
+                const removeBtn = row.children[3];
+
+                captionInput.oninput = () => { awardGalleryArr[idx].caption = captionInput.value; updateHiddenJson('awardGallery', awardGalleryArr); };
+                urlInput.oninput = () => { awardGalleryArr[idx].url = urlInput.value; updateHiddenJson('awardGallery', awardGalleryArr); };
+                removeBtn.onclick = () => { awardGalleryArr.splice(idx, 1); renderAwardGallery(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('awardGallery', awardGalleryArr);
+        }
+
+        document.getElementById('addAwardImageBtn').onclick = () => {
+            const url = document.getElementById('awardImageUrl').value.trim();
+            const caption = document.getElementById('awardImageCaption').value.trim();
+
+            if (url && caption) {
+                awardGalleryArr.push({ url, caption });
+                renderAwardGallery();
+                document.getElementById('awardImageUrl').value = '';
+                document.getElementById('awardImageCaption').value = '';
+            }
+        };
+
+        let achievementsArr = [];
+
+        function renderCareerAchievements() {
+            const container = document.getElementById('careerAchievementsInput');
+            container.innerHTML = '';
+
+            achievementsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+      <input class="form-control form-control-sm w-100" value="${item.year}" placeholder="Year">
+<textarea class="form-control form-control-sm w-100" placeholder="Title">${item.title}</textarea>
+<textarea class="form-control form-control-sm flex-fill" placeholder="Description">${item.description}</textarea>
+      <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+    `;
+
+                const yearInput = row.children[0];
+                const titleInput = row.children[1];
+                const descInput = row.children[2];
+                const removeBtn = row.children[3];
+
+                yearInput.oninput = () => { achievementsArr[idx].year = yearInput.value; updateHiddenJson('careerAchievements', achievementsArr); };
+                titleInput.oninput = () => { achievementsArr[idx].title = titleInput.value; updateHiddenJson('careerAchievements', achievementsArr); };
+                descInput.oninput = () => { achievementsArr[idx].description = descInput.value; updateHiddenJson('careerAchievements', achievementsArr); };
+                removeBtn.onclick = () => { achievementsArr.splice(idx, 1); renderCareerAchievements(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('careerAchievements', achievementsArr);
+        }
+
+        document.getElementById('addAchievement').onclick = function () {
+            const year = document.getElementById('careerAchievementYear').value.trim();
+            const title = document.getElementById('careerAchievementTitle').value.trim();
+            const description = document.getElementById('careerAchievementDesc').value.trim();
+
+            if (year && title && description) {
+                achievementsArr.push({ year, title, description });
+                renderCareerAchievements();
+                document.getElementById('careerAchievementYear').value = '';
+                document.getElementById('careerAchievementTitle').value = '';
+                document.getElementById('careerAchievementDesc').value = '';
+            }
+        };
+
+
+
+        let brandsArr = [];
+
+        function renderBrands() {
+            const container = document.getElementById('brandsInput');
+            container.innerHTML = '';
+
+            brandsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+     <textarea class="form-control form-control-sm w-100" placeholder="Brand Name">${item.brandName}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Year">${item.year}</textarea>
+<textarea class="form-control form-control-sm flex-fill" placeholder="Description">${item.description}</textarea>
+<button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+    `;
+
+                const brandInput = row.children[0];
+                const yearInput = row.children[1];
+                const descInput = row.children[2];
+                const removeBtn = row.children[3];
+
+                brandInput.oninput = () => { brandsArr[idx].brandName = brandInput.value; updateHiddenJson('brands', brandsArr); };
+                yearInput.oninput = () => { brandsArr[idx].year = yearInput.value; updateHiddenJson('brands', brandsArr); };
+                descInput.oninput = () => { brandsArr[idx].description = descInput.value; updateHiddenJson('brands', brandsArr); };
+                removeBtn.onclick = () => { brandsArr.splice(idx, 1); renderBrands(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('brands', brandsArr);
+        }
+
+        document.getElementById('addBrandBtn').onclick = () => {
+            const name = document.getElementById('brandName').value.trim();
+            const year = document.getElementById('brandYear').value.trim();
+            const description = document.getElementById('brandDescription').value.trim();
+
+            if (name && year && description) {
+                brandsArr.push({ brandName: name, year, description });
+                renderBrands();
+                document.getElementById('brandName').value = '';
+                document.getElementById('brandYear').value = '';
+                document.getElementById('brandDescription').value = '';
+            }
+        };
+
+
+
+        let timelineArr = [];
+
+        function renderTimeline() {
+            const container = document.getElementById('careerTimelineInputs');
+            container.innerHTML = '';
+
+            timelineArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+     <textarea class="form-control form-control-sm w-100" placeholder="Year">${item.year}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Title">${item.title}</textarea>
+<textarea class="form-control form-control-sm flex-fill" placeholder="Event">${item.event}</textarea>
+<button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+    `;
+
+                row.children[0].oninput = e => { timelineArr[idx].year = e.target.value; updateHiddenJson('timeline', timelineArr); };
+                row.children[1].oninput = e => { timelineArr[idx].title = e.target.value; updateHiddenJson('timeline', timelineArr); };
+                row.children[2].oninput = e => { timelineArr[idx].event = e.target.value; updateHiddenJson('timeline', timelineArr); };
+                row.children[3].onclick = () => { timelineArr.splice(idx, 1); renderTimeline(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('timeline', timelineArr);
+        }
+
+        document.getElementById('addTimeline').onclick = () => {
+            const year = document.getElementById('timelineYear').value.trim();
+            const title = document.getElementById('timelineTitle').value.trim();
+            const event = document.getElementById('timelineEvent').value.trim();
+
+            if (year && title && event) {
+                timelineArr.push({ year, title, event });
+                renderTimeline();
+                document.getElementById('timelineYear').value = '';
+                document.getElementById('timelineTitle').value = '';
+                document.getElementById('timelineEvent').value = '';
+            }
+        };
+
+        let albumsArr = [];
+
+        function renderAlbums() {
+            const container = document.getElementById('albumsInput');
+            container.innerHTML = '';
+
+            albumsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+      <textarea class="form-control form-control-sm w-100" placeholder="Title">${item.title}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Year">${item.year}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Description">${item.description}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="URL">${item.url}</textarea>
+<button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+    `;
+
+                row.children[0].oninput = e => { albumsArr[idx].title = e.target.value; updateHiddenJson('albums', albumsArr); };
+                row.children[1].oninput = e => { albumsArr[idx].year = e.target.value; updateHiddenJson('albums', albumsArr); };
+                row.children[2].oninput = e => { albumsArr[idx].description = e.target.value; updateHiddenJson('albums', albumsArr); };
+                row.children[3].oninput = e => { albumsArr[idx].url = e.target.value; updateHiddenJson('albums', albumsArr); };
+                row.children[4].onclick = () => { albumsArr.splice(idx, 1); renderAlbums(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('albums', albumsArr);
+        }
+
+        document.getElementById('addAlbum').onclick = () => {
+            const title = document.getElementById('albumTitle').value.trim();
+            const year = document.getElementById('albumYear').value.trim();
+            const description = document.getElementById('albumDescription').value.trim();
+            const url = document.getElementById('albumUrl').value.trim();
+
+            if (title && year && description && url) {
+                albumsArr.push({ title, year, description, url });
+                renderAlbums();
+                document.getElementById('albumTitle').value = '';
+                document.getElementById('albumYear').value = '';
+                document.getElementById('albumDescription').value = '';
+                document.getElementById('albumUrl').value = '';
+            }
+        };
+
+        let concertsArr = [];
+
+        function renderConcerts() {
+            const container = document.getElementById('concertsInput');
+            container.innerHTML = '';
+
+            concertsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+      <textarea class="form-control form-control-sm w-100" placeholder="Name">${item.name}</textarea>
+<textarea class="form-control form-control-sm w-100" placeholder="Year">${item.year}</textarea>
+<textarea class="form-control form-control-sm flex-fill" placeholder="Description">${item.description}</textarea>
+<button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+    `;
+
+                row.children[0].oninput = e => { concertsArr[idx].name = e.target.value; updateHiddenJson('concerts', concertsArr); };
+                row.children[1].oninput = e => { concertsArr[idx].year = e.target.value; updateHiddenJson('concerts', concertsArr); };
+                row.children[2].oninput = e => { concertsArr[idx].description = e.target.value; updateHiddenJson('concerts', concertsArr); };
+                row.children[3].onclick = () => { concertsArr.splice(idx, 1); renderConcerts(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('concerts', concertsArr);
+        }
+
+        document.getElementById('addConcert').onclick = () => {
+            const name = document.getElementById('concertName').value.trim();
+            const year = document.getElementById('concertYear').value.trim();
+            const description = document.getElementById('concertDesc').value.trim();
+
+            if (name && year && description) {
+                concertsArr.push({ name, year, description });
+                renderConcerts();
+                document.getElementById('concertName').value = '';
+                document.getElementById('concertYear').value = '';
+                document.getElementById('concertDesc').value = '';
+            }
+        };
+
+
+        let awardsArr = [];
+
+        function renderAwards() {
+            const container = document.getElementById('awardsInput');
+            container.innerHTML = '';
+
+            awardsArr.forEach((item, idx) => {
+                const row = document.createElement('div');
+                row.className = 'd-flex-column align-items-start mt-2 mb-2 border border-success p-2 rounded';
+
+                row.innerHTML = `
+                        <textarea class="form-control form-control-sm w-100" placeholder="Award Name">${item.name}</textarea>
+                        <textarea class="form-control form-control-sm w-100" placeholder="Year">${item.year}</textarea>
+                        <textarea class="form-control form-control-sm flex-fill" placeholder="Description">${item.description}</textarea>
+                        <button class="btn btn-link text-danger p-0"><i class="bi bi-x-circle"></i></button>
+                            `;
+
+                row.children[0].oninput = e => { awardsArr[idx].name = e.target.value; updateHiddenJson('awards', awardsArr); };
+                row.children[1].oninput = e => { awardsArr[idx].year = e.target.value; updateHiddenJson('awards', awardsArr); };
+                row.children[2].oninput = e => { awardsArr[idx].description = e.target.value; updateHiddenJson('awards', awardsArr); };
+                row.children[3].onclick = () => { awardsArr.splice(idx, 1); renderAwards(); };
+
+                container.appendChild(row);
+            });
+
+            updateHiddenJson('awards', awardsArr);
+        }
+
+        document.getElementById('addAward').onclick = () => {
+            const name = document.getElementById('awardName').value.trim();
+            const year = document.getElementById('awardYear').value.trim();
+            const description = document.getElementById('awardDesc').value.trim();
+
+            if (name && year && description) {
+                awardsArr.push({ name, year, description });
+                renderAwards();
+                document.getElementById('awardName').value = '';
+                document.getElementById('awardYear').value = '';
+                document.getElementById('awardDesc').value = '';
+            }
+        };
+
+        // Load for update (if slug in URL)
+        async function fetchCelebrity(slug) {
+            try {
+                const res = await fetch(`/api/celebrities/${slug}`);
+                if (!res.ok) return null;
+                return await res.json();
+            } catch (e) {
+                return null;
+            }
+        }
+        function fillForm(data) {
+            document.getElementById('formTitle').textContent = 'Update Celebrity';
+            document.getElementById('fullName').value = data.fullName || '';
+            document.getElementById('stageName').value = data.stageName || data.nickname || '';
+            document.getElementById('dateOfBirth').value = data.dateOfBirth ? data.dateOfBirth.split('T')[0] : '';
+            document.getElementById('placeOfBirth').value = data.placeOfBirth || '';
+            document.getElementById('nationality').value = data.nationality || '';
+            document.getElementById('profession').value = data.roles ? data.roles.join(', ') : '';
+            document.getElementById('bio').value = data.bio || '';
+            document.getElementById('careerBackground').value = data.careerBackground || '';
+            document.getElementById('careerStatus').value = data.careerStatus || '';
+            document.getElementById('careerStart').value = data.careerStart || '';
+            document.getElementById('careerBreakthrough').value = data.careerBreakthrough || '';
+            document.getElementById('link').value = data.link || '';
+            achievementsArr = data.careerAchievements || [];
+            renderCareerAchievements();
+            timelineArr = (data.careerTimeline || []);
+            renderTimeline();
+            albumsArr = (data.albums || []);
+            renderAlbums();
+            concertsArr = (data.concerts || []);
+            renderConcerts();
+            brandsArr = (data.brands || []);
+            renderBrands();
+            awardsArr = (data.awards || []);
+            renderAwards();
+            nominationsArr = (data.nominations || []);
+            renderNominations();
+            recordsArr = (data.records || []);
+            renderRecords();
+            awardGalleryArr = (data.awardGallery || []);
+            renderAwardGallery();
+            document.getElementById('relationshipStatus').value = data.relationshipStatus || '';
+            document.getElementById('children').value = (data.children || []).join(', ') || '';
+            document.getElementById('family').value = data.family || '';
+            document.getElementById('friends').value = (data.friends || []).join(', ') || '';
+            personalInsightsArr = data.personalInsights || [];
+            renderPersonalInsights();
+            const netWorth = parseFloat(data.networth);
+            document.getElementById('networth').value = isNaN(netWorth) ? 0 : netWorth.toFixed(2);
+
+            assetsArr = data.assets || [];
+            renderAssets();
+            philanthropyArr = data.philanthropy || [];
+            renderPhilanthropy();
+            newsTag.set(data.news || []);
+            funFactsArr = data.funFacts || [];
+            renderFunFacts();
+            if (data.profilePic) {
+                document.getElementById('profileImgPreview').src = data.profilePic;
+                document.getElementById('profilePic').value = data.profilePic;
+            }
+            if (data.coverPic) {
+                document.getElementById('coverImgPreview').src = data.coverPic;
+                document.getElementById('coverPic').value = data.coverPic;
+            }
+        }
+        // On load, check for slug
+        let slug = null;
+        document.addEventListener('DOMContentLoaded', async function () {
+            slug = new URLSearchParams(window.location.search).get('slug') || null;
+            if (slug) {
+                const data = await fetchCelebrity(slug);
+                if (data) fillForm(data);
+            }
+
+            document.querySelectorAll('textarea').forEach(textarea => {
+                const autoResize = () => {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = `${textarea.scrollHeight}px`;
+                };
+                textarea.addEventListener('input', autoResize);
+                autoResize(); // initial size
+            });
+
+        });
+
+
+
+
+        document.getElementById('celebrityForm').onsubmit = async function (e) {
+            e.preventDefault();
+            document.getElementById('formAlert').innerHTML = '';
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            let imageUrl = formData.get('profilePic'); // May already have a URL
+
+            const fileInput = document.getElementById('ProfileImage');
+            if (fileInput.files.length) {
+                try {
+                    const uploadFormData = new FormData();
+                    uploadFormData.append('image', fileInput.files[0]);
+
+                    const res = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: uploadFormData
+                    });
+
+                    if (!res.ok) throw new Error('Upload failed');
+
+                    const data = await res.json();
+                    console.log('Server response:', data);
+
+                    // Extract URL from response
+                    imageUrl = data.url?.path || data.url?.secure_url || data.url;
+                    formData.set('profilePic', imageUrl);
+                    document.getElementById('profileImgPreview').src = imageUrl;
+
+                    // Also show it in the input field for user visibility
+                    const profilePicInput = document.querySelector('input[name="profilePic"]');
+                    if (profilePicInput) {
+                        profilePicInput.value = imageUrl;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    document.getElementById('formAlert').textContent = 'Image upload failed!';
+                    return;
+                }
+            }
+
+            // Prepare JSON payload
+            const payload = {
+                fullName: formData.get('fullName'),
+                nickname: formData.get('stageName'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                profilePic: imageUrl,
+                coverPic: formData.get('coverPic'),
+                placeOfBirth: formData.get('placeOfBirth'),
+                nationality: formData.get('nationality'),
+                roles: formData.get('profession').split(',').map(r => r.trim()).filter(Boolean),
+                link: formData.get('link'),
+                bio: formData.get('bio'),
+                careerBackground: formData.get('careerBackground'),
+                careerStatus: formData.get('careerStatus'),
+                careerStart: formData.get('careerStart'),
+                careerBreakthrough: formData.get('careerBreakthrough'),
+                careerAchievements: achievementsArr,
+                careerTimeline: timelineArr,
+                albums: albumsArr,
+                concerts: concertsArr,
+                brands: brandsArr,
+                awards: awardsArr,
+                nominations: nominationsArr,
+                records: recordsArr,
+                awardGallery: awardGalleryArr,
+                relationshipStatus: formData.get('relationshipStatus'),
+                children: formData.get('children').split(',').map(c => c.trim()).filter(Boolean),
+                family: formData.get('family'),
+                friends: formData.get('friends').split(',').map(f => f.trim()).filter(Boolean),
+                personalInsights: personalInsightsArr,
+                networth: formData.get('networth'),
+                assets: assetsArr,
+                philanthropy: philanthropyArr,
+                news: newsTag.get(),
+                funFacts: funFactsArr
+            };
+            // Submit
+            document.getElementById('submitBtn').disabled = true;
+            try {
+                const res = await fetch(slug ? `/api/celebrities/${slug}` : '/api/celebrities', {
+                    method: slug ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    document.getElementById('formAlert').innerHTML = '<div class="alert alert-success">Celebrity saved successfully!</div>';
+                    const datas = await res.json(); // ✅ await this
+
+                    console.log('Celebrity saved:', datas);
+
+                    if (datas.slug) {
+                        // Update URL with new slug
+                        slug = datas.slug || slug;
+
+                        const url = new URL(window.location);
+                        url.searchParams.set('slug', slug);
+                        window.history.replaceState({}, '', url);
+
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                    }
+                    if (!slug) form.reset();
+                } else {
+                    const err = await res.json();
+                    document.getElementById('formAlert').innerHTML = `<div class="alert alert-danger">${err.message || 'Failed to save.'}</div>`;
+                }
+            } catch (err) {
+                document.getElementById('formAlert').innerHTML = `<div class="alert alert-danger">Error: ${err.message}</div>`;
+            }
+            document.getElementById('submitBtn').disabled = false;
+        };
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('profileImgPreview');
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+    </script>
+</body>
+
+</html>

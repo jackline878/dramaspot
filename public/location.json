@@ -1,0 +1,272 @@
+{
+  "Africa": {
+    "East Africa": {
+      "Burundi": [],
+      "Comoros": [],
+      "Djibouti": [],
+      "Eritrea": [],
+      "Ethiopia": [],
+      "Kenya": [],
+      "Madagascar": [],
+      "Malawi": [],
+      "Mauritius": [],
+      "Mozambique": [],
+      "Rwanda": [],
+      "Seychelles": [],
+      "Somalia": [],
+      "South Sudan": [],
+      "Tanzania": [],
+      "Uganda": [],
+      "Zambia": []
+    },
+    "West Africa": {
+      "Benin": [],
+      "Burkina Faso": [],
+      "Cabo Verde": [],
+      "Côte d'Ivoire": [],
+      "Gambia": [],
+      "Ghana": [],
+      "Guinea": [],
+      "Guinea-Bissau": [],
+      "Liberia": [],
+      "Mali": [],
+      "Mauritania": [],
+      "Niger": [],
+      "Nigeria": [],
+      "Senegal": [],
+      "Sierra Leone": [],
+      "Togo": []
+    },
+    "Southern Africa": {
+      "Angola": [],
+      "Botswana": [],
+      "Eswatini": [],
+      "Lesotho": [],
+      "Malawi": [],
+      "Mozambique": [],
+      "Namibia": [],
+      "South Africa": [],
+      "Zambia": [],
+      "Zimbabwe": []
+    },
+    "North Africa": {
+      "Algeria": [],
+      "Egypt": [],
+      "Libya": [],
+      "Morocco": [],
+      "Sudan": [],
+      "Tunisia": [],
+      "Western Sahara": []
+    },
+    "Central Africa": {
+      "Cameroon": [],
+      "Central African Republic": [],
+      "Chad": [],
+      "Congo": [],
+      "Democratic Republic of the Congo": [],
+      "Equatorial Guinea": [],
+      "Gabon": [],
+      "Sao Tome and Principe": []
+    }
+  },
+  "Asia": {
+    "South Asia": {
+      "Afghanistan": [],
+      "Bangladesh": [],
+      "Bhutan": [],
+      "India": [],
+      "Maldives": [],
+      "Nepal": [],
+      "Pakistan": [],
+      "Sri Lanka": []
+    },
+    "Southeast Asia": {
+      "Brunei": [],
+      "Cambodia": [],
+      "East Timor": [],
+      "Indonesia": [],
+      "Laos": [],
+      "Malaysia": [],
+      "Myanmar": [],
+      "Philippines": [],
+      "Singapore": [],
+      "Thailand": [],
+      "Vietnam": []
+    },
+    "East Asia": {
+      "China": [],
+      "Japan": [],
+      "Mongolia": [],
+      "North Korea": [],
+      "South Korea": [],
+      "Taiwan": []
+    },
+    "Central Asia": {
+      "Kazakhstan": [],
+      "Kyrgyzstan": [],
+      "Tajikistan": [],
+      "Turkmenistan": [],
+      "Uzbekistan": []
+    },
+    "Western Asia": {
+      "Armenia": [],
+      "Azerbaijan": [],
+      "Bahrain": [],
+      "Cyprus": [],
+      "Georgia": [],
+      "Iran": [],
+      "Iraq": [],
+      "Israel": [],
+      "Jordan": [],
+      "Kuwait": [],
+      "Lebanon": [],
+      "Oman": [],
+      "Palestine": [],
+      "Qatar": [],
+      "Saudi Arabia": [],
+      "Syria": [],
+      "Turkey": [],
+      "United Arab Emirates": [],
+      "Yemen": []
+    }
+  },
+  "Europe": {
+    "Western Europe": {
+      "Austria": [],
+      "Belgium": [],
+      "France": [],
+      "Germany": [],
+      "Liechtenstein": [],
+      "Luxembourg": [],
+      "Monaco": [],
+      "Netherlands": [],
+      "Switzerland": []
+    },
+    "Eastern Europe": {
+      "Belarus": [],
+      "Bulgaria": [],
+      "Czech Republic": [],
+      "Hungary": [],
+      "Moldova": [],
+      "Poland": [],
+      "Romania": [],
+      "Russia": [],
+      "Slovakia": [],
+      "Ukraine": []
+    },
+    "Northern Europe": {
+      "Denmark": [],
+      "Estonia": [],
+      "Finland": [],
+      "Iceland": [],
+      "Ireland": [],
+      "Latvia": [],
+      "Lithuania": [],
+      "Norway": [],
+      "Sweden": [],
+      "United Kingdom": []
+    },
+    "Southern Europe": {
+      "Albania": [],
+      "Andorra": [],
+      "Bosnia and Herzegovina": [],
+      "Croatia": [],
+      "Greece": [],
+      "Italy": [],
+      "Malta": [],
+      "Montenegro": [],
+      "North Macedonia": [],
+      "Portugal": [],
+      "San Marino": [],
+      "Serbia": [],
+      "Slovenia": [],
+      "Spain": [],
+      "Vatican City": []
+    }
+  },
+  "North America": {
+    "Northern America": {
+      "Canada": [],
+      "United States": [],
+      "Mexico": [],
+      "Bermuda": [],
+      "Greenland": [],
+      "Saint Pierre and Miquelon": []
+    },
+    "Central America": {
+      "Belize": [],
+      "Costa Rica": [],
+      "El Salvador": [],
+      "Guatemala": [],
+      "Honduras": [],
+      "Nicaragua": [],
+      "Panama": []
+    },
+    "Caribbean": {
+      "Antigua and Barbuda": [],
+      "Bahamas": [],
+      "Barbados": [],
+      "Cuba": [],
+      "Dominica": [],
+      "Dominican Republic": [],
+      "Grenada": [],
+      "Haiti": [],
+      "Jamaica": [],
+      "Saint Kitts and Nevis": [],
+      "Saint Lucia": [],
+      "Saint Vincent and the Grenadines": [],
+      "Trinidad and Tobago": []
+    }
+  },
+  "South America": {
+    "Andean States": {
+      "Bolivia": [],
+      "Colombia": [],
+      "Ecuador": [],
+      "Peru": [],
+      "Venezuela": []
+    },
+    "Southern Cone": {
+      "Argentina": [],
+      "Chile": [],
+      "Paraguay": [],
+      "Uruguay": []
+    },
+    "Guianas": {
+      "Guyana": [],
+      "Suriname": [],
+      "French Guiana": []
+    },
+    "Brazil": []
+  },
+  "Australia": {
+    "Oceania": {
+      "Australia": [],
+      "Fiji": [],
+      "Kiribati": [],
+      "Marshall Islands": [],
+      "Micronesia": [],
+      "Nauru": [],
+      "New Zealand": [],
+      "Palau": [],
+      "Papua New Guinea": [],
+      "Samoa": [],
+      "Solomon Islands": [],
+      "Tonga": [],
+      "Tuvalu": [],
+      "Vanuatu": []
+    }
+  },
+  "Antarctica": {
+    "Research Zones": {
+      "McMurdo Station": [],
+      "Princess Elisabeth Station": [],
+      "Davis Station": [],
+      "Amundsen-Scott South Pole Station": [],
+      "Rothera Research Station": [],
+      "Palmer Station": [],
+      "Concordia Station": [],
+      "Neumayer-Station III": []
+    }
+  }
+}

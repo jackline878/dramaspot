@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Celebrities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Discover and explore the world of celebrities. From actors to musicians, find detailed profiles, latest news, and insights on your favorite stars.">
+    <meta name="keywords"
+        content="celebrities, actors, musicians, profiles, news, entertainment, celebrity news, celebrity profiles">
+    <meta name="author" content="LonaTech Solutions">
+
+  <!-- SEO Meta -->
+  <meta name="author" content="Drama Spots">
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph Meta (Facebook, LinkedIn) -->
+  <meta property="og:title" content="Celebrities" />
+  <meta property="og:description" content="Get to know your favourite celebrity" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dramaspots.com/celebrities" />
+  <meta property="og:image" content="https://dramaspots.com/assets/logo1.png" />
+
+  <!-- Twitter Card Meta -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Celebrities" />
+  <meta name="twitter:description" content="Get to know your favourite celebrity" />
+  <meta name="twitter:image" content="https://dramaspots.com/assets/logo1.png" />
+
+    <script src="/scripts/app.js"></script>
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://dramaspots.com/celebrities" />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Celebrities | Drama Spots",
+    "description": "Get to know your favourite celebrity",
+    "url": "https://dramaspots.com/celebrities"
+  }
+  </script>
+        <!-- JSON-LD Structured Data: Breadcrumb -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://dramaspots.com"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Celebrities",
+              "item": "https://dramaspots.com/celebrities"
+            }
+          ]
+        }
+        </script>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/logo1.png" sizes="32x32" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #d11e5a;
+            --red: #e50914;
+            --secondary: #222;
+            --accent: #e50914;
+            --text: #222;
+            --muted: #888;
+            --border: #e0e0e0;
+            --bg: #fff;
+            --card-bg: #fff;
+            --border: #e0e0e0;
+            --radius: 12px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .text-primary {
+            color: var(--primary) !important;
+        }
+
+        .btn-primary {
+            background: var(--primary) !important;
+            border: var(--primary);
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            color: var(--primary);
+        }
+
+        header {
+            background: var(--primary);
+            color: #fff;
+            padding: 32px 0 24px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            margin: 0;
+            color: #e0e0e0;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: var(--card-bg);
+            padding: 24px 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 32px auto 0 auto;
+            max-width: 1200px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filters label {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .filters select,
+        .filters input {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            background: #fafafa;
+            margin-right: 16px;
+        }
+
+        .filters .sort {
+            min-width: 180px;
+        }
+
+        .filters .search {
+            min-width: 220px;
+        }
+
+        .celebrities-group {
+            margin: 10px auto 0 auto;
+            max-width: 1200px;
+        }
+
+        .group-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 32px 0 16px 0;
+            color: var(--accent);
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 4px;
+        }
+
+        .title-btn {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .celebrities-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .celebrity-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .celebrity-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 4px 16px rgba(44, 62, 80, 0.12);
+        }
+
+        .celebrity-img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            background: #e0e0e0;
+        }
+
+        .celebrity-info {
+            padding: 24px 20px 20px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .celebrity-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .celebrity-stage {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .celebrity-role {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .celebrity-bio {
+            font-size: 0.98rem;
+            color: #444;
+            margin-bottom: 16px;
+            line-height: 1.6;
+            max-height: 7.5em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .celebrity-network {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .celebrity-location {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 10px;
+        }
+
+        .view-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: auto;
+            align-self: flex-start;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .view-btn:hover {
+            background: #ca6f1e;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin: 40px 0 60px 0;
+        }
+
+        .pagination button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pagination button:disabled {
+            background: #b2bec3;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-info {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+
+        @media (max-width: 900px) {
+            .celebrities-list {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 20px;
+            }
+
+            .filters {
+                flex-direction: column;
+                gap: 12px;
+                padding: 18px 12px;
+            }
+
+            .celebrities-group {
+                padding: 0 10px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .filters {
+                padding: 10px 4px;
+            }
+
+            .group-title {
+                font-size: 0.8rem;
+            }
+
+            .title-btn {
+                font-size: 0.8rem;
+            }
+
+            .celebrity-card {
+                padding: 0;
+            }
+
+            .celebrity-info {
+                padding: 14px 10px 10px 10px;
+            }
+
+            .celebrities-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.966);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+            /* Above most elements */
+            transition: opacity 0.2s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Drama Spots</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category/News">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Trending</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="/category/Exclusives">Exclusives
+                            <span class="exclusive-badge">Hot</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/auth">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="bg-light py-1 border-bottom">
+        <div class="container">
+            <div class=" my-3">
+                <h4 class="fw-bold">Discover Celebrities
+                    </h3>
+            </div>
+
+            <!-- Scrollable filter row on mobile -->
+            <div class="d-flex flex-wrap overflow-auto g-2 pb-2 flex-grow-1" id="filters">
+                <div class="me-2 flex-grow-1">
+                    <label for="location" class="form-label d-block small mb-1 flex-grow-1">Location</label>
+                    <select id="location" class="form-select form-select-sm" style="min-width: 140px;"></select>
+                </div>
+                <div class="me-2 flex-grow-1">
+                    <label for="role" class="form-label d-block small mb-1">Role</label>
+                    <select id="role" class="form-select form-select-sm" style="min-width: 140px;">
+                        <option value="">All</option>
+                        <option value="Musician">Musician</option>
+                        <option value="Singer">Singer</option>
+                        <option value="Rapper">Rapper</option>
+                        <option value="Actor">Actor</option>
+                        <option value="Actress">Actress</option>
+                        <option value="Athlete">Athlete</option>
+                        <option value="Footballer">Footballer</option>
+                        <option value="Basketball Player">Basketball Player</option>
+                        <option value="Tennis Player">Tennis Player</option>
+                        <option value="Influencer">Influencer</option>
+                        <option value="YouTuber">YouTuber</option>
+                        <option value="TikToker">TikToker</option>
+                        <option value="Comedian">Comedian</option>
+                        <option value="Politician">Politician</option>
+                        <option value="Entrepreneur">Entrepreneur</option>
+                        <option value="Model">Model</option>
+                        <option value="Fashion Designer">Fashion Designer</option>
+                        <option value="TV Host">TV Host</option>
+                        <option value="Director">Director</option>
+                        <option value="Producer">Producer</option>
+                        <option value="Author">Author</option>
+                        <option value="DJ">DJ</option>
+                        <option value="Philanthropist">Philanthropist</option>
+                        <option value="Reality Star">Reality Star</option>
+                        <option value="Chef">Chef</option>
+                        <option value="Dancer">Dancer</option>
+                        <option value="Visual Artist">Visual Artist</option>
+                        <option value="Activist">Activist</option>
+                        <option value="Public Figure">Public Figure</option>
+                        <option value="TikTok Star">TikTok Star</option>
+                        <option value="Content Creator">Content Creator</option>
+                        <option value="Social Media Influencer">S.Media Influencer</option>
+                    </select>
+                </div>
+                <div class="me-2 flex-grow-1">
+                    <label for="sort" class="form-label d-block small mb-1">Sort</label>
+                    <select id="sort" class="form-select form-select-sm" style="min-width: 160px;">
+                        <option value="network-desc">Net Worth ↓</option>
+                        <option value="network-asc">Net Worth ↑</option>
+                        <option value="name-asc">Name A–Z</option>
+                        <option value="name-desc">Name Z–A</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="m-2 d-flex align-items-end flex-grow-1">
+                <input type="text" id="search" class="form-control form-control-sm" placeholder="Search celebrities..."
+                    style="max-width: 200px;">
+                <button class="btn btn-primary btn-sm ms-2" id="searchBtn">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <main id="celebrities-container">
+        <!-- Celebrities will be rendered here -->
+    </main>
+    <div class="pagination" id="pagination">
+        <button id="prevPage" disabled>Prev</button>
+        <span class="page-info" id="pageInfo"></span>
+        <button id="nextPage">Next</button>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+   
+<!-- Footer -->
+<footer class="bg-danger text-white py-5 mt-5">
+  <div class="container">
+    <div class="row">
+      <!-- Brand & Description -->
+      <div class="col-md-4 mb-4 mb-md-0">
+        <h5 class="fw-bold">Dramaspot</h5>
+        <p class="small">
+          Your #1 source for the latest in celebrity relationships, breakups, and Hollywood news.
+        </p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-2 mb-4 mb-md-0">
+        <h6 class="fw-bold">Sections</h6>
+        <ul class="list-unstyled small">
+          <li><a href="/" class="footer-link text-white text-decoration-none">Home</a></li>
+          <li><a href="/category/Relationships%20&%20Love%20Life" class="footer-link text-white text-decoration-none">Relationships & Love Life</a></li>
+          <li><a href="/category/Red%20Carpet%20&%20Events" class="footer-link text-white text-decoration-none">Red Carpet & Events</a></li>
+          <li><a href="/category/News" class="footer-link text-white text-decoration-none">News</a></li>
+          <li><a href="/about" class="footer-link text-white text-decoration-none">About</a></li>
+          <li><a href="/contact" class="footer-link text-white text-decoration-none">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Pages -->
+      <div class="col-md-3 mb-4 mb-md-0">
+        <h6 class="fw-bold">Legal</h6>
+        <ul class="list-unstyled small">
+          <li><a href="/terms" class="footer-link text-white text-decoration-none">Terms & Conditions</a></li>
+          <li><a href="/privacy" class="footer-link text-white text-decoration-none">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter Signup -->
+      <div class="col-md-3">
+        <h6 class="fw-bold">Newsletter</h6>
+        <form id="subsciptionForm" action="/newsletter/subscribe" method="POST" class="d-flex flex-column gap-2">
+          <input name="email" type="email" class="form-control" placeholder="Your email" required>
+          <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-light my-4">
+
+    <!-- Contact & Socials -->
+    <div class="row">
+      <div class="col-md-6 text-center text-md-start small">
+        <p class="mb-0">Email: <a href="mailto:dramaspots254@gmail.com" class="text-white">dramaspots254@gmail.com</a></p>
+      </div>
+      <div class="col-md-6 text-center text-md-end">
+        <a href="https://x.com/dramaSpot254" class="text-white text-decoration-none me-3"><i class="bi bi-x"></i> X</a>
+        <a href="https://www.instagram.com/dramaspots254/" class="text-white text-decoration-none me-3"><i class="bi bi-instagram"></i> Instagram</a>
+        <a href="https://www.youtube.com/@dramaspot-w2r" class="text-white text-decoration-none"><i class="bi bi-youtube"></i> YouTube</a>
+        <a href="https://www.tiktok.com/@dramaspots254" class="text-white text-decoration-none"><i class="bi bi-tiktok"></i> Tiktok</a>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-center small mt-3">
+      &copy; 2025 Dramaspot. All rights reserved | Developed By <a class="text-primary text-decoration-none" href="https://lonatech.onrender.com/">Lonatech solutions</a>.
+    </div>
+  </div>
+</footer>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        // --- State ---
+        let filters = {
+            location: "",
+            role: "",
+            sort: "network-desc",
+            search: ""
+        };
+        let currentPage = 1;
+        const pageSize = 10;
+        let totalPages = 1;
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('d-none');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('d-none');
+        }
+
+        // --- Utility Functions ---
+        async function filterCelebrities() {
+            const response = await fetch(`/api/celebrities?location=${filters.location}&role=${filters.role}&search=${filters.search}&sort=${filters.sort}&page=${currentPage}&limit=${pageSize}`);
+            if (!response.ok) {
+                console.error('Failed to fetch celebrities');
+                return;
+            }
+            const celebrities = await response.json();
+
+            return celebrities;
+        }
+
+        function sortCelebrities(data) {
+            switch (filters.sort) {
+                case "network-desc":
+                    return data.sort((a, b) => b.network - a.network);
+                case "network-asc":
+                    return data.sort((a, b) => a.network - b.network);
+                case "name-asc":
+                    return data.sort((a, b) => a.name.localeCompare(b.name));
+                case "name-desc":
+                    return data.sort((a, b) => b.name.localeCompare(a.name));
+                default:
+                    return data;
+            }
+        }
+
+        function groupCelebrities(data) {
+            // Group by location
+            let groups = {};
+            if (filters.location === "") {
+                groups[""] = data;
+                return groups;
+            }
+
+            data.forEach(c => {
+                if (!groups[c.location]) groups[c.location] = [];
+                groups[c.location].push(c);
+            });
+
+
+            if (!data.length) {
+                groups[filters.location] = [];
+            }
+
+            return groups;
+        }
+
+        function paginateCelebrities(data) {
+            const start = (currentPage - 1) * pageSize;
+            return data.slice(start, start + pageSize);
+        }
+
+        // --- Render Functions ---
+        async function renderCelebrities() {
+            showLoading();
+            let data = await filterCelebrities();
+
+            let filtered = Array.isArray(data?.data) ? data.data.map(c => ({
+                id: c.id,
+                name: c.fullName || 'Unnamed',
+                stageName: c.nickname || c.fullName || 'Unknown',
+                profilePic: c.profilePic || 'https://media.istockphoto.com/id/2165512149/photo/red-carpet-interview-with-male-celebrity.webp?a=1&b=1&s=612x612&w=0&k=20&c=gHgyn-kmsvy451ZvOW1HPFZnay4-JNknWON5yWSsknk=',
+                role: Array.isArray(JSON.parse(c.roles)) ? JSON.parse(c.roles).join(', ') : 'Unknown',
+                location: c.placeOfBirth || 'Unknown',
+                network: c.networth || 0,
+                bio: c.bio || 'No bio available',
+                slug: c.slug || c.fullName.toLowerCase().replace(/\s+/g, '-')
+            })) : [];
+            console.log('Filtered Celebrities:', filtered);
+            console.log(data);
+            // Pagination
+
+            document.getElementById('prevPage').disabled = data.page === 1;
+            document.getElementById('nextPage').disabled = data.page === data.totalPages || data.totalPages === 0;
+            document.getElementById('pageInfo').textContent = `Page ${data.page} of ${data.totalPages || 1}`;
+            currentPage = data.page || 1;
+            totalPages = data.totalPages || 1;
+            if (totalPages === 1) {
+                document.getElementById('pagination').classList.add('d-none');
+            }
+
+            // Grouping
+            const grouped = groupCelebrities(filtered);
+
+            // Render
+            const container = document.getElementById('celebrities-container');
+            container.innerHTML = '';
+
+            Object.keys(grouped).forEach(location => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'celebrities-group';
+
+
+                if (location !== '') {
+                    const nestLength = location.split(',').length;
+
+                    const title = document.createElement('div');
+                    title.className = 'group-title';
+
+                    const locationParts = location.split(',').map(part => part.trim());
+                    location.split(',').map(part => part.trim());
+                    const titleHead = document.createElement('span');
+                    titleHead.innerHTML = ''; // Clear existing title contents
+                    locationParts.forEach((part, index) => {
+                        const btn = document.createElement('button');
+                        btn.textContent = part;
+                        btn.style.marginRight = '5px';
+                        btn.className = 'title-btn';
+                        btn.style.background = 'none';
+                        btn.style.border = 'none';
+                        btn.style.color = 'blue';
+                        btn.style.cursor = 'pointer';
+                        btn.style.textDecoration = 'underline';
+
+                        btn.addEventListener('click', () => {
+                            // Keep only parts up to this index
+                            const newLocation = locationParts.slice(0, index + 1).join(', ');
+                            filters.location = newLocation;
+                            renderCelebrities();
+
+                        });
+
+                        titleHead.appendChild(btn);
+
+                        // Add separator if not last
+                        if (index < locationParts.length - 1) {
+                            const sep = document.createElement('span');
+                            sep.textContent = ' > ';
+                            titleHead.appendChild(sep);
+                        }
+                    });
+
+
+
+                    title.appendChild(titleHead);
+                    const topDiv = document.createElement('div');
+                    topDiv.className = 'group-top';
+
+
+
+                    let current = locations;
+
+                    // Loop through each part to go one level deeper each time
+                    for (let z = 0; z < locationParts.length; z++) {
+                        if (current && current[locationParts[z]]) {
+                            current = current[locationParts[z]];
+                        } else {
+                            current = null;
+                            break;
+                        }
+                    }
+
+                    // Now `current` is the object at the current level
+                    if (current && typeof current === 'object' && Object.keys(current).length > 0) {
+
+                        const gSelect = document.createElement('select');
+                        gSelect.id = 'region';
+
+                        // Create and append the "All" option
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = '';
+                        defaultOption.textContent = 'All';
+                        gSelect.appendChild(defaultOption);
+
+                        Object.keys(current).forEach(loc => {
+                            const option = document.createElement('option');
+                            option.value = loc;
+                            option.textContent = loc;
+                            gSelect.appendChild(option);
+                        });
+
+                        // Listen for selection changes on the <select>
+                        gSelect.addEventListener('change', (e) => {
+                            const selectedLoc = e.target.value;
+                            if (selectedLoc === 'All') {
+                                filters.location = `${location}`;
+                            } else {
+                                filters.location = `${location}, ${selectedLoc}`;
+                            }
+                            renderCelebrities();
+                        });
+
+                        topDiv.appendChild(gSelect);
+                    }
+
+
+                    title.appendChild(topDiv);
+
+                    groupDiv.appendChild(title);
+                }
+                const list = document.createElement('div');
+                list.className = 'celebrities-list';
+
+                grouped[location].forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = 'celebrity-card';
+
+                    const img = document.createElement('img');
+                    img.className = 'celebrity-img';
+                    img.src = c.profilePic;
+                    img.alt = `${c.stageName} profile picture`;
+                    card.appendChild(img);
+
+                    const info = document.createElement('div');
+                    info.className = 'celebrity-info';
+
+                    const name = document.createElement('div');
+                    name.className = 'celebrity-name';
+                    name.textContent = c.stageName;
+                    info.appendChild(name);
+
+                    const stage = document.createElement('div');
+                    stage.className = 'celebrity-stage';
+                    stage.textContent = `(${c.name})`;
+                    info.appendChild(stage);
+
+                    const role = document.createElement('div');
+                    role.className = 'celebrity-role';
+                    role.innerHTML = `<i class="fa-solid fa-user"></i> ${c.role}`;
+                    info.appendChild(role);
+
+                    const locationDiv = document.createElement('div');
+                    locationDiv.className = 'celebrity-location';
+                    locationDiv.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${c.location}`;
+                    info.appendChild(locationDiv);
+
+                    const network = document.createElement('div');
+                    network.className = 'celebrity-network';
+                    network.innerHTML = `<i class="fa-solid fa-money-bill-wave"></i> Net Worth: $${c.network.toLocaleString()}`;
+                    info.appendChild(network);
+
+                    const bio = document.createElement('div');
+                    bio.className = 'celebrity-bio';
+                    bio.textContent = c.bio;
+                    info.appendChild(bio);
+
+                    const btn = document.createElement('a');
+                    btn.className = 'view-btn';
+                    btn.href = `/celebrity/${c.slug}`;
+                    btn.textContent = 'View Profile';
+                    info.appendChild(btn);
+
+                    const btn2 = document.createElement('a');
+                    btn2.className = 'view-btn';
+                    btn2.href = `/celeb/add?slug=${c.slug}`;
+                    btn2.textContent = 'Edit Profile';
+                    info.appendChild(btn2);
+
+                    card.appendChild(info);
+                    list.appendChild(card);
+                });
+
+                groupDiv.appendChild(list);
+                container.appendChild(groupDiv);
+            });
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            hideLoading();
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('location').addEventListener('change', e => {
+            filters.location = e.target.value;
+            currentPage = 1;
+            renderCelebrities();
+        });
+        document.getElementById('role').addEventListener('change', e => {
+            filters.role = e.target.value;
+            currentPage = 1;
+            renderCelebrities();
+        });
+        document.getElementById('sort').addEventListener('change', e => {
+            filters.sort = e.target.value;
+            renderCelebrities();
+        });
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            filters.search = document.getElementById('search').value.trim().toLowerCase();
+            currentPage = 1;
+            renderCelebrities();
+        });
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderCelebrities();
+            }
+        });
+        document.getElementById('nextPage').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderCelebrities();
+            }
+        });
+        let locations = {};
+        // --- Initial Render ---
+        document.addEventListener("DOMContentLoaded", async () => {
+            const res = await fetch('/location.json');
+            locations = await res.json();
+            const locationSelect = document.getElementById('location');
+
+            locationSelect.innerHTML =
+                '<option value="">All</option>' +
+                Object.keys(locations).map(loc => `<option value="${loc}">${loc}</option>`).join('');
+        });
+
+        renderCelebrities();
+    </script>
+</body>
+
+</html>

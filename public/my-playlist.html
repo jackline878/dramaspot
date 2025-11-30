@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Playlist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     <title>🎶 Your Playlist – Add & Enjoy Your Favorite Collection on DramaSpots Music</title>
+        <meta name="title" content="🎶 Your Playlist – Add & Enjoy Your Favorite Collection on DramaSpots Music">
+        <meta name="description" content="All your favorite tracks in one place! Access and enjoy your personal playlist exclusively on DramaSpots Music. Listen, manage, and vibe with your top songs anytime.">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Dramaspots">
+        <meta property="og:title" content="🎶 Your Playlist – Add & Enjoy Your Favorite Collection on DramaSpots Music">
+        <meta property="og:description" content="All your favorite tracks in one place! Access and enjoy your personal playlist exclusively on DramaSpots Music. Listen, manage, and vibe with your top songs anytime.">
+        <meta property="og:locale" content="en_ZA">
+        <meta property="og:image" content="https://dramaspots.com/assets/logo1.png">
+        <meta property="og:image:width" content="1200">
+        <meta property="og:image:height" content="630">
+        <meta property="og:image:alt" content="🎶 Your Playlist – Add & Enjoy Your Favorite Collection on DramaSpots Music">
+        <meta property="og:image:type" content="image/svg+xml">
+        <meta property="og:url" content="https://dramaspots.com/music/my-playlist">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="@dramaSpot254">
+        <meta name="twitter:title" content="🎶 Your Playlist – Add & Enjoy Your Favorite Collection on DramaSpots Music">
+        <meta name="twitter:description" content="All your favorite tracks in one place! Access and enjoy your personal playlist exclusively on DramaSpots Music. Listen, manage, and vibe with your top songs anytime.">
+        <meta name="twitter:creator" content="@dramaSpot254">
+        <meta name="twitter:image" content="https://dramaspots.com/assets/logo1.png">
+        <meta name="twitter:label1" content="Author">
+        <meta name="twitter:data1" content="Dramaspots">
+        <meta name="twitter:label2" content="Estimated Reading Time">
+        <meta name="twitter:data2" content="2 minutes">
+        <meta name="robots" content="noindex, nofollow">
+        <link rel="canonical" href="https://dramaspots.com/music/my-playlist">
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+            <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/logo1.png" sizes="32x32">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/logo1.png">
+
+         
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+${JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "Playlist",
+                    "headline": title,
+                    "image": ['https://dramaspots.com/assets/logo1.png'],
+                    "datePublished": null,
+                    "dateModified": null,
+                    "author": {
+                        "@type": "Person",
+                        "name": "DramaSpots"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "DramaSpots",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "https://dramaspots.com/assets/logo1.png"
+                        }
+                    },
+                    "mainEntityOfPage": {
+                        "@type": "WebPage",
+                        "@id": `https://dramaspots.com/music/my-playlist`
+                    }
+                },
+                {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        {
+                            "@type": "ListItem",
+                            "position": 1,
+                            "name": "Home",
+                            "item": "https://dramaspots.com/"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 2,
+                            "name": `Music`,
+                            "item": "https://dramaspots.com/music"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 3,
+                            "name": `My Playlist`,
+                            "item": `https://dramaspots.com/music/my-playlist`
+                        }
+                    ]
+                }
+            ]
+        }, null, 2)}
+    </script>
+
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .playlist-item {
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .playlist-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .playlist-info {
+            flex-grow: 1;
+        }
+
+        .btn-outline-primary {
+            color: #d11e5a;
+            border-color: #d11e5a;
+        }
+
+        .btn-primary {
+            background: #d11e5a;
+            border-color: #d11e5a;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #d11e5a;
+            border-color: #d11e5a;
+            color: #fff;
+        }
+
+        .card-title {
+            color: #615e5e;
+
+        }
+
+        .music-section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #d11e5a;
+        }
+
+        @media (max-width: 768px) {
+            .card-title {
+                font-size: 0.75rem !important;
+            }
+
+            .card-text {
+                font-size: 0.75rem;
+            }
+        }
+
+        .text_primary {
+            color: rgb(71, 110, 216) !important;
+        }
+
+        .btn-outline_primary {
+            color: rgb(71, 110, 216) !important;
+            border-color: rgb(71, 110, 216) !important;
+        }
+
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.966);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1050;
+            transition: opacity 0.2s ease;
+        }
+
+                .play-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #d11e5a;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Drama Spots</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/music">Music</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/music#genres">Genres</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/music#moods">Moods</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container bg-white py-4">
+        <h2 class="mb-4 play-title">🎵 Your Playlist</h2>
+        <div class="m-2">
+            <button class="btn btn-danger" id="clearPlaylistBtn">
+                <i class="fas fa-trash-alt"></i> Clear Playlist
+            </button>
+        </div>
+        <div id="playlistContainer" class="m-2 rounded"></div>
+        <nav>
+            <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
+
+        <!-- New Releases Section -->
+        <section id="releasesSection" class="mb-5" style="display: none;">
+            <div class="music-section-title mb-3">New Releases</div>
+            <div class="row flex-wrap g-1 sectionss" id="newReleasesRow">
+                <!-- JS will populate -->
+            </div>
+        </section>
+
+        <div class="loader w-100 d-flex justify-content-center align-items-center" id="loadingOverlay">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!-- Featured Section -->
+        <section id="featuredSection" class="mb-5" style="display: none;">
+            <div class="music-section-title mb-3">Featured</div>
+            <div class="row flex-wrap g-1 sectionss" id="featuredRow">
+                <!-- JS will populate -->
+            </div>
+        </section>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-danger text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Brand & Description -->
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold">Dramaspot</h5>
+                    <p class="small">
+                        Your #1 source for the latest in celebrity relationships, breakups, and Hollywood news.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Sections</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="/" class="footer-link text-white text-decoration-none">Home</a></li>
+                        <li><a href="/category/Relationships%20&%20Love%20Life"
+                                class="footer-link text-white text-decoration-none">Relationships & Love Life</a></li>
+                        <li><a href="/category/Red%20Carpet%20&%20Events"
+                                class="footer-link text-white text-decoration-none">Red Carpet & Events</a></li>
+                        <li><a href="/category/News" class="footer-link text-white text-decoration-none">News</a></li>
+                        <li><a href="/about" class="footer-link text-white text-decoration-none">About</a></li>
+                        <li><a href="/contact" class="footer-link text-white text-decoration-none">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Pages -->
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold">Legal</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="/terms" class="footer-link text-white text-decoration-none">Terms & Conditions</a>
+                        </li>
+                        <li><a href="/privacy" class="footer-link text-white text-decoration-none">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Signup -->
+                <div class="col-md-3">
+                    <h6 class="fw-bold">Newsletter</h6>
+                    <form id="subsciptionForm" action="/newsletter/subscribe" method="POST"
+                        class="d-flex flex-column gap-2">
+                        <input name="email" type="email" class="form-control" placeholder="Your email" required>
+                        <button class="btn btn-light btn-sm" type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="border-light my-4">
+
+            <!-- Contact & Socials -->
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start small">
+                    <p class="mb-0">Email: <a href="mailto:dramaspots254@gmail.com"
+                            class="text-white">dramaspots254@gmail.com</a></p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="https://x.com/dramaSpot254" class="text-white text-decoration-none me-3"><i
+                            class="bi bi-x"></i> X</a>
+                    <a href="https://www.instagram.com/dramaspots254/" class="text-white text-decoration-none me-3"><i
+                            class="bi bi-instagram"></i> Instagram</a>
+                    <a href="https://www.youtube.com/@dramaspot-w2r" class="text-white text-decoration-none"><i
+                            class="bi bi-youtube"></i> YouTube</a>
+                    <a href="https://www.tiktok.com/@dramaspots254" class="text-white text-decoration-none"><i
+                            class="bi bi-tiktok"></i> Tiktok</a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center small mt-3">
+                &copy; 2025 Dramaspot. All rights reserved | Developed By <a class="text-primary text-decoration-none"
+                    href="https://lonatech.onrender.com/">Lonatech solutions</a>.
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const SONGS_PER_PAGE = 20;
+        let currentPage = 1;
+
+        function renderPagination(totalSongs, currentPage) {
+            const totalPages = Math.ceil(totalSongs / SONGS_PER_PAGE);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = 'page-item' + (currentPage === 1 ? ' disabled' : '');
+            prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
+            prevLi.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    goToPage(currentPage - 1);
+                }
+            });
+            pagination.appendChild(prevLi);
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = 'page-item' + (i === currentPage ? ' active' : '');
+                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                li.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    goToPage(i);
+                });
+                pagination.appendChild(li);
+            }
+
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = 'page-item' + (currentPage === totalPages ? ' disabled' : '');
+            nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>`;
+            nextLi.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    goToPage(currentPage + 1);
+                }
+            });
+            pagination.appendChild(nextLi);
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadPlaylist();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function loadPlaylist() {
+            const container = document.getElementById('playlistContainer');
+            container.innerHTML = '';
+
+            const playlist = JSON.parse(localStorage.getItem('playlist')) || [];
+            const totalSongs = playlist.length;
+
+            if (totalSongs === 0) {
+                container.innerHTML = '<p class="text-muted text-center">Your playlist is empty.</p>';
+                document.getElementById('clearPlaylistBtn').classList.add('d-none');
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+
+            renderPagination(totalSongs, currentPage);
+
+            const start = (currentPage - 1) * SONGS_PER_PAGE;
+            const end = start + SONGS_PER_PAGE;
+            const pageSongs = playlist.slice(start, end);
+
+            container.innerHTML = `
+                <div class="row g-1">
+                    ${pageSongs.map((r, index) => `
+                        <div class="col-md-3 col-6">
+                            <div class="card h-100 shadow-sm position-relative">
+                                <img src="${r.img}" class="card-img-top" alt="Related Song ${start + index + 1}">
+                                <div class="card-body">
+                                    <span class="card-title mb-1">${r.title}</span>
+                                    <p class="card-text text-muted mb-2"><i class="far fa-clock"></i>&nbsp;${r.duration}</p>
+                                    <div class="my-2 d-flex gap-2 align-items-center">
+                                        <button class="btn btn-sm btn-outline-primary share-btn" data-platform="facebook"
+                                            data-title="${r.title}" data-link="https://dramaspots.com/music/${r.link}" data-img="${r.img}">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-dark share-btn" data-platform="twitter"
+                                            data-title="${r.title}" data-link="https://dramaspots.com/music/${r.link}" data-img="${r.img}">
+                                            <i class="fab fa-x-twitter"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success share-btn" data-platform="whatsapp"
+                                            data-title="${r.title}" data-link="https://dramaspots.com/music/${r.link}" data-img="${r.img}">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </button>
+                                    </div>
+                                    <a href="/music/${r.link}" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="fa-solid fa-play"></i> Listen
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-1 remove-btn" data-index="${start + index}">
+                                        <i class="fas fa-times"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeSongFromPlaylist(index);
+                });
+            });
+        }
+
+        function removeSongFromPlaylist(index) {
+            let playlist = JSON.parse(localStorage.getItem('playlist')) || [];
+            playlist.splice(index, 1);
+            localStorage.setItem('playlist', JSON.stringify(playlist));
+            // If removing last item on last page, go to previous page if needed
+            const totalPages = Math.ceil(playlist.length / SONGS_PER_PAGE);
+            if (currentPage > totalPages && totalPages > 0) {
+                currentPage = totalPages;
+            }
+            loadPlaylist();
+        }
+
+        document.getElementById('clearPlaylistBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear your entire playlist?')) {
+                localStorage.removeItem('playlist');
+                currentPage = 1;
+                loadPlaylist();
+            }
+        });
+        let musicSections = {
+            "New Releases": [],
+            "Featured": []
+        };
+        function renderMusicSlider(section, containerId) {
+            const row = document.getElementById(containerId);
+            row.innerHTML = '';
+            musicSections[section].forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-6';
+                col.innerHTML = `
+  
+    <div class="card h-100 shadow-sm">
+                        <img src="${item.img}" class="card-img-top" alt="Related Song 1">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">${item.title}</h6>
+                            <p class="card-text text-muted mb-2">
+                                <i class="far fa-clock"></i>&nbsp;
+                                ${item.duration}</p>
+                                <div class="my-2 d-flex gap-2 align-items-center">
+  <button class="btn btn-sm btn-outline_primary share-btn" data-platform="facebook"
+    data-title="${item.title}" data-link="https://dramaspots.com/music/${item.link}" data-img="${item.img}">
+    <i class="fab fa-facebook-f"></i>
+  </button>
+  <button class="btn btn-sm btn-outline-dark share-btn" data-platform="twitter"
+    data-title="${item.title}" data-link="https://dramaspots.com/music/${item.link}" data-img="${item.img}">
+    <i class="fab fa-x-twitter"></i>
+  </button>
+  <button class="btn btn-sm btn-outline-success share-btn" data-platform="whatsapp"
+    data-title="${item.title}" data-link="https://dramaspots.com/music/${item.link}" data-img="${item.img}">
+    <i class="fab fa-whatsapp"></i>
+  </button>
+</div>
+                            <a href="/music/${item.link}" class="btn btn-sm btn-outline-primary w-100"><i class="fa-solid fa-play"></i> Listen</a>
+                        </div>
+                    </div>
+`;
+
+                document.querySelectorAll('.share-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const platform = button.getAttribute('data-platform');
+                        const title = encodeURIComponent(button.getAttribute('data-title'));
+                        const link = encodeURIComponent(button.getAttribute('data-link'));
+                        const img = encodeURIComponent(button.getAttribute('data-img'));
+
+                        let url = '';
+                        switch (platform) {
+                            case 'facebook':
+                                url = `https://www.facebook.com/sharer/sharer.php?u=${link}&quote=${title}`;
+                                break;
+                            case 'twitter':
+                                url = `https://twitter.com/intent/tweet?url=${link}&text=${title}`;
+                                break;
+                            case 'whatsapp':
+                                url = `https://wa.me/?text=${title}%0A${link}`;
+                                break;
+                        }
+
+                        if (url) {
+                            window.open(url, '_blank', 'noopener,noreferrer,width=600,height=500');
+                        }
+                    });
+                });
+                row.appendChild(col);
+            });
+
+            if (containerId === 'newReleasesRow') {
+                document.getElementById('releasesSection').style.display = 'block'; // Show new releases section
+            } else if (containerId === 'featuredRow') {
+                document.getElementById('featuredSection').style.display = 'block'; // Show featured section
+            }
+            document.getElementById('loadingOverlay').classList.add('d-none'); // Hide loading overlay
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            currentPage = 1;
+            loadPlaylist();
+            musicSections = await fetch('/music/songs/home').then(res => res.json());
+            renderMusicSlider("New Releases", "newReleasesRow");
+            renderMusicSlider("Featured", "featuredRow");
+        });
+    </script>
+</body>
+
+</html>

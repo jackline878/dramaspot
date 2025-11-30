@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Movies & TV Shows - Dramaspots Movies</title>
+    <meta name="description" content="Explore our vast collection of movies and TV shows. Discover new content and find your next favorite entertainment.">
+    <meta name="keywords" content="explore movies, browse TV shows, discover entertainment, movie collection">
+    <meta name="author" content="Dramaspots Movies">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="movies.html">
+                    <h2>Dramaspots</h2>
+                </a>
+            </div>
+            <div class="nav-menu">
+                <a href="movies.html" class="nav-link">Home</a>
+                <a href="explore.html" class="nav-link active">Explore</a>
+                <a href="search.html" class="nav-link">Search</a>
+            </div>
+            <div class="nav-search">
+                <form class="search-form" action="search.html" method="GET">
+                    <input type="text" name="q" placeholder="Search movies, TV shows..." class="search-input">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Explore Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="section-header">
+                <h1>Explore All Content</h1>
+                <div class="explore-filters">
+                    <div class="filter-group">
+                        <label class="filter-label" for="genre-filter">Filter by Genre</label>
+                        <select id="genre-filter" class="filter-select">
+                            <option value="">All Genres</option>
+                            <option value="Action">Action</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Thriller">Thriller</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="year-filter">Filter by Year</label>
+                        <select id="year-filter" class="filter-select">
+                            <option value="">All Years</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label" for="type-filter">Filter by Type</label>
+                        <select id="type-filter" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="movie">Movies Only</option>
+                            <option value="tv">TV Shows Only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="explore-grid movies-grid">
+                <!-- All movies and TV shows will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Dramaspots Movies</h3>
+                    <p>Your ultimate destination for movies and TV shows.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="movies.html">Home</a></li>
+                        <li><a href="explore.html">Explore</a></li>
+                        <li><a href="search.html">Search</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Comedy</a></li>
+                        <li><a href="#">Drama</a></li>
+                        <li><a href="#">Horror</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Dramaspots Movies. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Additional explore page functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const genreFilter = document.getElementById('genre-filter');
+            const yearFilter = document.getElementById('year-filter');
+            const typeFilter = document.getElementById('type-filter');
+            
+            function applyFilters() {
+                const genre = genreFilter.value;
+                const year = yearFilter.value;
+                const type = typeFilter.value;
+                
+                const allMovies = [];
+                Object.values(moviesData).forEach(category => {
+                    if (category.All) {
+                        allMovies.push(...category.All);
+                    }
+                });
+                
+                let filteredMovies = allMovies;
+                
+                if (genre) {
+                    filteredMovies = filteredMovies.filter(movie => 
+                        movie.genres.toLowerCase().includes(genre.toLowerCase())
+                    );
+                }
+                
+                if (year) {
+                    filteredMovies = filteredMovies.filter(movie => 
+                        movie.year === year
+                    );
+                }
+                
+                if (type) {
+                    if (type === 'movie') {
+                        filteredMovies = filteredMovies.filter(movie => 
+                            !movie.title.includes('Season') && !movie.title.includes('Episode')
+                        );
+                    } else if (type === 'tv') {
+                        filteredMovies = filteredMovies.filter(movie => 
+                            movie.title.includes('Season') || movie.title.includes('Episode')
+                        );
+                    }
+                }
+                
+                const exploreGrid = document.querySelector('.explore-grid');
+                exploreGrid.innerHTML = '';
+                
+                if (filteredMovies.length === 0) {
+                    exploreGrid.innerHTML = '<p class="text-center">No movies found matching your criteria.</p>';
+                    return;
+                }
+                
+                filteredMovies.forEach(movie => {
+                    const movieCard = createMovieCard(movie);
+                    exploreGrid.appendChild(movieCard);
+                });
+            }
+            
+            if (genreFilter) genreFilter.addEventListener('change', applyFilters);
+            if (yearFilter) yearFilter.addEventListener('change', applyFilters);
+            if (typeFilter) typeFilter.addEventListener('change', applyFilters);
+        });
+    </script>
+</body>
+</html>

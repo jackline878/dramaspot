@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity News Blog</title>
+    <meta name="description" content="Stay updated with the latest celebrity news, trending stories, and exclusive features.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Lora:400,700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e50914;
+            --secondary: #222;
+            --accent: #f5f5f5;
+            --text: #222;
+            --muted: #888;
+            --border: #e0e0e0;
+            --bg: #fff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--accent);
+            color: var(--text);
+        }
+        a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: #b0060f; }
+        main {
+            display: flex;
+            max-width: 1300px;
+            margin: 2rem auto;
+            gap: 2rem;
+        }
+        .main-content { flex: 3; min-width: 0; }
+        .aside-content {
+            flex: 1.2;
+            min-width: 320px;
+            background: var(--bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0001;
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+        /* Featured Section */
+        .featured-section { margin-bottom: 2.5rem; }
+        .featured-title {
+            font-size: 2rem;
+            font-family: 'Lora', serif;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .featured-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1.2rem;
+        }
+        .featured-main {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 340px;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .featured-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: opacity 0.3s;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1;
+        }
+        .featured-main:hover img { opacity: 1; }
+        .featured-main .overlay {
+            position: relative;
+            z-index: 2;
+            padding: 2rem 1.5rem 1.2rem 1.5rem;
+            background: linear-gradient(0deg, #000b 80%, #0000 100%);
+            color: #fff;
+        }
+        .featured-main .category {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            display: inline-block;
+            margin-bottom: 0.7rem;
+        }
+        .featured-main .title {
+            font-size: 1.7rem;
+            font-family: 'Lora', serif;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .featured-main .excerpt {
+            font-size: 1.08rem;
+            margin-bottom: 0.7rem;
+            color: #fff;
+            opacity: 0.95;
+        }
+        .featured-main .meta {
+            font-size: 0.95rem;
+            color: #fffc;
+        }
+        .featured-side {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .featured-side-article {
+            display: flex;
+            gap: 0.8rem;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px #0001;
+            min-height: 120px;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .featured-side-article img {
+            width: 110px;
+            height: 100%;
+            object-fit: cover;
+        }
+        .featured-side-article .info {
+            padding: 0.7rem 0.7rem 0.7rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .featured-side-article .category {
+            font-size: 0.85rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+        .featured-side-article .title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.2rem;
+        }
+        .featured-side-article .excerpt {
+            font-size: 0.92rem;
+            color: #444;
+            margin-bottom: 0.2rem;
+        }
+        .featured-side-article .meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        /* Ad Placeholder */
+        .ad-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #bbb;
+            color: #888;
+            text-align: center;
+            padding: 1.5rem 0.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .ad-type {
+            font-size: 0.95rem;
+            color: #e50914;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        /* Latest Section */
+        .latest-section { margin-bottom: 2.5rem; }
+        .section-title {
+            font-size: 1.5rem;
+            font-family: 'Lora', serif;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.7rem;
+        }
+        .latest-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .latest-article {
+            display: flex;
+            gap: 1.2rem;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px #0001;
+            overflow: hidden;
+            min-height: 140px;
+            transition: box-shadow 0.2s;
+        }
+        .latest-article:hover { box-shadow: 0 4px 16px #0002; }
+        .latest-article img {
+            width: 180px;
+            height: 100%;
+            object-fit: cover;
+        }
+        .latest-article .info {
+            padding: 1rem 1rem 1rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .latest-article .category {
+            font-size: 0.9rem;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+        }
+        .latest-article .title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.4rem;
+        }
+        .latest-article .excerpt {
+            font-size: 1.02rem;
+            color: #444;
+            margin-bottom: 0.3rem;
+        }
+        .latest-article .meta {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+        .loading {
+            text-align: center;
+            color: var(--muted);
+            margin: 2rem 0;
+        }
+        /* Aside Widgets */
+        .widget { margin-bottom: 2.2rem; }
+        .widget-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-family: 'Lora', serif;
+        }
+        .trending-list, .recommended-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .trending-list li, .recommended-list li {
+            margin-bottom: 1.1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+        }
+        .trending-list li:last-child, .recommended-list li:last-child { margin-bottom: 0; }
+        .trending-list img, .recommended-list img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .trending-list .info, .recommended-list .info { flex: 1; }
+        .trending-list .title, .recommended-list .title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        .trending-list .meta, .recommended-list .meta {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        .categories-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+        .categories-list a {
+            background: var(--accent);
+            color: var(--secondary);
+            padding: 0.3rem 0.9rem;
+            border-radius: 14px;
+            font-size: 0.98rem;
+            border: 1px solid var(--border);
+            margin-bottom: 0.3rem;
+            transition: background 0.2s;
+        }
+        .categories-list a:hover { background: var(--primary); color: #fff; }
+        .hashtags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .hashtags-list a {
+            background: #f0f0f0;
+            color: var(--primary);
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            border: 1px solid #eee;
+            margin-bottom: 0.2rem;
+            transition: background 0.2s;
+        }
+        .hashtags-list a:hover { background: var(--primary); color: #fff; }
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: #fff;
+            padding: 2.5rem 0 1.2rem 0;
+            margin-top: 3rem;
+        }
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .footer-logo {
+            font-family: 'Lora', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .footer-links, .footer-social {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .footer-links a { color: #fff; font-size: 1rem; }
+        .footer-links a:hover { color: var(--primary); }
+        .footer-social a {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-right: 1rem;
+        }
+        .footer-social a:last-child { margin-right: 0; }
+        .footer-bottom {
+            text-align: center;
+            color: #bbb;
+            font-size: 0.95rem;
+            margin-top: 2rem;
+        }
+        /* Responsive */
+        @media (max-width: 1100px) {
+            main { flex-direction: column; }
+            .aside-content {
+                position: static;
+                width: 100%;
+                min-width: 0;
+                margin-top: 2rem;
+            }
+        }
+        @media (max-width: 800px) {
+            .featured-grid { grid-template-columns: 1fr; }
+            .featured-side { flex-direction: row; gap: 1rem; }
+            .featured-side-article { flex: 1; min-width: 0; }
+            .latest-article img { width: 120px; }
+        }
+        @media (max-width: 600px) {
+            main { padding: 0 0.5rem; }
+            .aside-content { padding: 1rem 0.5rem; }
+            .footer-container {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+        }
+        .navbar-brand {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, rgb(250, 92, 18) 0%, rgb(243, 50, 163) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            overflow-x: scroll;
+        }
+        .tab-nav::-webkit-scrollbar { display: none; }
+        .tab-nav a {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: rgb(250, 217, 234);
+            transition: border-color 0.3s;
+        }
+        .tab-nav a.active, .tab-nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        @media (max-width: 767.98px) {
+            .tab-nav { gap: 5px; justify-content: left; }
+            .tab-nav a {
+                padding: 0px 5px;
+                font-size: 0.9rem;
+                color: rgb(250, 217, 234);
+                font-weight: 500;
+                border: 1px solid transparent;
+                border-radius: 4px;
+            }
+        }
+        .exclusive-badge {
+            background: #e83e8c;
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 0.25em 0.75em;
+            border-radius: 1em;
+            font-weight: 600;
+            margin-left: 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Drama Spots</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category/News">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Trending</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page"
+                            href="/category/Exclusives">Exclusives <span class="exclusive-badge">Hot</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <section class="main-content">
+            <!-- Featured Section -->
+            <section class="featured-section">
+                <div class="featured-title">Featured</div>
+                <div class="featured-grid">
+                    <article class="featured-main"></article>
+                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80" alt="Featured Celebrity">
+                        <div class="overlay">
+                            <div class="category">Exclusive</div>
+                            <div class="title">Inside the Glamorous Life of Hollywood's Brightest Star</div>
+                            <div class="excerpt">
+                                Discover the untold stories, daily routines, and behind-the-scenes moments that define Hollywood's most talked-about celebrity. From red carpet events to private getaways, get an exclusive look at their world.
+                            </div>
+                            <div class="meta">By Jane Doe &bull; June 10, 2024</div>
+                        </div>
+                    </article>
+                    <div class="featured-side">
+                        <article class="featured-side-article"></article>
+                            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Celebrity News">
+                            <div class="info">
+                                <div class="category">Movies</div>
+                                <div class="title">Blockbuster Premiere: Red Carpet Highlights</div>
+                                <div class="excerpt">
+                                    The most stunning looks and memorable moments from last night's star-studded movie premiere.
+                                </div>
+                                <div class="meta">By John Smith &bull; 2h ago</div>
+                            </div>
+                        </article>
+                        <article class="featured-side-article"></article>
+                            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Celebrity News">
+                            <div class="info">
+                                <div class="category">Music</div>
+                                <div class="title">Top 10 Summer Hits You Can't Miss</div>
+                                <div class="excerpt">
+                                    A curated list of the hottest tracks dominating the charts this summer.
+                                </div>
+                                <div class="meta">By Emily Clark &bull; 4h ago</div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            <!-- Ad Placeholder: Leaderboard Banner -->
+            <div class="ad-placeholder">
+                Advertisement<br>
+                <span class="ad-type">Leaderboard Banner (728x90) - Place Google AdSense or similar here</span>
+            </div>
+            <!-- Latest Section -->
+            <section class="latest-section">
+                <div class="section-title">Latest News</div>
+                <div class="latest-list" id="latest-list">
+                    <!-- Latest articles will be loaded here -->
+                </div>
+                <div class="loading" id="loading" style="display:none;">
+                    <i class="fas fa-spinner fa-spin"></i> Loading more news...
+                </div>
+            </section>
+            <!-- Ad Placeholder: In-Article Rectangle -->
+            <div class="ad-placeholder">
+                Advertisement<br>
+                <span class="ad-type">In-Article Rectangle (300x250) - Place Google AdSense or native ad here</span>
+            </div>
+        </section>
+        <aside class="aside-content"></aside>
+            <!-- Ad Placeholder: Sidebar Skyscraper -->
+            <div class="ad-placeholder">
+                Advertisement<br>
+                <span class="ad-type">Sidebar Skyscraper (160x600) - Place Google AdSense or similar here</span>
+            </div>
+            <!-- Trending Widget -->
+            <div class="widget">
+                <div class="widget-title"><i class="fas fa-fire"></i> Trending</div>
+                <ul class="trending-list"></ul>
+                    <li>
+                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80" alt="Trending">
+                        <div class="info">
+                            <div class="title"><a href="#">Celebrity Couple Announces Engagement</a></div>
+                            <div class="meta">1.2k views</div>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=100&q=80" alt="Trending">
+                        <div class="info">
+                            <div class="title"><a href="#">Award Show: Best Dressed Stars</a></div>
+                            <div class="meta">980 views</div>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=100&q=80" alt="Trending">
+                        <div class="info">
+                            <div class="title"><a href="#">Exclusive Interview with Pop Icon</a></div>
+                            <div class="meta">870 views</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- Recommended Widget -->
+            <div class="widget">
+                <div class="widget-title"><i class="fas fa-thumbs-up"></i> Recommended</div>
+                <ul class="recommended-list"></ul>
+                    <li>
+                        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=100&q=80" alt="Recommended">
+                        <div class="info">
+                            <div class="title"><a href="#">Rising Stars to Watch This Year</a></div>
+                            <div class="meta">By Alex Lee</div>
+                        </div>
+                    </li>
+                    <li>
+                        <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80" alt="Recommended">
+                        <div class="info">
+                            <div class="title"><a href="#">Fashion Trends from the Red Carpet</a></div>
+                            <div class="meta">By Mia Wong</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- Categories Widget -->
+            <div class="widget">
+                <div class="widget-title"><i class="fas fa-list"></i> Categories</div>
+                <div class="categories-list">
+                    <a href="#">Celebrities</a>
+                    <a href="#">Movies</a>
+                    <a href="#">TV</a>
+                    <a href="#">Music</a>
+                    <a href="#">Fashion</a>
+                    <a href="#">Interviews</a>
+                    <a href="#">Photos</a>
+                    <a href="#">Events</a>
+                    <a href="#">Lifestyle</a>
+                </div>
+            </div>
+            <!-- Trending Hashtags Widget -->
+            <div class="widget">
+                <div class="widget-title"><i class="fas fa-hashtag"></i> Trending Hashtags</div>
+                <div class="hashtags-list">
+                    <a href="#">#Oscars2024</a>
+                    <a href="#">#RedCarpet</a>
+                    <a href="#">#CelebrityStyle</a>
+                    <a href="#">#MusicAwards</a>
+                    <a href="#">#Hollywood</a>
+                    <a href="#">#ViralMoments</a>
+                    <a href="#">#BehindTheScenes</a>
+                    <a href="#">#FashionWeek</a>
+                </div>
+            </div>
+        </aside>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo">CelebrityBlog</div>
+                <div style="max-width: 320px; color: #bbb; font-size: 1rem;"></div>
+                    Your daily dose of celebrity news, exclusive interviews, and trending stories. Stay connected with the world of entertainment!
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms &amp; Conditions</a>
+            </div>
+            <div class="footer-social">
+                <a href="https://facebook.com/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://twitter.com/" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://youtube.com/" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 CelebrityBlog. All rights reserved.
+        </div>
+    </footer>
+    <script>
+        // Dummy data for latest articles with excerpts
+        const latestArticles = [
+            {
+                img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+                category: "Celebrities",
+                title: "Celebrity Chef Launches New Cookbook",
+                excerpt: "Renowned chef surprises fans with a collection of mouth-watering recipes inspired by global travels.",
+                meta: "By Sarah Lee • 10m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+                category: "Movies",
+                title: "Blockbuster Sequel Announced for 2025",
+                excerpt: "The much-anticipated sequel promises more action, drama, and star-studded performances.",
+                meta: "By Mike Brown • 20m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+                category: "Music",
+                title: "Chart-Topping Singer Drops Surprise Album",
+                excerpt: "Fans are buzzing as the artist releases a new album with unexpected collaborations.",
+                meta: "By Lisa Green • 30m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+                category: "Fashion",
+                title: "Fashion Week: Best Looks from the Runway",
+                excerpt: "A roundup of the most talked-about outfits and designers from this season's fashion week.",
+                meta: "By Anna White • 45m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80",
+                category: "TV",
+                title: "TV Drama Finale Leaves Fans in Shock",
+                excerpt: "The season finale delivers unexpected twists, leaving viewers eagerly awaiting the next season.",
+                meta: "By Tom Black • 1h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+                category: "Interviews",
+                title: "Exclusive: Star Opens Up About New Role",
+                excerpt: "In a candid interview, the actor discusses challenges and excitement for their latest project.",
+                meta: "By Rachel Adams • 1h 20m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80",
+                category: "Events",
+                title: "Charity Gala Raises Record Funds",
+                excerpt: "Celebrities gather for a night of giving, raising millions for important causes.",
+                meta: "By Steve Kim • 2h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+                category: "Lifestyle",
+                title: "How Celebrities Stay Fit and Healthy",
+                excerpt: "Top stars share their fitness routines and wellness secrets for a balanced lifestyle.",
+                meta: "By Olivia Brown • 2h 30m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+                category: "Photos",
+                title: "Behind the Scenes: Movie Set Revealed",
+                excerpt: "Go behind the camera to see how your favorite blockbuster was brought to life.",
+                meta: "By Chris Evans • 3h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+                category: "Music",
+                title: "Music Awards: Winners and Highlights",
+                excerpt: "A recap of the night's biggest winners and unforgettable performances.",
+                meta: "By Emma Watson • 3h 30m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+                category: "Celebrities",
+                title: "Viral Moment: Celebrity's Heartwarming Gesture",
+                excerpt: "A touching act of kindness by a beloved star goes viral on social media.",
+                meta: "By Daniel Lee • 4h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80",
+                category: "Fashion",
+                title: "Red Carpet: Who Wore It Best?",
+                excerpt: "Fashion critics weigh in on the most stylish looks from the latest red carpet event.",
+                meta: "By Mia Wong • 4h 20m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+                category: "TV",
+                title: "New Series Breaks Streaming Records",
+                excerpt: "The latest streaming sensation is breaking records and captivating audiences worldwide.",
+                meta: "By Alex Lee • 5h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80",
+                category: "Events",
+                title: "Celebrity Wedding: All the Details",
+                excerpt: "An inside look at the most talked-about celebrity wedding of the year.",
+                meta: "By Sarah Lee • 5h 30m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+                category: "Lifestyle",
+                title: "Top 5 Celebrity Vacation Spots",
+                excerpt: "Explore the luxurious destinations where celebrities unwind and relax.",
+                meta: "By Mike Brown • 6h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+                category: "Photos",
+                title: "Stunning Photos from the Awards Night",
+                excerpt: "A gallery of the most breathtaking moments captured during the awards ceremony.",
+                meta: "By Lisa Green • 6h 30m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+                category: "Music",
+                title: "Rising Star: Meet the New Sensation",
+                excerpt: "Get to know the breakout artist everyone is talking about this year.",
+                meta: "By Anna White • 7h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+                category: "Celebrities",
+                title: "Celebrity Chef's Secret Recipe Revealed",
+                excerpt: "A famous chef shares a closely guarded recipe with fans for the first time.",
+                meta: "By Tom Black • 7h 30m ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80",
+                category: "Fashion",
+                title: "Fashion Icon's Style Evolution",
+                excerpt: "Tracing the transformation of a fashion icon's signature looks over the years.",
+                meta: "By Rachel Adams • 8h ago"
+            },
+            {
+                img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+                category: "TV",
+                title: "TV Host Shares Behind-the-Scenes Secrets",
+                excerpt: "Popular TV host reveals what really happens when the cameras stop rolling.",
+                meta: "By Steve Kim • 8h 30m ago"
+            }
+        ];
+
+        let latestPage = 0;
+        const latestPerPage = 5;
+        let loading = false;
+
+        function renderLatestArticles() {
+            const list = document.getElementById('latest-list');
+            const start = latestPage * latestPerPage;
+            const end = start + latestPerPage;
+            const articles = latestArticles.slice(start, end);
+
+            articles.forEach(article => {
+                const el = document.createElement('article');
+                el.className = 'latest-article';
+                el.innerHTML = `
+                    <img src="${article.img}" alt="${article.title}">
+                    <div class="info">
+                        <div class="category">${article.category}</div>
+                        <div class="title"><a href="#">${article.title}</a></div>
+                        <div class="excerpt">${article.excerpt}</div>
+                        <div class="meta">${article.meta}</div>
+                    </div>
+                `;
+                list.appendChild(el);
+            });
+        }
+
+        function loadMoreLatest() {
+            if (loading) return;
+            loading = true;
+            document.getElementById('loading').style.display = 'block';
+            setTimeout(() => {
+                latestPage++;
+                renderLatestArticles();
+                loading = false;
+                document.getElementById('loading').style.display = 'none';
+                if (latestPage * latestPerPage >= latestArticles.length) {
+                    // No more articles
+                    window.removeEventListener('scroll', handleScroll);
+                }
+            }, 800);
+        }
+
+        function handleScroll() {
+            const scrollY = window.scrollY || window.pageYOffset;
+            const viewport = window.innerHeight;
+            const fullHeight = document.body.offsetHeight;
+            if (scrollY + viewport > fullHeight - 200) {
+                loadMoreLatest();
+            }
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLatestArticles();
+            latestPage++;
+            window.addEventListener('scroll', handleScroll);
+        });
+    </script>
+    <!--
+        This HTML file is intentionally long and detailed to meet the requirements of a full-featured news website.
+        For a real-world project, consider splitting CSS and JS into separate files and using a backend for dynamic content.
+        All images are from Unsplash and used as placeholders.
+    -->
+</body>
+</html>

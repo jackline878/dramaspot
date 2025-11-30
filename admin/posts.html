@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Posts | Drama Spots</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: #212529;
+            color: #fff;
+        }
+        .sidebar .nav-link {
+            color: #adb5bd;
+        }
+        .sidebar .nav-link.active {
+            color: #fff;
+            background: #343a40;
+        }
+        .table-responsive {
+            min-height: 400px;
+        }
+        .filter-label {
+            font-weight: 500;
+        }
+        .post-title {
+            font-weight: 500;
+        }
+        .status-badge {
+            font-size: 0.9em;
+        }
+        .pagination {
+            margin-bottom: 0;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+        }
+        .category-badge {
+            font-size: 0.85em;
+        }
+        .filter-form .form-select, .filter-form .form-control {
+            min-width: 120px;
+        }
+        @media (max-width: 991.98px) {
+            .sidebar {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Main Content -->
+            <main class="col py-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">All Posts</h2>
+                    <a href="create-post.html" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> New Post
+                    </a>
+                </div>
+                <!-- Filters -->
+                <form class="row g-3 mb-4 filter-form" id="filterForm">
+                    <div class="col-md-2">
+                        <label for="filterDate" class="form-label filter-label">Date</label>
+                        <input type="date" class="form-control" id="filterDate" name="date">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filterAuthor" class="form-label filter-label">Author</label>
+                        <select class="form-select" id="filterAuthor" name="author">
+                            <option value="">All</option>
+                            <option value="1">Jane Doe</option>
+                            <option value="2">John Smith</option>
+                            <option value="3">Emily Clark</option>
+                            <option value="4">Michael Lee</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filterCategory" class="form-label filter-label">Category</label>
+                        <select class="form-select" id="filterCategory" name="category">
+                            <option value="">All</option>
+                            <option value="gossip">Gossip</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="movies">Movies</option>
+                            <option value="music">Music</option>
+                            <option value="sports">Sports</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="filterStatus" class="form-label filter-label">Status</label>
+                        <select class="form-select" id="filterStatus" name="status">
+                            <option value="">All</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-funnel"></i> Filter
+                        </button>
+                    </div>
+                </form>
+                <!-- Posts Table -->
+                <div class="table-responsive mb-4">
+                    <table class="table table-hover align-middle" id="postsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Author</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Published</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postsTbody">
+                            <!-- Posts will be rendered here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <nav>
+                    <ul class="pagination justify-content-end" id="pagination">
+                        <!-- Pagination will be rendered here by JS -->
+                    </ul>
+                </nav>
+            </main>
+        </div>
+    </div>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Demo Data & Filtering Logic -->
+    <script>
+        // Demo authors
+        const authors = [
+            { id: 1, name: "Jane Doe", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
+            { id: 2, name: "John Smith", avatar: "https://randomuser.me/api/portraits/men/45.jpg" },
+            { id: 3, name: "Emily Clark", avatar: "https://randomuser.me/api/portraits/women/46.jpg" },
+            { id: 4, name: "Michael Lee", avatar: "https://randomuser.me/api/portraits/men/47.jpg" }
+        ];
+
+        // Demo categories
+        const categories = [
+            { id: "gossip", name: "Gossip", color: "primary" },
+            { id: "fashion", name: "Fashion", color: "warning" },
+            { id: "movies", name: "Movies", color: "danger" },
+            { id: "music", name: "Music", color: "info" },
+            { id: "sports", name: "Sports", color: "success" }
+        ];
+
+        // Demo posts (simulate 50 posts)
+        const demoPosts = [];
+        const statuses = [
+            { id: "published", label: "Published", color: "success" },
+            { id: "draft", label: "Draft", color: "secondary" },
+            { id: "pending", label: "Pending", color: "warning" },
+            { id: "archived", label: "Archived", color: "dark" }
+        ];
+        function randomDate(start, end) {
+            return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        }
+        for (let i = 1; i <= 500; i++) {
+            const author = authors[Math.floor(Math.random() * authors.length)];
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            const date = randomDate(new Date(2023, 0, 1), new Date());
+            demoPosts.push({
+                id: i,
+                title: `Celebrity Post #${i}: ${category.name} News`,
+                author: author,
+                category: category,
+                published: date,
+                status: status
+            });
+        }
+
+        // Pagination settings
+        const postsPerPage = 10;
+        let currentPage = 1;
+        let filteredPosts = demoPosts;
+
+        // Render posts table
+        function renderPostsTable(posts, page = 1) {
+            const tbody = document.getElementById('postsTbody');
+            tbody.innerHTML = '';
+            const start = (page - 1) * postsPerPage;
+            const end = start + postsPerPage;
+            const pagePosts = posts.slice(start, end);
+            if (pagePosts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">No posts found.</td></tr>`;
+                return;
+            }
+            pagePosts.forEach((post, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <th scope="row">${start + idx + 1}</th>
+                    <td>
+                        <span class="post-title">${post.title}</span>
+                    </td>
+                    <td>
+                        <img src="${post.author.avatar}" class="avatar" alt="${post.author.name}">
+                        ${post.author.name}
+                    </td>
+                    <td>
+                        <span class="badge bg-${post.category.color} category-badge">${post.category.name}</span>
+                    </td>
+                    <td>
+                        ${post.published.toLocaleDateString()}
+                    </td>
+                    <td>
+                        <span class="badge bg-${post.status.color} status-badge">${post.status.label}</span>
+                    </td>
+                    <td class="text-end">
+                        <a href="edit-post.html?id=${post.id}" class="btn btn-sm btn-outline-secondary me-1" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <button class="btn btn-sm btn-outline-danger" title="Delete" onclick="deletePost(${post.id})"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Render pagination
+        function renderPagination(posts, page = 1) {
+            const totalPages = Math.ceil(posts.length / postsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            if (totalPages <= 1) return;
+
+            function createPageItem(label, pageNum, disabled = false, active = false) {
+                const li = document.createElement('li');
+                li.className = `page-item${disabled ? ' disabled' : ''}${active ? ' active' : ''}`;
+                const a = document.createElement('a');
+                a.className = 'page-link';
+                a.href = '#';
+                a.innerText = label;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    if (!disabled && !active) goToPage(pageNum);
+                };
+                li.appendChild(a);
+                return li;
+            }
+
+            // Prev
+            pagination.appendChild(createPageItem('«', page - 1, page === 1));
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= page - 1 && i <= page + 1)) {
+                    pagination.appendChild(createPageItem(i, i, false, i === page));
+                } else if (i === page - 2 || i === page + 2) {
+                    const li = document.createElement('li');
+                    li.className = 'page-item disabled';
+                    li.innerHTML = `<span class="page-link">…</span>`;
+                    pagination.appendChild(li);
+                }
+            }
+            // Next
+            pagination.appendChild(createPageItem('»', page + 1, page === totalPages));
+        }
+
+        // Go to page
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderPostsTable(filteredPosts, currentPage);
+            renderPagination(filteredPosts, currentPage);
+        }
+
+        // Filter posts
+        function filterPosts(formData) {
+            let posts = demoPosts.slice();
+            // Date filter
+            const date = formData.get('date');
+            if (date) {
+                posts = posts.filter(post => {
+                    const postDate = post.published.toISOString().slice(0,10);
+                    return postDate === date;
+                });
+            }
+            // Author filter
+            const author = formData.get('author');
+            if (author) {
+                posts = posts.filter(post => post.author.id == author);
+            }
+            // Category filter
+            const category = formData.get('category');
+            if (category) {
+                posts = posts.filter(post => post.category.id === category);
+            }
+            // Status filter
+            const status = formData.get('status');
+            if (status) {
+                posts = posts.filter(post => post.status.id === status);
+            }
+            // Day filter
+            const day = formData.get('day');
+
+            return posts;
+        }
+
+        // Delete post (demo only)
+        function deletePost(id) {
+            if (confirm('Are you sure you want to delete this post?')) {
+                const idx = demoPosts.findIndex(p => p.id === id);
+                if (idx !== -1) {
+                    demoPosts.splice(idx, 1);
+                    filteredPosts = filterPosts(new FormData(document.getElementById('filterForm')));
+                    goToPage(currentPage);
+                }
+            }
+        }
+        window.deletePost = deletePost;
+
+        // Filter form submit
+        document.getElementById('filterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            filteredPosts = filterPosts(formData);
+            currentPage = 1;
+            renderPostsTable(filteredPosts, currentPage);
+            renderPagination(filteredPosts, currentPage);
+        });
+
+        // Initial render
+        renderPostsTable(filteredPosts, currentPage);
+        renderPagination(filteredPosts, currentPage);
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dramaspots Article Embed Preview</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+    label, input, button { display: block; width: 100%; margin-bottom: 10px; }
+    .embed { border: 1px solid #ccc; padding: 15px; margin-top: 20px;}
+    .embed details{ 
+        display: flex;
+        border-radius: 10px;
+        gap: 10px;
+        font-size: 10px !important;
+        font-weight: bolder !important;
+        font-style: italic !important;
+        text-align: center !important;
+        color: grey;
+    }
+    
+    .embed img { max-width: 100%; height: auto; margin-bottom: 10px; }
+    .embed-title { font-weight: bold; font-size: 1.2em; margin-bottom: 8px; }
+    .embed-excerpt { color: #555; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h2>DramaSpots Article Embed Preview</h2>
+  <label onload="" data-url="" for="urlInput">Enter article URL (must start with https://dramaspots.com/article/)</label>
+  <input type="text" id="urlInput" placeholder="https://dramaspots.com/article/..." />
+  <button id="previewBtn">Preview Embed</button>
+  <div id="embedContainer" class="embed">
+    <div class="embed-title" id="embedTitle"></div>
+    <img id="embedImage" src="" alt="Article Image" />
+    <div class="embed-excerpt" id="embedExcerpt"></div>
+  </div>
+  <div id="errorMsg" class="error"></div>
+
+  <script>
+
+    async function
+    document.getElementById('previewBtn').addEventListener('click', async () => {
+      const url = document.getElementById('urlInput').value.trim();
+      const embed = document.getElementById('embedContainer');
+      const error = document.getElementById('errorMsg');
+      embed.style.display = 'none';
+      error.textContent = '';
+
+      if (!url.startsWith('https://dramaspots.com/article/')) {
+        return error.textContent = 'URL must start with https://dramaspots.com/article/';
+      }
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch the article');
+
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+
+        const titleEl = doc.querySelector('h1') || doc.querySelector('title');
+        const imgEl = doc.querySelector('img') || doc.querySelector('figure img');
+        const pEl = doc.querySelector('p');
+
+        if (!titleEl || !pEl) throw new Error('Required content not found in article');
+
+        document.getElementById('embedTitle').textContent = titleEl.textContent;
+        document.getElementById('embedImage').src = imgEl ? imgEl.src : '';
+        document.getElementById('embedImage').style.display = imgEl ? 'block' : 'none';
+        document.getElementById('embedExcerpt').textContent = pEl.textContent;
+
+        embed.getAttribute
+      } catch (err) {
+        console.error(err);
+        error.textContent = 'Error fetching article: ' + err.message;
+      }
+    });
+
+
+
+
+
+
+
+    async function renderArticle(article) {
+    return `
+<article class="col-lg-8 mb-5">
+    ${(
+        await Promise.all(
+            article.sections.map(async (section, index) => {
+                const isOdd = (index + 1) % 4 === 0;
+
+                const sectionContents = await Promise.all(
+                    section.contents.map(async (content) => {
+                        const contentData = JSON.parse(content.content);
+
+                        switch (content.type) {
+                            case 'head': {
+                                const level = Math.min(Math.max(contentData.level || 2, 1), 6);
+                                const fontSize = `fs-${Math.min(level + 1, 6)}`;
+                                const fontWeight = level <= 2 ? 'fw-bold' : level <= 4 ? 'fw-semibold' : 'fw-normal';
+                                const indent = `ms-${Math.min(level, 5)}`;
+                                const textColor =
+                                    level <= 2
+                                        ? 'text-dark'
+                                        : level === 3
+                                        ? 'text-secondary'
+                                        : level === 4
+                                        ? 'text-body-secondary'
+                                        : 'text-muted';
+
+                                return `<h${level} class="${fontSize} ${fontWeight} ${textColor} ${indent}">${contentData.head}</h${level}>`;
+                            }
+
+                            case 'text':
+                                return `<p>${contentData.text}</p>`;
+
+                            case 'list':
+                                if (Array.isArray(contentData.items) && contentData.items.length > 0) {
+                                    if (contentData.is_ordered) {
+                                        return `<ol class="list-group list-group-numbered list-group-flush mb-4 ms-4">
+                                            ${contentData.items.map(item => `<li class="list-group-item bg-white border-none">${item}</li>`).join('')}
+                                        </ol>`;
+                                    } else {
+                                        return `<ul class="mb-4 ps-4 ms-4" style="list-style-type: disc;">
+                                            ${contentData.items.map(item => `<li class="mb-1">${item}</li>`).join('')}
+                                        </ul>`;
+                                    }
+                                }
+                                return '';
+
+                            case 'table':
+                                if (contentData.headers && Array.isArray(contentData.headers) &&
+                                    contentData.rows && Array.isArray(contentData.rows)) {
+                                    return `
+                                    <div class="table-responsive mb-4" style="overflow-x: auto;">
+                                        <table class="table table-bordered table-striped table-hover align-middle text-center">
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    ${contentData.headers.map(header => `<th scope="col">${header}</th>`).join('')}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${contentData.rows.map(row => `
+                                                    <tr>
+                                                        ${row.map(cell => `<td>${cell}</td>`).join('')}
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    `;
+                                }
+                                return '';
+
+                            case 'quote':
+                                return `<blockquote class="blockquote px-4 py-3 bg-light border-start border-4 border-danger rounded mb-4">
+                                    <p class="mb-0">${contentData.quote}</p>
+                                    <footer class="blockquote-footer">${contentData.attribution}</footer>
+                                </blockquote>`;
+
+                            case 'carousel':
+                                return `
+                                <div id="galleryCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                                    <div class="carousel-inner rounded shadow">
+                                        ${contentData.map(item => `
+                                            <div class="carousel-item active">
+                                                <picture>
+                                                    <source srcset="/image/convert?url=${item.image}&format=avif" type="image/avif">
+                                                    <source srcset="/image/convert?url=${item.image}&format=webp" type="image/webp">
+                                                    <img src="${item.image}" alt="${item.caption}" class="d-block w-100">
+                                                </picture>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                </div>
+                                `;
+
+                            case 'image':
+                                return `<p class="mb-0">${contentData.caption}</p>
+                                    <div class="card">
+                                        <picture>
+                                            <source srcset="/image/convert?url=${contentData.image}&format=avif" type="image/avif">
+                                            <source srcset="/image/convert?url=${contentData.image}&format=webp" type="image/webp">
+                                            <img src="${contentData.image}" alt="${contentData.caption}" class="d-block w-100">
+                                        </picture>
+                                    </div>`;
+
+                            case 'video':
+                                return `<p class="mb-0">${contentData.caption}</p>
+                                    <div class="card">
+                                        <video controls>
+                                            <source src="${contentData.video}" type="video/mp4">
+                                        </video>
+                                    </div>`;
+
+                            case 'embed':
+                                return await generateEmbedHTML(contentData);
+
+                            default:
+                                return `<p>${contentData.text}</p>`;
+                        }
+                    })
+                );
+
+                return `
+                <section class="mb-2" style="margin-top: 3rem;">
+                    ${sectionContents.join('')}
+                    ${isOdd ? `` : ``}
+                </section>`;
+            })
+        )
+    ).join('')}
+</article>
+    `;
+}
+
+  </script>
+</body>
+</html>

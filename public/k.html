@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rider Active Ride - Cab Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 350px;
+            width: 100%;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .ride-status {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        .client-info-card {
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        .btn-pickup {
+            font-size: 1.1rem;
+            padding: 0.75rem 2rem;
+        }
+        .timeline {
+            border-left: 3px solid #0d6efd;
+            margin-left: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        .timeline-event {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .timeline-event:before {
+            content: '';
+            position: absolute;
+            left: -1.7rem;
+            top: 0.2rem;
+            width: 1rem;
+            height: 1rem;
+            background: #0d6efd;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #0d6efd;
+        }
+        .fade-in {
+            animation: fadeIn 1s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0;}
+            to { opacity: 1;}
+        }
+        .client-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #0d6efd;
+        }
+        .map-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+        .bg-blur {
+            backdrop-filter: blur(3px);
+            background: rgba(255,255,255,0.7);
+        }
+        .ride-details-table td {
+            padding: 0.5rem 1rem;
+        }
+        .chat-box {
+            height: 220px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .chat-message {
+            margin-bottom: 0.75rem;
+        }
+        .chat-message.rider {
+            text-align: right;
+        }
+        .chat-message .msg {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            background: #e9ecef;
+            max-width: 70%;
+        }
+        .chat-message.rider .msg {
+            background: #0d6efd;
+            color: #fff;
+        }
+        .chat-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .chat-input-group input {
+            flex: 1;
+        }
+        .alert-pickup {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #fff;
+            background: #198754;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">CabRider</a>
+            <div>
+                <span class="navbar-text text-white me-3">Active Ride</span>
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rider" class="rounded-circle" width="36" height="36">
+            </div>
+        </div>
+    </nav>
+    <div class="container mb-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4 fade-in">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="badge bg-warning text-dark me-2">En Route to Pickup</span>
+                                <span class="ride-status text-primary">Ride #CB123456</span>
+                            </div>
+                            <button class="btn btn-outline-primary map-btn" onclick="centerOnClient()">Center on Client</button>
+                        </div>
+                        <div id="map"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-borderless ride-details-table">
+                                    <tr>
+                                        <td><strong>Pickup:</strong></td>
+                                        <td id="pickup-address">Loading...</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dropoff:</strong></td>
+                                        <td id="dropoff-address">Loading...</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Distance:</strong></td>
+                                        <td id="distance">--</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Estimated Fare:</strong></td>
+                                        <td id="fare">$--</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Client Position:</strong></td>
+                                        <td id="client-position">Locating...</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="timeline">
+                                    <div class="timeline-event">
+                                        <div><strong>Assigned</strong></div>
+                                        <div class="text-muted small">2 min ago</div>
+                                    </div>
+                                    <div class="timeline-event">
+                                        <div><strong>En Route to Pickup</strong></div>
+                                        <div class="text-muted small">Now</div>
+                                    </div>
+                                    <div class="timeline-event">
+                                        <div><strong>Pickup</strong></div>
+                                        <div class="text-muted small">Pending</div>
+                                    </div>
+                                    <div class="timeline-event">
+                                        <div><strong>Dropoff</strong></div>
+                                        <div class="text-muted small">Pending</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert-pickup" id="pickup-alert">
+                            ✅ Client has been picked up! Proceed to dropoff.
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-success btn-pickup" id="pickup-btn" onclick="markPickedUp()">
+                                <i class="bi bi-person-check"></i> Mark as Picked Up
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm fade-in mb-4">
+                    <div class="card-header bg-white">
+                        <strong>Chat with Client</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="chat-box" id="chat-box">
+                            <div class="chat-message client">
+                                <span class="msg">Hi, I'm waiting at the main entrance.</span>
+                                <div class="small text-muted">Client • 1 min ago</div>
+                            </div>
+                            <div class="chat-message rider">
+                                <span class="msg">On my way, see you soon!</span>
+                                <div class="small text-muted">You • 30 sec ago</div>
+                            </div>
+                        </div>
+                        <form id="chat-form" autocomplete="off">
+                            <div class="chat-input-group">
+                                <input type="text" class="form-control" id="chat-input" placeholder="Type a message..." maxlength="200">
+                                <button class="btn btn-primary" type="submit">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card client-info-card shadow-sm fade-in mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Client" class="client-avatar mb-2">
+                        <h5 class="card-title mb-1" id="client-name">Jane Doe</h5>
+                        <div class="mb-2">
+                            <span class="badge bg-info text-dark">4.9 <i class="bi bi-star-fill"></i></span>
+                            <span class="text-muted small">| 120 rides</span>
+                        </div>
+                        <div class="mb-2">
+                            <i class="bi bi-telephone"></i>
+                            <a href="tel:+1234567890" class="text-decoration-none" id="client-phone">+1 234 567 890</a>
+                        </div>
+                        <div>
+                            <i class="bi bi-chat-dots"></i>
+                            <a href="#" onclick="openChat();return false;" class="text-decoration-none">Message</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm fade-in mb-4">
+                    <div class="card-header bg-white">
+                        <strong>Ride Summary</strong>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Pickup Time</span>
+                                <span id="pickup-time">12:45 PM</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Vehicle</span>
+                                <span>Toyota Prius (Blue)</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Plate</span>
+                                <span>ABC-1234</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Payment</span>
+                                <span>Cash</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Status</span>
+                                <span class="badge bg-warning text-dark" id="ride-status-badge">En Route</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card shadow-sm fade-in">
+                    <div class="card-header bg-white">
+                        <strong>Support</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">Need help? Contact our support team:</p>
+                        <a href="tel:+1800123456" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="bi bi-headset"></i> Call Support
+                        </a>
+                        <a href="mailto:support@cabservice.com" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-envelope"></i> Email Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap 5 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Demo ride data
+        const rideData = {
+            pickup: {
+                lat: 40.748817,
+                lng: -73.985428,
+                address: "350 5th Ave, New York, NY 10118, USA"
+            },
+            dropoff: {
+                lat: 40.730610,
+                lng: -73.935242,
+                address: "31-00 47th Ave, Queens, NY 11101, USA"
+            },
+            client: {
+                lat: 40.748917,
+                lng: -73.985528,
+                name: "Jane Doe",
+                phone: "+1 234 567 890",
+                avatar: "https://randomuser.me/api/portraits/women/44.jpg"
+            },
+            distance: "7.2 km",
+            fare: "$18.50",
+            pickupTime: "12:45 PM"
+        };
+
+        // Map initialization
+        let map, pickupMarker, dropoffMarker, clientMarker, routeLine;
+        function initMap() {
+            map = L.map('map').setView([rideData.pickup.lat, rideData.pickup.lng], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            pickupMarker = L.marker([rideData.pickup.lat, rideData.pickup.lng], {
+                icon: L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 36]
+                })
+            }).addTo(map).bindPopup("Pickup Location");
+
+            dropoffMarker = L.marker([rideData.dropoff.lat, rideData.dropoff.lng], {
+                icon: L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 36],
+                    className: 'dropoff-marker'
+                })
+            }).addTo(map).bindPopup("Dropoff Location");
+
+            clientMarker = L.marker([rideData.client.lat, rideData.client.lng], {
+                icon: L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png',
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 36]
+                })
+            }).addTo(map).bindPopup("Client Position");
+
+            // Draw route (straight line for demo)
+            routeLine = L.polyline([
+                [rideData.pickup.lat, rideData.pickup.lng],
+                [rideData.dropoff.lat, rideData.dropoff.lng]
+            ], {color: '#0d6efd', weight: 4, dashArray: '8,8'}).addTo(map);
+
+            // Fit map to markers
+            let group = new L.featureGroup([pickupMarker, dropoffMarker, clientMarker]);
+            map.fitBounds(group.getBounds().pad(0.2));
+        }
+
+        function centerOnClient() {
+            map.setView([rideData.client.lat, rideData.client.lng], 16, {animate: true});
+            clientMarker.openPopup();
+        }
+
+        // Populate ride info
+        function populateRideInfo() {
+            document.getElementById('pickup-address').textContent = rideData.pickup.address;
+            document.getElementById('dropoff-address').textContent = rideData.dropoff.address;
+            document.getElementById('distance').textContent = rideData.distance;
+            document.getElementById('fare').textContent = rideData.fare;
+            document.getElementById('client-position').textContent = 
+                rideData.client.lat.toFixed(5) + ", " + rideData.client.lng.toFixed(5);
+            document.getElementById('client-name').textContent = rideData.client.name;
+            document.getElementById('client-phone').textContent = rideData.client.phone;
+            document.getElementById('client-phone').href = "tel:" + rideData.client.phone.replace(/[^0-9+]/g, '');
+            document.querySelector('.client-avatar').src = rideData.client.avatar;
+            document.getElementById('pickup-time').textContent = rideData.pickupTime;
+        }
+
+        // Pickup button logic
+        function markPickedUp() {
+            document.getElementById('pickup-btn').disabled = true;
+            document.getElementById('pickup-btn').classList.remove('btn-success');
+            document.getElementById('pickup-btn').classList.add('btn-secondary');
+            document.getElementById('pickup-btn').innerHTML = '<i class="bi bi-person-check"></i> Picked Up';
+            document.getElementById('pickup-alert').style.display = 'block';
+            document.getElementById('ride-status-badge').classList.remove('bg-warning', 'text-dark');
+            document.getElementById('ride-status-badge').classList.add('bg-success', 'text-white');
+            document.getElementById('ride-status-badge').textContent = 'Picked Up';
+        }
+
+        // Chat logic
+        function openChat() {
+            document.getElementById('chat-input').focus();
+            window.scrollTo({top: document.getElementById('chat-box').offsetTop - 100, behavior: 'smooth'});
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            populateRideInfo();
+
+            // Chat form
+            document.getElementById('chat-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const input = document.getElementById('chat-input');
+                const msg = input.value.trim();
+                if (msg.length === 0) return;
+                const chatBox = document.getElementById('chat-box');
+                const now = new Date();
+                const time = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+                const div = document.createElement('div');
+                div.className = 'chat-message rider';
+                div.innerHTML = `<span class="msg">${msg}</span>
+                    <div class="small text-muted">You • now</div>`;
+                chatBox.appendChild(div);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                input.value = '';
+            });
+        });
+    </script>
+</body>
+</html></div>

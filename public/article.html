@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrity Gossip Club - Add Article</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="/add.css">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            border: 1px solid #dee2e6;
+            border-radius: .5rem;
+            margin-bottom: 1.5rem;
+            background: #fdfdfe;
+        }
+
+        .section-header {
+            background: #f1f3f5;
+            border-bottom: 1px solid #dee2e6;
+            padding: .75rem 1rem;
+            border-radius: .5rem .5rem 0 0;
+            font-weight: 500;
+        }
+
+        .drag-handle {
+            cursor: grab;
+        }
+
+        .section-controls {
+            float: right;
+        }
+
+        .section-controls button {
+            margin-left: 0.5rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .content-card {
+            background: #fff;
+            border-radius: .5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-header {
+            background: #f1f3f5;
+            border-bottom: 1px solid #dee2e6;
+            padding: .75rem 1rem;
+            border-radius: .5rem .5rem 0 0;
+            font-weight: 500;
+        }
+
+        .content-controls {
+            float: right;
+        }
+
+        .content-controls button {
+            margin-left: 0.25rem;
+        }
+
+        .img-preview {
+            max-width: 100%;
+            margin-top: 8px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <form id="articleForm" class="needs-validation" enctype="multipart/form-data" novalidate>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 shadow-sm sticky-top">
+            <div class="container">
+                <button type="submit" name="action" value="published" id="savePublish"
+                    class="btn btn-light navbar-brand">
+                    Publish
+                </button>
+                <button type="submit" name="action" value="draft" id="saveDraft" class="btn btn-info">
+                    Save as Draft
+                </button>
+
+            </div>
+            </div>
+        </nav>
+        <!-- Article Header -->
+        <header class="article-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div id="alertContainer" class="mt-4"></div>
+                        <textarea class="display-4 fw-bold mb-3 autosize-textarea" name="title" id="title" rows="1"
+                            placeholder="Enter title..."></textarea>
+
+                        <div class="mb-2" id="tagContainer">
+                            <div class="tag-wrapper position-relative" style="display: inline-block;">
+                                <input id="hashTagInput" type="text" class="tag" placeholder="Add tag" />
+                                <span class="input-mirror" aria-hidden="true"></span>
+                            </div>
+
+                        </div>
+                        <div id="hashtagSuggestions" class="list-group position-absolute w-100"
+                            style="z-index: 1000; display: none;"></div>
+
+                        <div class="d-flex align-items-center mt-3">
+                            <div>
+                                <div class="text-muted small">
+                                    Published:
+                                    <input type="datetime-local" id="published_at" name="published_at"
+                                        class="inline-input" />
+                                    &middot;
+                                    <input type="number" id="read_duration" name="read_duration" class="inline-input"
+                                        min="1" max="60" placeholder="5" />
+                                    min read
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+
+                        <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                        <button type="button" class="btn btn-primary"
+                            onclick="document.getElementById('image').click();">
+                            Upload Image
+                        </button>
+                        <img id="imagePreview" class="article-img-main shadow d-none my-2" alt="Image Preview">
+                        <div class="form-text">JPG, PNG, GIF. Max 2MB.</div>
+                    </div>
+                </div>
+                <div class="col-md-4 m-3">
+                    <!-- Trigger button -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#categoryModal">
+                        Select Category
+                    </button>
+                    <div id="allSelectedCategories" class="mt-2">
+                    </div>
+                    <input type="hidden" name="subcategoryIds" id="subcategoryIds">
+                    <div class="invalid-feedback">Category is required.</div>
+                </div>
+                <section>
+                    <textarea class="autosize-textarea" placeholder="Excerpt is required." id="excerpt" name="excerpt"
+                        maxlength="500" required></textarea>
+                </section>
+            </div>
+        </header>
+
+    </form>
+
+    <!-- Section Template -->
+    <template id="sectionTemplate">
+        <div class="section-card fade-in" data-section-id="">
+            <div class="section-header align-items-center">
+                <span class="drag-handle me-2" title="Drag to reorder"><i class="bi bi-grip-vertical"></i></span>
+                <span class="section-title">Section <span class="section-number"></span></span>
+                <div class="section-controls ms-auto">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-section" title="Remove Section"><i
+                            class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="section-body p-3">
+                <div class="mb-2 section-preview-content d-none">
+                    <div class="preview-content border rounded p-2 bg-light"></div>
+                </div>
+        <div id="contentsContainer"></div>
+        <button type="button" class="btn btn-primary" id="addContentBtn"><i class="bi bi-plus-circle"></i> Add
+            Content</button>
+            </div>
+        </div>
+    </template>
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row">
+            <!-- Article Body -->
+            <article class="col-lg-8 mb-5">
+            <div id="sectionsContainer"></div>
+                            <button type="button" class="btn btn-primary" id="addSectionBtn"><i class="bi bi-plus-circle"></i>
+                    Add Section</button>
+            </article>
+        </div>
+    </main>
+
+
+    
+    <!-- Content Templates -->
+    <template id="contentCardTemplate">
+        <div class="content-card fade-in mb-3" data-content-id="">
+            <div class="content-header d-none align-items-center ">
+                <span class="content-type-label"></span>
+                <div class="content-controls ms-auto">
+                    <button type="button" class="btn btn-sm btn-outline-success save-content" title="Save"><i
+                            class="bi bi-check"></i></button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-content" title="Delete"><i
+                            class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="card-body content-fields"></div>
+        </div>
+    </template>
+    <template id="contentTypeSelectTemplate">
+        <select class="form-select content-type-select mb-2">
+            <option value="">Select content type...</option>
+            <option value="head">Head</option>
+            <option value="list">List</option>
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="carousel">Carousel</option>
+            <option value="quote">Quote</option>
+            <option value="embed">Embed</option>
+            <option value="table">table</option>
+        </select>
+    </template>
+    <template id="contentFields-text">
+        <div>
+            <label class="form-label required">Text Content</label>
+            <textarea class="form-control content-text autosize-textarea" rows="4" required></textarea>
+        </div>
+    </template>
+    <template id="contentFields-image">
+        <div>
+            <label class="form-label required">Image</label>
+            <input type="file" class="form-control content-image" accept="image/*">
+            <img class="img-preview d-none mt-2" alt="Image Preview">
+            <label class="form-label mt-2">Caption</label>
+            <input type="text" class="form-control content-caption autosize-textarea" maxlength="120">
+        </div>
+    </template>
+    <template id="contentFields-head">
+        <div class="mb-3">
+            <label class="form-label required">Heading Text</label>
+            <input type="text" class="form-control content-head autosize-textarea" maxlength="150">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Level</label>
+            <select class="form-select content-level">
+                <option value="2">Section Title</option>
+                <option value="4">Section subtitle</option>
+            </select>
+        </div>
+    </template>
+    <template id="contentFields-list">
+        <div class="mb-3">
+            <label class="form-label required">List Items (one per line)</label>
+            <textarea class="form-control content-list autosize-textarea" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ordered List?</label>
+            <input class="content-is-ordered" type="checkbox">
+        </div>
+    </template>
+    <template id="contentFields-video">
+        <div>
+            <label class="form-label required">Video File</label>
+            <input type="file" class="form-control content-video" accept="video/*">
+            <label class="form-label mt-2">Caption</label>
+            <input type="text" class="form-control content-caption autosize-textarea" maxlength="120">
+        </div>
+    </template>
+    <template id="contentFields-carousel">
+        <div>
+            <label class="form-label required">Carousel Media</label>
+            <input type="file" class="form-control content-carousel-media" accept="image/*,video/*" multiple>
+            <div class="carousel-preview mt-2"></div>
+            <label class="form-label mt-2">Captions (optional, one per media)</label>
+            <textarea class="form-control content-carousel-captions autosize-textarea" rows="2"
+                placeholder="Enter captions separated by new lines"></textarea>
+        </div>
+    </template>
+    <template id="contentFields-quote">
+        <div>
+            <label class="form-label required">Quote</label>
+            <textarea class="form-control content-quote" rows="2" required></textarea>
+            <label class="form-label mt-2">Attribution</label>
+            <input type="text" class="form-control content-attribution autosize-textarea" maxlength="80">
+        </div>
+    </template>
+    <template id="contentFields-embed">
+        <div class="mb-3">
+            <label class="form-label required">Embed URL (YouTube, Instagram, Twitter, etc.)</label>
+            <input type="url" class="form-control content-embed-url" placeholder="https://www.youtube.com/embed/..."
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Caption (optional)</label>
+            <input type="text" class="form-control content-embed-caption autosize-textarea"
+                placeholder="e.g. Blake Lively showcases confidence in color">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Alignment (optional)</label>
+            <select class="form-select content-embed-align">
+                <option value="mx-auto" selected>Center</option>
+                <option value="ms-auto">Align Right</option>
+                <option value="me-auto">Align Left</option>
+                <option value="">No Alignment</option>
+            </select>
+        </div>
+    </template>
+    <template id="contentFields-table">
+        <div class="mb-5">
+            <table data-content class="table table-bordered mt-3 content-table">
+                <thead>
+                    <tr class="table-headers-row bg-primary text-white"></tr>
+                </thead>
+                <tbody class="table-body"></tbody>
+            </table>
+        </div>
+    </template>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay d-flex justify-content-center align-items-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Category & Subcategory</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body d-flex" style="max-height: 400px;">
+                    <!-- Categories list -->
+                    <div class="list-group me-3 overflow-auto" style="width: 200px;" id="categoryList">
+                        <!-- Categories will be injected here -->
+                    </div>
+
+                    <!-- Subcategories section -->
+                    <div class="flex-fill" id="subcategoryContainer">
+                        <p class="text-muted">Select a category to view subcategories</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="saveSelection" class="btn btn-success" data-bs-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    <!-- Bootstrap 5 JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <!-- Main JS for Comments, Likes, Replies -->
+    <script src="/article.js"></script>
+
+</body> 
+
+</html>

@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Article - Editor</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* --- Layout and visual styles --- */
+    :root{
+      --toolbar-bg: rgba(255,255,255,0.98);
+      --toolbar-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      --editor-border: 1px solid #e3e6ea;
+      --chip-bg: #f1f3f5;
+    }
+
+    body{background:#f8fafc}
+    .page-title{font-weight:700}
+
+    .editor-frame{
+      background: #ffffff;
+      border-radius: .5rem;
+      padding: 1rem;
+      box-shadow: 0 6px 20px rgba(16,24,40,0.04);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .content-block{
+      border: 1px dashed rgba(0,0,0,0.06);
+      padding: .75rem;
+      margin-bottom: .75rem;
+      border-radius: .375rem;
+      position: relative;
+      background: #fff;
+    }
+
+    .content-block.focused{box-shadow: 0 0 0 3px rgba(13,110,253,0.06); border-color: rgba(13,110,253,0.2)}
+
+    .editable{
+      min-height: 40px;
+      outline: none;
+      white-space: pre-wrap;
+    }
+
+    .floating-toolbar{
+      position: sticky;
+      top: 0.5rem;
+      z-index: 2000;
+      display: none; /* shown when focused */
+      border-radius: .5rem;
+      padding: .5rem;
+      box-shadow: var(--toolbar-shadow);
+      background: var(--toolbar-bg);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .chip{display:inline-flex;align-items:center;padding:.25rem .5rem;border-radius:999px;margin:.125rem;background:var(--chip-bg);}
+    .chip .remove{margin-left:.5rem;cursor:pointer}
+
+    .tags-input{min-height:46px;border:1px solid #e9ecef;padding:.35rem;border-radius:.375rem;background:#fff}
+
+    .section-card{border:1px solid rgba(0,0,0,0.04);border-radius:.5rem;padding:.75rem;margin-bottom:1rem;background:#fbfdff}
+
+    .file-preview{max-height:240px;object-fit:cover;width:100%;border-radius:.375rem;border:1px solid rgba(0,0,0,0.06)}
+
+    .controls .btn{margin-right:.25rem}
+
+    /* helper for large code file (padding) */
+    /* lots of comments below to increase file length deliberately and help with readability. */
+
+    /*
+      -------------------------------------------------------------------
+      NOTE: This file purposely contains an extensive inline documentation
+      block used to explain each area of the editor and provide an
+      example-rich code base. You can remove comments when you copy into
+      your production environment.
+      -------------------------------------------------------------------
+    */
+  </style>
+</head>
+<body>
+  <div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="page-title">Add Article</h1>
+      <div>
+        <button id="previewBtn" class="btn btn-outline-primary">Preview</button>
+        <button id="saveBtn" class="btn btn-primary">Save Article</button>
+      </div>
+    </div>
+
+    <div class="editor-frame">
+
+      <!-- Top toolbar (appears when content focused) -->
+      <div id="floatingToolbar" class="floating-toolbar d-flex gap-2 align-items-center flex-wrap">
+        <!-- Undo/Redo -->
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-sm btn-light" data-cmd="undo" title="Undo">↺</button>
+          <button type="button" class="btn btn-sm btn-light" data-cmd="redo" title="Redo">↻</button>
+        </div>
+
+        <!-- font style and heading -->
+        <select id="headingSelect" class="form-select form-select-sm" style="width:110px">
+          <option value="p">Paragraph</option>
+          <option value="h1">Heading 1</option>
+          <option value="h2">Heading 2</option>
+          <option value="h3">Heading 3</option>
+          <option value="h4">Heading 4</option>
+          <option value="h5">Heading 5</option>
+          <option value="h6">Heading 6</option>
+        </select>
+
+        <select id="fontSelect" class="form-select form-select-sm" style="width:140px">
+          <option value="">Default font</option>
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="'Times New Roman', Times, serif">Times</option>
+          <option value="'Courier New', Courier, monospace">Courier</option>
+        </select>
+
+        <!-- Bold with slider (simulate MS Word weight change) -->
+        <div class="d-flex align-items-center gap-1">
+          <label class="mb-0 small">Bold</label>
+          <input id="boldRange" type="range" min="100" max="900" step="100" value="700" title="Font weight slider">
+        </div>
+
+        <!-- Color picker and caps -->
+        <input id="colorInput" type="color" class="form-control form-control-sm" style="width:44px;height:34px;padding:2px">
+
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-sm btn-light" data-cmd="bold">B</button>
+          <button type="button" class="btn btn-sm btn-light" data-cmd="italic">I</button>
+          <button type="button" class="btn btn-sm btn-light" data-cmd="underline">U</button>
+        </div>
+
+        <div class="btn-group" role="group">
+          <button id="capsBtn" type="button" class="btn btn-sm btn-light" title="Toggle CAPS">Aa</button>
+          <button id="linkBtn" type="button" class="btn btn-sm btn-light" title="Add / Edit Link">🔗</button>
+          <button id="unlinkBtn" type="button" class="btn btn-sm btn-light" title="Remove Link">⛔</button>
+        </div>
+
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-sm btn-light" data-cmd="insertUnorderedList">• List</button>
+          <button type="button" class="btn btn-sm btn-light" data-cmd="insertOrderedList">1. List</button>
+        </div>
+
+        <div class="ms-auto small text-muted">Selection mode toolbar</div>
+      </div>
+
+      <!-- Article meta inputs -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-8">
+          <div class="mb-2">
+            <label class="form-label">Title</label>
+            <input id="titleInput" class="form-control form-control-lg" placeholder="Enter article title" />
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Excerpt</label>
+            <textarea id="excerpt" class="form-control" rows="3" placeholder="Short excerpt..."></textarea>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Featured Image</label>
+            <div class="d-flex gap-2 align-items-start">
+              <input id="imageInput" type="file" accept="image/*" class="form-control form-control-sm">
+              <div style="width:160px">
+                <img id="imagePreview" src="" alt="preview" class="file-preview d-none" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-md-4">
+          <div class="mb-2">
+            <label class="form-label">Hashtags</label>
+            <div id="tagsInput" class="tags-input" tabindex="0">
+              <input id="tagAdder" class="form-control form-control-sm border-0" placeholder="type and press Enter" style="min-width:130px" />
+            </div>
+            <small class="text-muted">Press Enter to add a hashtag. Click 'x' to remove.</small>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Categories</label>
+            <div id="categories" class="d-flex flex-wrap gap-1">
+              <!-- sample categories, user can add new -->
+              <button class="btn btn-outline-secondary btn-sm" data-cat="News">News</button>
+              <button class="btn btn-outline-secondary btn-sm" data-cat="Tech">Tech</button>
+              <button class="btn btn-outline-secondary btn-sm" data-cat="Lifestyle">Lifestyle</button>
+              <button class="btn btn-outline-secondary btn-sm" id="addCategoryBtn">+ Add</button>
+            </div>
+            <input id="newCategoryInput" class="form-control form-control-sm mt-2 d-none" placeholder="Enter category and press Enter">
+            <small class="text-muted">Toggle categories by clicking. Add custom categories with + Add.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sections area -->
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">Sections</h5>
+          <div>
+            <button id="addSectionBtn" class="btn btn-sm btn-success">Add Section</button>
+            <button id="collapseAllBtn" class="btn btn-sm btn-outline-secondary">Collapse All</button>
+          </div>
+        </div>
+
+        <div id="sectionsContainer">
+          <!-- Sections will be injected here -->
+        </div>
+
+      </div>
+
+      <!-- Hidden form data for sending to server -->
+      <pre id="debugOutput" class="d-none"></pre>
+
+    </div>
+
+    <!-- Preview modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Article Preview</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="previewBody"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS + Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* -----------------------------------
+       Editor JavaScript
+       - Handles sections / contents
+       - Floating toolbar appearance
+       - Formatting commands
+       ----------------------------------- */
+
+    // Utility: create element with classes and attrs
+    function el(tag, opts = {}){
+      const d = document.createElement(tag);
+      if(opts.classes) opts.classes.split(' ').forEach(c=>d.classList.add(c));
+      if(opts.html) d.innerHTML = opts.html;
+      if(opts.attrs) for(const k in opts.attrs) d.setAttribute(k, opts.attrs[k]);
+      return d;
+    }
+
+    // State
+    const state = {
+      sections: [],
+      tags: [],
+      categories: new Set()
+    };
+
+    // DOM refs
+    const sectionsContainer = document.getElementById('sectionsContainer');
+    const addSectionBtn = document.getElementById('addSectionBtn');
+    const floatingToolbar = document.getElementById('floatingToolbar');
+    const headingSelect = document.getElementById('headingSelect');
+    const fontSelect = document.getElementById('fontSelect');
+    const colorInput = document.getElementById('colorInput');
+    const boldRange = document.getElementById('boldRange');
+    const tagAdder = document.getElementById('tagAdder');
+    const tagsInput = document.getElementById('tagsInput');
+    const categoriesEl = document.getElementById('categories');
+    const newCategoryInput = document.getElementById('newCategoryInput');
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const saveBtn = document.getElementById('saveBtn');
+    const previewBtn = document.getElementById('previewBtn');
+
+    // Create first section by default
+    addSection();
+
+    // Tag management
+    tagAdder.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const v = tagAdder.value.trim();
+        if(!v) return;
+        addTag(v.startsWith('#') ? v : '#'+v);
+        tagAdder.value = '';
+      }
+    });
+
+    function renderTags(){
+      // remove previous chip nodes except input
+      const inputs = Array.from(tagsInput.querySelectorAll('input')); // keep
+      tagsInput.innerHTML = '';
+      state.tags.forEach((t, idx)=>{
+        const c = el('span',{classes:'chip'});
+        c.textContent = t;
+        const rm = el('span',{classes:'remove'});
+        rm.innerHTML = '&times;';
+        rm.addEventListener('click', ()=>{state.tags.splice(idx,1); renderTags();});
+        c.appendChild(rm);
+        tagsInput.appendChild(c);
+      });
+      tagsInput.appendChild(tagAdder);
+      tagAdder.focus();
+    }
+
+    function addTag(t){
+      if(state.tags.includes(t)) return;
+      state.tags.push(t);
+      renderTags();
+    }
+
+    // Categories handling
+    categoriesEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      if(btn.id === 'addCategoryBtn'){
+        newCategoryInput.classList.toggle('d-none');
+        if(!newCategoryInput.classList.contains('d-none')) newCategoryInput.focus();
+        return;
+      }
+      const cat = btn.getAttribute('data-cat');
+      if(state.categories.has(cat)){
+        state.categories.delete(cat);
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-outline-secondary');
+      } else {
+        state.categories.add(cat);
+        btn.classList.remove('btn-outline-secondary');
+        btn.classList.add('btn-primary');
+      }
+    });
+
+    newCategoryInput.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter'){
+        e.preventDefault();
+        const v = newCategoryInput.value.trim();
+        if(!v) return;
+        const b = el('button',{classes:'btn btn-primary btn-sm', html: v});
+        b.setAttribute('data-cat', v);
+        categoriesEl.insertBefore(b, addCategoryBtn);
+        state.categories.add(v);
+        newCategoryInput.value='';
+        newCategoryInput.classList.add('d-none');
+      } else if(e.key==='Escape'){
+        newCategoryInput.classList.add('d-none');
+      }
+    });
+
+    // Image preview
+    imageInput.addEventListener('change', (e)=>{
+      const f = e.target.files[0];
+      if(!f) { imagePreview.src=''; imagePreview.classList.add('d-none'); return; }
+      const url = URL.createObjectURL(f);
+      imagePreview.src = url; imagePreview.classList.remove('d-none');
+    });
+
+    // Section + content management
+    function addSection(data = null){
+      const section = {
+        id: 's'+Math.random().toString(36).slice(2,9),
+        title: data && data.title || 'Untitled Section',
+        contents: data && data.contents || []
+      };
+      state.sections.push(section);
+      renderSections();
+      return section;
+    }
+
+    addSectionBtn.addEventListener('click', ()=>{ addSection(); });
+
+    function renderSections(){
+      sectionsContainer.innerHTML='';
+      state.sections.forEach((s, sidx)=>{
+        const sc = el('div',{classes:'section-card'});
+        const header = el('div',{classes:'d-flex justify-content-between align-items-start mb-2'});
+        const left = el('div',{classes:'w-100'});
+        const titleInput = el('input',{classes:'form-control form-control-sm mb-1', attrs:{value:s.title}});
+        titleInput.addEventListener('input', (e)=>{ s.title = e.target.value; });
+        left.appendChild(titleInput);
+
+        const controls = el('div',{classes:'d-flex gap-1'});
+        const addContentBtn = el('button',{classes:'btn btn-sm btn-outline-success', html: 'Add Content'});
+        const removeSectionBtn = el('button',{classes:'btn btn-sm btn-outline-danger', html: 'Remove'});
+        addContentBtn.addEventListener('click', ()=>{ s.contents.push({id:'c'+Math.random().toString(36).slice(2,9), type:'text', html:''}); renderSections(); setTimeout(()=>focusContentById(s.contents[s.contents.length-1].id),50); });
+        removeSectionBtn.addEventListener('click', ()=>{ state.sections.splice(sidx,1); renderSections(); });
+        controls.appendChild(addContentBtn); controls.appendChild(removeSectionBtn);
+
+        header.appendChild(left); header.appendChild(controls);
+        sc.appendChild(header);
+
+        // Contents list
+        const contentsList = el('div');
+        s.contents.forEach((c, cidx)=>{
+          const cb = el('div',{classes:'content-block'});
+          cb.setAttribute('data-content-id', c.id);
+
+          const topRow = el('div',{classes:'d-flex justify-content-between align-items-center mb-1'});
+          const meta = el('div',{classes:'small text-muted'});
+          meta.textContent = `Content ${cidx+1} — ${c.type}`;
+          const tools = el('div',{classes:'d-flex gap-1'});
+
+          const toTop = el('button',{classes:'btn btn-sm btn-outline-secondary', html:'⇧'});
+          toTop.title = 'Move up';
+          toTop.addEventListener('click', ()=>{ if(cidx>0){ s.contents.splice(cidx-1,0,s.contents.splice(cidx,1)[0]); renderSections(); }});
+
+          const toBottom = el('button',{classes:'btn btn-sm btn-outline-secondary', html:'⇩'});
+          toBottom.title = 'Move down';
+          toBottom.addEventListener('click', ()=>{ if(cidx < s.contents.length-1){ s.contents.splice(cidx+1,0,s.contents.splice(cidx,1)[0]); renderSections(); }});
+
+          const remove = el('button',{classes:'btn btn-sm btn-outline-danger', html:'Delete'});
+          remove.addEventListener('click', ()=>{ s.contents.splice(cidx,1); renderSections(); });
+
+          tools.appendChild(toTop); tools.appendChild(toBottom); tools.appendChild(remove);
+          topRow.appendChild(meta); topRow.appendChild(tools);
+          cb.appendChild(topRow);
+
+          // Editable area
+          const editable = el('div',{classes:'editable', attrs:{contenteditable:'true', 'data-content-id': c.id}});
+          editable.innerHTML = c.html || '<p><br></p>';
+
+          // When paste, sanitize and keep line breaks and paragraphs
+          editable.addEventListener('paste', (ev)=>{
+            ev.preventDefault();
+            const text = (ev.clipboardData || window.clipboardData).getData('text/plain');
+            document.execCommand('insertHTML', false, escapeHtml(text).replace(/\n/g,'<br>'));
+          });
+
+          // Focus / blur behaviors
+          editable.addEventListener('focus', (ev)=>{
+            document.querySelectorAll('.content-block').forEach(b=>b.classList.remove('focused'));
+            cb.classList.add('focused');
+            showToolbarFor(editable);
+          });
+          editable.addEventListener('blur', ()=>{
+            // update stored html
+            c.html = editable.innerHTML;
+            setTimeout(()=>{
+              if(!document.activeElement || !document.activeElement.classList.contains('editable')) hideFloatingToolbar();
+            }, 200);
+          });
+
+          // Selection change — show toolbar when selection inside editable
+          editable.addEventListener('mouseup', ()=>{ setTimeout(()=>updateToolbarState(), 10); });
+          editable.addEventListener('keyup', ()=>{ updateToolbarState(); });
+
+          // store reference to content HTML when changed
+          editable.addEventListener('input', ()=>{ c.html = editable.innerHTML; });
+
+          cb.appendChild(editable);
+          contentsList.appendChild(cb);
+        });
+
+        sc.appendChild(contentsList);
+        sectionsContainer.appendChild(sc);
+      });
+
+      // ensure toolbar is bound to selection events
+      bindToolbarButtons();
+    }
+
+    function focusContentById(id){
+      const el = document.querySelector('[data-content-id="'+id+'"]');
+      if(el) el.focus();
+    }
+
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Toolbar actions
+    function bindToolbarButtons(){
+      // command buttons
+      floatingToolbar.querySelectorAll('[data-cmd]').forEach(btn=>{
+        btn.onclick = ()=>{
+          const cmd = btn.getAttribute('data-cmd');
+          document.execCommand(cmd, false, null);
+          updateToolbarState();
+        };
+      });
+
+      // heading select
+      headingSelect.onchange = ()=>{
+        const val = headingSelect.value;
+        if(!val) return;
+        // wrap current paragraph/selection into heading or p
+        wrapSelectionBlock(val);
+      };
+
+      fontSelect.onchange = ()=>{
+        const font = fontSelect.value;
+        if(!font) return;
+        applyToSelectionRange((range)=>{
+          wrapRangeWithTag(range, 'span', {style:`font-family:${font};`});
+        });
+      };
+
+      colorInput.onchange = ()=>{
+        const color = colorInput.value;
+        document.execCommand('foreColor', false, color);
+        updateToolbarState();
+      };
+
+      boldRange.oninput = ()=>{
+        const weight = boldRange.value;
+        applyToSelectionRange((range)=>{
+          wrapRangeWithTag(range, 'span', {style:`font-weight:${weight};`});
+        });
+      };
+
+      document.getElementById('capsBtn').onclick = ()=>{
+        applyToSelectionRange((range)=>{
+          wrapRangeWithTag(range, 'span', {style:'text-transform:uppercase;'});
+        });
+      };
+
+      document.getElementById('linkBtn').onclick = ()=>{
+        const url = prompt('Enter link URL (https://...):', 'https://');
+        if(!url) return;
+        document.execCommand('createLink', false, url);
+      };
+      document.getElementById('unlinkBtn').onclick = ()=>{ document.execCommand('unlink'); };
+
+      // undo/redo
+      floatingToolbar.querySelector('[data-cmd="undo"]').onclick = ()=>{ document.execCommand('undo'); };
+      floatingToolbar.querySelector('[data-cmd="redo"]').onclick = ()=>{ document.execCommand('redo'); };
+    }
+
+    // Helper: apply a function to selection ranges
+    function applyToSelectionRange(fn){
+      const sel = window.getSelection();
+      if(!sel || sel.rangeCount===0) return;
+      const range = sel.getRangeAt(0).cloneRange();
+      if(range.collapsed) return;
+      fn(range);
+      // reset selection to the modified range
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+
+    // Wrap a range with a tag and optional attrs
+    function wrapRangeWithTag(range, tag, attrs = {}){
+      const wrapper = document.createElement(tag);
+      for(const k in attrs){ wrapper.setAttribute(k, attrs[k]); }
+      wrapper.appendChild(range.extractContents());
+      range.insertNode(wrapper);
+      return wrapper;
+    }
+
+    // Convert the current block to selected heading/p
+    function wrapSelectionBlock(tagName){
+      const sel = window.getSelection();
+      if(!sel || sel.rangeCount===0) return;
+      const range = sel.getRangeAt(0);
+      // find the start container's ancestor block
+      let node = range.startContainer;
+      while(node && node.nodeType===3) node = node.parentNode;
+      if(!node) return;
+      // find nearest block ancestor (p, div, li, etc)
+      let block = node;
+      while(block && !isBlockElement(block)) block = block.parentNode;
+      if(!block) return;
+      // create heading and move content
+      const newEl = document.createElement(tagName);
+      newEl.innerHTML = block.innerHTML;
+      block.parentNode.replaceChild(newEl, block);
+    }
+
+    function isBlockElement(el){
+      if(!el || el.nodeType!==1) return false;
+      const display = window.getComputedStyle(el).display;
+      return display==='block' || display==='list-item' || display==='table';
+    }
+
+    // Show/hide toolbar based on focus/selection
+    function showToolbarFor(editable){
+      floatingToolbar.style.display = 'flex';
+      // position is sticky at top — so it's visible. We can ensure it scrolls into view
+      // populate heading select based on current block
+      updateToolbarState();
+    }
+    function hideFloatingToolbar(){ floatingToolbar.style.display = 'none'; document.querySelectorAll('.content-block').forEach(b=>b.classList.remove('focused')); }
+
+    // Update toolbar state (which selection is active, e.g. bold/italic etc)
+    function updateToolbarState(){
+      const sel = window.getSelection();
+      if(!sel || sel.rangeCount===0) return;
+      const range = sel.getRangeAt(0);
+      // If selection inside editable
+      const editable = findAncestor(range.startContainer, 'editable');
+      if(!editable){ hideFloatingToolbar(); return; }
+      showToolbarFor(editable);
+      // derive block tag name
+      let node = range.startContainer;
+      while(node && node.nodeType===3) node = node.parentNode;
+      let block = node;
+      while(block && !isBlockElement(block)) block = block.parentNode;
+      headingSelect.value = block && block.tagName ? (block.tagName.toLowerCase().startsWith('h')? block.tagName.toLowerCase() : 'p') : 'p';
+    }
+
+    function findAncestor(node, className){
+      while(node){
+        if(node.nodeType===1 && node.classList && node.classList.contains(className)) return node;
+        node = node.parentNode;
+      }
+      return null;
+    }
+
+    // Hide toolbar when clicking outside
+    document.addEventListener('click', (e)=>{
+      if(e.target.closest('.editable') || e.target.closest('.floating-toolbar') || e.target.closest('.content-block')) return;
+      hideFloatingToolbar();
+    });
+
+    // Save / Preview logic
+    saveBtn.addEventListener('click', ()=>{
+      // Gather data
+      const data = collectArticleData();
+      // TODO: send to server via fetch — for now we just show debug JSON
+      const json = JSON.stringify(data, null, 2);
+      document.getElementById('debugOutput').textContent = json;
+      console.log('Article payload', data);
+      alert('Article JSON logged to console and put in debug output. Replace alert with actual submit logic.');
+    });
+
+    previewBtn.addEventListener('click', ()=>{
+      const data = collectArticleData();
+      const previewBody = document.getElementById('previewBody');
+      let html = `<h1>${escapeHtml(data.title||'Untitled')}</h1>`;
+      if(data.image) html += `<img src="${data.image}" style="max-width:100%;height:auto;margin-bottom:1rem;border-radius:.5rem;">`;
+      html += `<p><em>${escapeHtml(data.excerpt||'')}</em></p>`;
+      data.sections.forEach(sec=>{
+        html += `<h3>${escapeHtml(sec.title||'Untitled Section')}</h3>`;
+        sec.contents.forEach(c=>{ html += `<div>${c.html}</div>`; });
+      });
+      previewBody.innerHTML = html;
+      const mod = new bootstrap.Modal(document.getElementById('previewModal'));
+      mod.show();
+    });
+
+    function collectArticleData(){
+      const title = document.getElementById('titleInput').value.trim();
+      const excerpt = document.getElementById('excerpt').value.trim();
+      const image = imagePreview && !imagePreview.classList.contains('d-none') ? imagePreview.src : null;
+      // gather sections
+      const sections = state.sections.map(s=>({ title: s.title, contents: s.contents.map(c=>({type:c.type, html:c.html})) }));
+      return { title, excerpt, image, hashtags: state.tags.slice(), categories: Array.from(state.categories), sections };
+    }
+
+    // Utility: find if an element has an ancestor with class
+    function hasAncestorClass(node, cls){ while(node){ if(node.nodeType===1 && node.classList && node.classList.contains(cls)) return true; node=node.parentNode;} return false; }
+
+    // Small helper to detect editable ancestor by class
+    function findEditableAncestor(node){ while(node){ if(node.nodeType===1 && node.classList && node.classList.contains('editable')) return node; node=node.parentNode;} return null; }
+
+    // keyboard shortcuts for common formatting
+    document.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='b'){ e.preventDefault(); document.execCommand('bold'); }
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='i'){ e.preventDefault(); document.execCommand('italic'); }
+      if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); const url = prompt('Enter URL','https://'); if(url) document.execCommand('createLink', false, url); }
+    });
+
+    // INITIAL toolbar bind
+    bindToolbarButtons();
+
+    // Utility: find ancestor with class name
+    function findAncestor(node, cls){ while(node){ if(node.nodeType===1 && node.classList && node.classList.contains(cls)) return node; node = node.parentNode; } return null; }
+  </script>
+</body>
+</html>

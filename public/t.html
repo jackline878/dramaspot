@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Active Ride - Cab Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        #ride-map {
+            height: 350px;
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .status-badge {
+            font-size: 1rem;
+            padding: 0.5em 1em;
+            border-radius: 1em;
+        }
+        .driver-img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #0d6efd;
+        }
+        .ride-info-card {
+            border-radius: 1rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+        .btn-action {
+            min-width: 160px;
+        }
+        .timeline {
+            border-left: 3px solid #0d6efd;
+            margin-left: 1.5rem;
+            padding-left: 1.5rem;
+        }
+        .timeline-event {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .timeline-event:before {
+            content: '';
+            position: absolute;
+            left: -2.1rem;
+            top: 0.2rem;
+            width: 1.2rem;
+            height: 1.2rem;
+            background: #fff;
+            border: 3px solid #0d6efd;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-event:last-child {
+            margin-bottom: 0;
+        }
+        .map-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 350px;
+            background: #e9ecef;
+            border-radius: 12px;
+            color: #6c757d;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">CabNow</a>
+            <div class="d-flex align-items-center">
+                <span class="me-3 text-secondary">Hi, <strong>User</strong></span>
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="rounded-circle" width="40" height="40">
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="row g-4">
+            <!-- Ride Info Card -->
+            <div class="col-lg-5">
+                <div class="card ride-info-card p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Driver" class="driver-img me-3">
+                        <div>
+                            <h5 class="mb-1">John Doe</h5>
+                            <span class="text-muted small">Toyota Prius • ABC-1234</span>
+                            <div>
+                                <span class="badge bg-success status-badge" id="ride-status-badge">En Route</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                            <div>
+                                <div class="fw-semibold">Pickup</div>
+                                <div class="text-muted small">123 Main St, Downtown</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-flag-fill text-danger me-2"></i>
+                            <div>
+                                <div class="fw-semibold">Destination</div>
+                                <div class="text-muted small">456 Elm St, Uptown</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Estimated Arrival:</span>
+                            <span class="fw-bold" id="eta">5 min</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Fare:</span>
+                            <span class="fw-bold">$12.50</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-telephone-fill text-primary me-2"></i>
+                            <a href="tel:+1234567890" class="text-decoration-none">Call Driver</a>
+                        </div>
+                        <div class="d-flex align-items-center mt-2">
+                            <i class="bi bi-chat-dots-fill text-primary me-2"></i>
+                            <a href="#" class="text-decoration-none">Message Driver</a>
+                        </div>
+                    </div>
+                    <div id="action-buttons" class="d-grid gap-2">
+                        <button class="btn btn-success btn-action" id="btn-found" style="display:none;">
+                            <i class="bi bi-check-circle me-2"></i>Found My Ride
+                        </button>
+                        <button class="btn btn-danger btn-action" id="btn-cancel">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Map and Timeline -->
+            <div class="col-lg-7">
+                <div id="ride-map" class="mb-4 map-loader">
+                    Loading map...
+                </div>
+                <div class="card p-4">
+                    <h6 class="fw-bold mb-3">Ride Timeline</h6>
+                    <div class="timeline">
+                        <div class="timeline-event">
+                            <div class="fw-semibold">Ride Requested</div>
+                            <div class="text-muted small">10:02 AM</div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="fw-semibold">Driver Assigned</div>
+                            <div class="text-muted small">10:03 AM</div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="fw-semibold">Driver En Route</div>
+                            <div class="text-muted small">10:04 AM</div>
+                        </div>
+                        <div class="timeline-event" id="timeline-arrived" style="display:none;">
+                            <div class="fw-semibold text-success">Driver Arrived</div>
+                            <div class="text-muted small" id="arrived-time"></div>
+                        </div>
+                        <div class="timeline-event" id="timeline-found" style="display:none;">
+                            <div class="fw-semibold text-primary">You Found Your Ride</div>
+                            <div class="text-muted small" id="found-time"></div>
+                        </div>
+                        <div class="timeline-event" id="timeline-canceled" style="display:none;">
+                            <div class="fw-semibold text-danger">Ride Canceled</div>
+                            <div class="text-muted small" id="canceled-time"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Simulated ride state
+        let rideStatus = 'enroute'; // 'enroute', 'arrived', 'found', 'canceled'
+        let driverLocation = [40.7128, -74.0060]; // Example: New York
+        let pickupLocation = [40.7138, -74.0010];
+        let destinationLocation = [40.7218, -74.0000];
+
+        // Map initialization
+        function initMap() {
+            document.getElementById('ride-map').classList.remove('map-loader');
+            document.getElementById('ride-map').innerHTML = '';
+            const map = L.map('ride-map').setView(driverLocation, 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            // Markers
+            const driverMarker = L.marker(driverLocation, {title: "Driver", icon: L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/1946/1946429.png',
+                iconSize: [36, 36],
+                iconAnchor: [18, 36]
+            })}).addTo(map).bindPopup('Driver Location');
+
+            const pickupMarker = L.marker(pickupLocation, {title: "Pickup", icon: L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32]
+            })}).addTo(map).bindPopup('Pickup Point');
+
+            const destMarker = L.marker(destinationLocation, {title: "Destination", icon: L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                iconSize: [32, 32],
+                iconAnchor: [16, 32],
+                className: 'destination-marker'
+            })}).addTo(map).bindPopup('Destination');
+
+            // Draw route (polyline)
+            const route = [pickupLocation, driverLocation, destinationLocation];
+            L.polyline(route, {color: 'blue', weight: 4, opacity: 0.7, dashArray: '10,10'}).addTo(map);
+
+            // Fit bounds
+            map.fitBounds([pickupLocation, driverLocation, destinationLocation], {padding: [40, 40]});
+        }
+
+        // Simulate driver arrival after 10 seconds
+        setTimeout(() => {
+            if (rideStatus === 'enroute') {
+                rideStatus = 'arrived';
+                updateRideStatus();
+            }
+        }, 10000);
+
+        // Update UI based on ride status
+        function updateRideStatus() {
+            const statusBadge = document.getElementById('ride-status-badge');
+            const eta = document.getElementById('eta');
+            const btnFound = document.getElementById('btn-found');
+            const btnCancel = document.getElementById('btn-cancel');
+            const timelineArrived = document.getElementById('timeline-arrived');
+            const timelineFound = document.getElementById('timeline-found');
+            const timelineCanceled = document.getElementById('timeline-canceled');
+
+            if (rideStatus === 'enroute') {
+                statusBadge.textContent = 'En Route';
+                statusBadge.className = 'badge bg-success status-badge';
+                eta.textContent = '5 min';
+                btnFound.style.display = 'none';
+                btnCancel.style.display = '';
+                timelineArrived.style.display = 'none';
+                timelineFound.style.display = 'none';
+                timelineCanceled.style.display = 'none';
+            } else if (rideStatus === 'arrived') {
+                statusBadge.textContent = 'Arrived';
+                statusBadge.className = 'badge bg-primary status-badge';
+                eta.textContent = 'Arrived';
+                btnFound.style.display = '';
+                btnCancel.style.display = '';
+                timelineArrived.style.display = '';
+                document.getElementById('arrived-time').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                timelineFound.style.display = 'none';
+                timelineCanceled.style.display = 'none';
+            } else if (rideStatus === 'found') {
+                statusBadge.textContent = 'Ride Found';
+                statusBadge.className = 'badge bg-info status-badge';
+                eta.textContent = '-';
+                btnFound.style.display = 'none';
+                btnCancel.style.display = 'none';
+                timelineArrived.style.display = '';
+                timelineFound.style.display = '';
+                document.getElementById('found-time').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                timelineCanceled.style.display = 'none';
+            } else if (rideStatus === 'canceled') {
+                statusBadge.textContent = 'Canceled';
+                statusBadge.className = 'badge bg-danger status-badge';
+                eta.textContent = '-';
+                btnFound.style.display = 'none';
+                btnCancel.style.display = 'none';
+                timelineArrived.style.display = '';
+                timelineFound.style.display = 'none';
+                timelineCanceled.style.display = '';
+                document.getElementById('canceled-time').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            updateRideStatus();
+
+            document.getElementById('btn-found').addEventListener('click', function() {
+                rideStatus = 'found';
+                updateRideStatus();
+                alert('You have found your ride! Others will be notified.');
+            });
+
+            document.getElementById('btn-cancel').addEventListener('click', function() {
+                if (confirm('Are you sure you want to cancel this ride?')) {
+                    rideStatus = 'canceled';
+                    updateRideStatus();
+                    alert('Your ride has been canceled.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

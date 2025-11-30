@@ -1,0 +1,58 @@
+How to "Create Article"
+
+This page allows you to create and submit a new article for Drama Spots. Follow these steps carefully:
+
+1. Access the Page
+
+    then www.dramaspots.com/article/add
+
+2. Fill in Article Details
+	- **Title**: Enter a descriptive title (max 180 characters). This is required.
+	- **Category & Subcategory**:
+	  - Click "Select Category".
+	  - In the modal, choose a category from the left.
+	  - Select one or more subcategories by checking the boxes.
+	  - Click "Save" to confirm your selection.
+	- **Excerpt**: Write a short summary (max 300 characters). Required.
+	- **Status**: Choose "Draft" or "Published".
+	- **Publish Date**.
+	- **Read Duration**:  Enter estimated reading time in minutes.
+	- **Article Image**:  Upload a JPG, PNG, or GIF (max 2MB). A preview will appear if selected.
+	- **Hashtags**:  Type hashtags (max 8). Suggestions will appear as you type. Press Enter or click a suggestion to add. Remove by clicking the "x" on a tag.
+
+3. Add Article Sections
+	- Click "Add Section" to create a new section.
+	- For each section:
+	  - **Section Order**: Set the order (auto-filled).
+	  - **Section Contents**: Click "Add Content" to add content blocks.
+	  - For each content block:
+		 - Select a content type (Head, List, Text, Image, Video, Carousel, Quote, Embed).
+		 - Fill in the required fields for the selected type.
+		 - For images/videos, upload the appropriate file.
+		 - For lists, enter one item per line.
+		 - For carousel, upload multiple images/videos and add captions if needed.
+	  - Reorder sections or content blocks using drag handles or up/down arrows.
+	  - Remove sections or content blocks with the trash icon.
+
+4. Review Your Article
+	- Ensure all required fields are filled.
+	- Check that sections and content are in the correct order.
+	- Confirm hashtags and categories are correct.
+
+5. Submit the Article
+	- Click "Create Article".
+	- Wait for the success message. If there are errors, review the highlighted fields or error message.
+
+6. After Submission
+	- On success, the form resets and you can create another article.
+	- If you need to return to the articles list, use the "Back to Articles" button.
+
+Considerations & Tips:
+- Required fields are marked with a red asterisk (*).
+- You can save as draft and publish later.
+- Use clear, concise headings and content for better readability.
+- For best results, use high-quality images and relevant hashtags.
+- Do not exceed the maximum allowed hashtags or file sizes.
+- If you encounter issues, check your internet connection or contact support.
+
+This procedure ensures your article is well-structured and ready for publication.

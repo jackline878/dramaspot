@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join the Celebrity Gossip Club</title>
+    <meta name="description" content="Become a member of the Celebrity Gossip Club and get exclusive access to the latest celebrity news, rumors, and more!">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            min-height: 100vh;
+        }
+        .hero-section {
+            background: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            color: #fff;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .hero-overlay {
+            background: rgba(0,0,0,0.6);
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .form-section {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            margin-top: -100px;
+            margin-bottom: 2rem;
+        }
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: #e83e8c;
+        }
+        .testimonial-img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .faq-question {
+            cursor: pointer;
+        }
+        .footer {
+            background: #212529;
+            color: #fff;
+            padding: 2rem 0;
+        }
+        .social-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #fff;
+            transition: color 0.2s;
+        }
+        .social-icon:hover {
+            color: #e83e8c;
+        }
+        .required {
+            color: #e83e8c;
+        }
+        .plan-card {
+            border: 2px solid #e83e8c;
+            border-radius: 1rem;
+            transition: box-shadow 0.2s;
+        }
+        .plan-card:hover {
+            box-shadow: 0 8px 32px rgba(232,62,140,0.15);
+        }
+        .plan-feature {
+            font-size: 1.1rem;
+        }
+        .bg-pink {
+            background: #e83e8c !important;
+            color: #fff !important;
+        }
+        .nav-link.active {
+            color: #e83e8c !important;
+        }
+        .form-check-input:checked {
+            background-color: #e83e8c;
+            border-color: #e83e8c;
+        }
+        .progress-bar {
+            background-color: #e83e8c;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-pink" href="/">
+                <i class="fa-solid fa-star text-warning"></i>
+                Celebrity Gossip Club
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/join.html">Join Club</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section position-relative">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content text-center">
+            <h1 class="display-4 fw-bold mb-3">Join the Celebrity Gossip Club</h1>
+            <p class="lead mb-4">Get exclusive access to the juiciest celebrity news, behind-the-scenes stories, and members-only perks. Be the first to know what's trending in the world of stars!</p>
+            <a href="#join-form" class="btn btn-lg bg-pink shadow px-5 py-3 fw-bold">Become a Member</a>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="container py-5">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold mb-3">Why Join Our Club?</h2>
+                <p class="text-muted">Unlock a world of celebrity gossip, exclusive content, and a vibrant community of fans just like you!</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <div class="benefit-icon mb-3"><i class="fa-solid fa-crown"></i></div>
+                    <h5 class="fw-bold mb-2">Exclusive News</h5>
+                    <p class="text-muted">Get access to breaking celebrity news and rumors before anyone else.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <div class="benefit-icon mb-3"><i class="fa-solid fa-users"></i></div>
+                    <h5 class="fw-bold mb-2">Members-Only Community</h5>
+                    <p class="text-muted">Join discussions, polls, and live chats with fellow celebrity enthusiasts.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <div class="benefit-icon mb-3"><i class="fa-solid fa-gift"></i></div>
+                    <h5 class="fw-bold mb-2">Giveaways & Events</h5>
+                    <p class="text-muted">Participate in exclusive giveaways, contests, and virtual meetups.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membership Plans -->
+    <section class="container py-5" id="plans">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold mb-3">Choose Your Membership</h2>
+                <p class="text-muted">Flexible plans for every fan. Cancel anytime.</p>
+            </div>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="plan-card p-4 h-100 text-center">
+                    <h5 class="fw-bold mb-2">Basic</h5>
+                    <div class="display-6 fw-bold mb-2">$0 <span class="fs-6 fw-normal">/mo</span></div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Weekly Newsletter</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Access to Free Articles</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-xmark text-danger me-2"></i> Members-Only Forum</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-xmark text-danger me-2"></i> Giveaways</li>
+                    </ul>
+                    <button class="btn btn-outline-pink w-100" disabled>Current Plan</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="plan-card p-4 h-100 text-center bg-pink text-white">
+                    <h5 class="fw-bold mb-2">Premium</h5>
+                    <div class="display-6 fw-bold mb-2">$5 <span class="fs-6 fw-normal">/mo</span></div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> All Basic Features</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Members-Only Forum</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Monthly Giveaways</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Early Access to Articles</li>
+                    </ul>
+                    <button class="btn btn-light w-100 fw-bold" onclick="scrollToForm()">Join Premium</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="plan-card p-4 h-100 text-center">
+                    <h5 class="fw-bold mb-2">VIP</h5>
+                    <div class="display-6 fw-bold mb-2">$15 <span class="fs-6 fw-normal">/mo</span></div>
+                    <ul class="list-unstyled mb-4">
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> All Premium Features</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> VIP-Only Events</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Direct Q&A with Bloggers</li>
+                        <li class="plan-feature mb-2"><i class="fa-solid fa-check text-success me-2"></i> Personalized News Feed</li>
+                    </ul>
+                    <button class="btn btn-outline-pink w-100" onclick="scrollToForm()">Join VIP</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Form Section -->
+    <section class="container py-5" id="join-form">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="form-section shadow">
+                    <h2 class="fw-bold mb-4 text-center">Sign Up Now</h2>
+                    <form id="membershipForm" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                <div class="invalid-feedback">Please enter your first name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                <div class="invalid-feedback">Please enter your last name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email <span class="required">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="username" class="form-label">Username <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="username" name="username" required minlength="4">
+                                <div class="invalid-feedback">Please choose a username (min 4 characters).</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">Password <span class="required">*</span></label>
+                                <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="plan" class="form-label">Membership Plan <span class="required">*</span></label>
+                                <select class="form-select" id="plan" name="plan" required>
+                                    <option value="">Choose...</option>
+                                    <option value="basic">Basic (Free)</option>
+                                    <option value="premium">Premium ($5/mo)</option>
+                                    <option value="vip">VIP ($15/mo)</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a plan.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="interests" class="form-label">Favorite Celebrity (optional)</label>
+                                <input type="text" class="form-control" id="interests" name="interests" placeholder="e.g. Taylor Swift, Dwayne Johnson">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the <a href="/terms.html" target="_blank">terms and conditions</a> <span class="required">*</span>
+                                    </label>
+                                    <div class="invalid-feedback">You must agree before submitting.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 d-grid">
+                            <button type="submit" class="btn bg-pink btn-lg fw-bold">Join Now</button>
+                        </div>
+                        <div class="mt-3 text-center">
+                            <small>Already a member? <a href="/login.html">Sign in</a></small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Bar Section -->
+    <section class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="mb-2 fw-bold">Club Growth</div>
+                <div class="progress" style="height: 1.5rem;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 78%;" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">7,800+ Members</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="container py-5">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold mb-3">What Our Members Say</h2>
+                <p class="text-muted">Hear from real fans who love being part of our club!</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Member" class="testimonial-img me-3">
+                        <div>
+                            <div class="fw-bold">Jessica M.</div>
+                            <div class="text-muted small">Premium Member</div>
+                        </div>
+                    </div>
+                    <p class="mb-0">"I love getting the latest gossip before anyone else! The giveaways are awesome and the community is so much fun."</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Member" class="testimonial-img me-3">
+                        <div>
+                            <div class="fw-bold">Alex R.</div>
+                            <div class="text-muted small">VIP Member</div>
+                        </div>
+                    </div>
+                    <p class="mb-0">"The VIP events are incredible! I even got to ask my favorite blogger a question during a live Q&A."</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded-4 h-100 shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Member" class="testimonial-img me-3">
+                        <div>
+                            <div class="fw-bold">Priya S.</div>
+                            <div class="text-muted small">Basic Member</div>
+                        </div>
+                    </div>
+                    <p class="mb-0">"Even the free plan is great! The newsletter keeps me updated on all the celebrity buzz."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="container py-5">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold mb-3">Frequently Asked Questions</h2>
+                <p class="text-muted">Got questions? We've got answers.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                                Is the Basic plan really free?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! The Basic plan is completely free and gives you access to our newsletter and free articles.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                                Can I cancel my membership anytime?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! You can cancel your Premium or VIP membership at any time from your account dashboard.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                                How do I participate in giveaways?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Giveaways are announced in our members-only forum and newsletter. Premium and VIP members are automatically entered!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                                What payment methods do you accept?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We accept all major credit cards and PayPal for Premium and VIP memberships.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq5">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                                Is my personal information safe?
+                            </button>
+                        </h2>
+                        <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faq5" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, we take your privacy seriously. Your information is encrypted and never shared with third parties.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="container py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="p-5 bg-pink rounded-4 shadow text-white">
+                    <h2 class="fw-bold mb-3">Ready to Join the Hottest Club?</h2>
+                    <p class="lead mb-4">Sign up today and start enjoying exclusive perks, news, and a community of celebrity fans!</p>
+                    <a href="#join-form" class="btn btn-light btn-lg fw-bold px-5 py-3">Join Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row align-items-center mb-3">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <a class="navbar-brand fw-bold text-white" href="/">
+                        <i class="fa-solid fa-star text-warning"></i>
+                        Celebrity Gossip Club
+                    </a>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <small>
+                        &copy; 2024 Celebrity Gossip Club. All rights reserved. |
+                        <a href="/privacy.html" class="text-white text-decoration-underline">Privacy Policy</a> |
+                        <a href="/terms.html" class="text-white text-decoration-underline">Terms of Service</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="btn btn-lg bg-pink text-white rounded-circle scroll-top" id="scrollTopBtn" title="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Scroll to form function
+        function scrollToForm() {
+            document.getElementById('join-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('#membershipForm')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })();
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 300) {
+                scrollTopBtn.style.display = 'block';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+        scrollTopBtn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

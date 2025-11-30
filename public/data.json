@@ -1,0 +1,333 @@
+{
+  "Trending": {
+    "All": [
+      {
+        "id": 1,
+        "image": "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+        "title": "Spider-Man: No Way Home",
+        "description": "Peter Parker's secret identity is revealed to the entire world. Desperate for help, Peter turns to Doctor Strange to make the world forget that he is Spider-Man.",
+        "imdb rating": "8.4",
+        "votes count": "890000",
+        "genres": "Action, Adventure, Fantasy",
+        "year": "2021",
+        "company": "Marvel Studios",
+        "production": ["Columbia Pictures", "Marvel Studios", "Pascal Pictures"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=JfVOs4VSpmA"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Tom Holland", "role": "Peter Parker / Spider-Man"},
+          {"original name": "Zendaya", "role": "MJ"},
+          {"original name": "Benedict Cumberbatch", "role": "Doctor Strange"},
+          {"original name": "Jacob Batalon", "role": "Ned Leeds"}
+        ],
+        "crew": [
+          {"original name": "Jon Watts", "role": "Director"},
+          {"original name": "Chris McKenna", "role": "Screenplay"},
+          {"original name": "Erik Sommers", "role": "Screenplay"}
+        ],
+        "recommended": [2, 3, 4]
+      },
+      {
+        "id": 2,
+        "image": "https://image.tmdb.org/t/p/w500/6KErczPBROQty0Qd9Wp0MtfP6Up.jpg",
+        "title": "Dune",
+        "description": "Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people.",
+        "imdb rating": "8.0",
+        "votes count": "650000",
+        "genres": "Adventure, Drama, Sci-Fi",
+        "year": "2021",
+        "company": "Warner Bros. Pictures",
+        "production": ["Legendary Pictures", "Warner Bros. Pictures"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=n9xhJrPXop4"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Timothée Chalamet", "role": "Paul Atreides"},
+          {"original name": "Rebecca Ferguson", "role": "Lady Jessica"},
+          {"original name": "Oscar Isaac", "role": "Duke Leto Atreides"},
+          {"original name": "Josh Brolin", "role": "Gurney Halleck"}
+        ],
+        "crew": [
+          {"original name": "Denis Villeneuve", "role": "Director"},
+          {"original name": "Jon Spaihts", "role": "Screenplay"},
+          {"original name": "Denis Villeneuve", "role": "Screenplay"}
+        ],
+        "recommended": [1, 5, 6]
+      }
+    ],
+    "Movies": [
+      {
+        "id": 1,
+        "image": "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+        "title": "Spider-Man: No Way Home",
+        "description": "Peter Parker's secret identity is revealed to the entire world. Desperate for help, Peter turns to Doctor Strange to make the world forget that he is Spider-Man.",
+        "imdb rating": "8.4",
+        "votes count": "890000",
+        "genres": "Action, Adventure, Fantasy",
+        "year": "2021",
+        "company": "Marvel Studios",
+        "production": ["Columbia Pictures", "Marvel Studios", "Pascal Pictures"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=JfVOs4VSpmA"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Tom Holland", "role": "Peter Parker / Spider-Man"},
+          {"original name": "Zendaya", "role": "MJ"},
+          {"original name": "Benedict Cumberbatch", "role": "Doctor Strange"},
+          {"original name": "Jacob Batalon", "role": "Ned Leeds"}
+        ],
+        "crew": [
+          {"original name": "Jon Watts", "role": "Director"},
+          {"original name": "Chris McKenna", "role": "Screenplay"},
+          {"original name": "Erik Sommers", "role": "Screenplay"}
+        ],
+        "recommended": [2, 3, 4]
+      },
+      {
+        "id": 2,
+        "image": "https://image.tmdb.org/t/p/w500/6KErczPBROQty0Qd9Wp0MtfP6Up.jpg",
+        "title": "Dune",
+        "description": "Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people.",
+        "imdb rating": "8.0",
+        "votes count": "650000",
+        "genres": "Adventure, Drama, Sci-Fi",
+        "year": "2021",
+        "company": "Warner Bros. Pictures",
+        "production": ["Legendary Pictures", "Warner Bros. Pictures"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=n9xhJrPXop4"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Timothée Chalamet", "role": "Paul Atreides"},
+          {"original name": "Rebecca Ferguson", "role": "Lady Jessica"},
+          {"original name": "Oscar Isaac", "role": "Duke Leto Atreides"},
+          {"original name": "Josh Brolin", "role": "Gurney Halleck"}
+        ],
+        "crew": [
+          {"original name": "Denis Villeneuve", "role": "Director"},
+          {"original name": "Jon Spaihts", "role": "Screenplay"},
+          {"original name": "Denis Villeneuve", "role": "Screenplay"}
+        ],
+        "recommended": [1, 5, 6]
+      }
+    ],
+    "TV Shows": [
+      {
+        "id": 3,
+        "image": "https://image.tmdb.org/t/p/w500/6kbAMLteGO8yyewYau6bJ683sw7.jpg",
+        "title": "The Witcher",
+        "description": "Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts.",
+        "imdb rating": "8.2",
+        "votes count": "420000",
+        "genres": "Action, Adventure, Drama",
+        "year": "2019",
+        "company": "Netflix",
+        "production": ["Netflix", "Platige Image", "Hivemind"],
+        "countries": "Poland, United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=c0i88t0Kacs"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Henry Cavill", "role": "Geralt of Rivia"},
+          {"original name": "Anya Chalotra", "role": "Yennefer of Vengerberg"},
+          {"original name": "Freya Allan", "role": "Ciri"},
+          {"original name": "Joey Batey", "role": "Jaskier"}
+        ],
+        "crew": [
+          {"original name": "Lauren Schmidt Hissrich", "role": "Creator"},
+          {"original name": "Lauren Schmidt Hissrich", "role": "Executive Producer"}
+        ],
+        "recommended": [4, 7, 8]
+      }
+    ]
+  },
+  "Popular": {
+    "All": [
+      {
+        "id": 4,
+        "image": "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+        "title": "Stranger Things",
+        "description": "When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces, and one strange little girl.",
+        "imdb rating": "8.7",
+        "votes count": "1200000",
+        "genres": "Drama, Fantasy, Horror",
+        "year": "2016",
+        "company": "Netflix",
+        "production": ["Netflix", "21 Laps Entertainment", "Monkey Massacre"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=b9EkMc79ZSU"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Millie Bobby Brown", "role": "Eleven"},
+          {"original name": "Finn Wolfhard", "role": "Mike Wheeler"},
+          {"original name": "Winona Ryder", "role": "Joyce Byers"},
+          {"original name": "David Harbour", "role": "Jim Hopper"}
+        ],
+        "crew": [
+          {"original name": "Matt Duffer", "role": "Creator"},
+          {"original name": "Ross Duffer", "role": "Creator"},
+          {"original name": "Matt Duffer", "role": "Executive Producer"}
+        ],
+        "recommended": [3, 9, 10]
+      }
+    ],
+    "Movies": [
+      {
+        "id": 5,
+        "image": "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
+        "title": "Top Gun: Maverick",
+        "description": "After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN's elite graduates on a mission that demands the ultimate sacrifice from those chosen to fly it.",
+        "imdb rating": "8.3",
+        "votes count": "750000",
+        "genres": "Action, Drama",
+        "year": "2022",
+        "company": "Paramount Pictures",
+        "production": ["Paramount Pictures", "Skydance Media", "Jerry Bruckheimer Films"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=qSqVVswa4sy"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Tom Cruise", "role": "Capt. Pete 'Maverick' Mitchell"},
+          {"original name": "Miles Teller", "role": "Lt. Bradley 'Rooster' Bradshaw"},
+          {"original name": "Jennifer Connelly", "role": "Penny Benjamin"},
+          {"original name": "Jon Hamm", "role": "Vice Adm. Beau 'Cyclone' Simpson"}
+        ],
+        "crew": [
+          {"original name": "Joseph Kosinski", "role": "Director"},
+          {"original name": "Ehren Kruger", "role": "Screenplay"},
+          {"original name": "Eric Warren Singer", "role": "Screenplay"}
+        ],
+        "recommended": [1, 2, 6]
+      }
+    ],
+    "TV Shows": [
+      {
+        "id": 6,
+        "image": "https://image.tmdb.org/t/p/w500/5DUMPBSnHOZsbBv81GFXZXvDpo7.jpg",
+        "title": "The Mandalorian",
+        "description": "The travels of a lone bounty hunter in the outer reaches of the galaxy, far from the authority of the New Republic.",
+        "imdb rating": "8.7",
+        "votes count": "680000",
+        "genres": "Action, Adventure, Fantasy",
+        "year": "2019",
+        "company": "Disney+",
+        "production": ["Lucasfilm", "Disney+", "Golem Creations"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=eW7Twd85m2g"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Pedro Pascal", "role": "The Mandalorian"},
+          {"original name": "Gina Carano", "role": "Cara Dune"},
+          {"original name": "Carl Weathers", "role": "Greef Karga"},
+          {"original name": "Werner Herzog", "role": "The Client"}
+        ],
+        "crew": [
+          {"original name": "Jon Favreau", "role": "Creator"},
+          {"original name": "Jon Favreau", "role": "Executive Producer"},
+          {"original name": "Dave Filoni", "role": "Executive Producer"}
+        ],
+        "recommended": [3, 7, 8]
+      }
+    ]
+  },
+  "Latest": {
+    "All": [
+      {
+        "id": 7,
+        "image": "https://image.tmdb.org/t/p/w500/4m1Au3YkjqsxF8iwQy0fPYSxE0h.jpg",
+        "title": "Avatar: The Way of Water",
+        "description": "Set more than a decade after the events of the first film, Avatar: The Way of Water begins to tell the story of the Sully family, the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.",
+        "imdb rating": "7.8",
+        "votes count": "450000",
+        "genres": "Action, Adventure, Drama",
+        "year": "2022",
+        "company": "20th Century Studios",
+        "production": ["20th Century Studios", "Lightstorm Entertainment", "TSG Entertainment"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=d9MyW72ELq0"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Sam Worthington", "role": "Jake Sully"},
+          {"original name": "Zoe Saldana", "role": "Neytiri"},
+          {"original name": "Sigourney Weaver", "role": "Kiri"},
+          {"original name": "Stephen Lang", "role": "Colonel Miles Quaritch"}
+        ],
+        "crew": [
+          {"original name": "James Cameron", "role": "Director"},
+          {"original name": "James Cameron", "role": "Screenplay"},
+          {"original name": "Rick Jaffa", "role": "Screenplay"}
+        ],
+        "recommended": [1, 2, 5]
+      }
+    ],
+    "Movies": [
+      {
+        "id": 8,
+        "image": "https://image.tmdb.org/t/p/w500/4m1Au3YkjqsxF8iwQy0fPYSxE0h.jpg",
+        "title": "Avatar: The Way of Water",
+        "description": "Set more than a decade after the events of the first film, Avatar: The Way of Water begins to tell the story of the Sully family, the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.",
+        "imdb rating": "7.8",
+        "votes count": "450000",
+        "genres": "Action, Adventure, Drama",
+        "year": "2022",
+        "company": "20th Century Studios",
+        "production": ["20th Century Studios", "Lightstorm Entertainment", "TSG Entertainment"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=d9MyW72ELq0"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Sam Worthington", "role": "Jake Sully"},
+          {"original name": "Zoe Saldana", "role": "Neytiri"},
+          {"original name": "Sigourney Weaver", "role": "Kiri"},
+          {"original name": "Stephen Lang", "role": "Colonel Miles Quaritch"}
+        ],
+        "crew": [
+          {"original name": "James Cameron", "role": "Director"},
+          {"original name": "James Cameron", "role": "Screenplay"},
+          {"original name": "Rick Jaffa", "role": "Screenplay"}
+        ],
+        "recommended": [1, 2, 5]
+      }
+    ],
+    "TV Shows": [
+      {
+        "id": 9,
+        "image": "https://image.tmdb.org/t/p/w500/5DUMPBSnHOZsbBv81GFXZXvDpo7.jpg",
+        "title": "The Last of Us",
+        "description": "Twenty years after modern civilization has been destroyed, Joel, a hardened survivor, is hired to smuggle Ellie, a 14-year-old girl, out of an oppressive quarantine zone.",
+        "imdb rating": "8.9",
+        "votes count": "320000",
+        "genres": "Drama, Horror, Thriller",
+        "year": "2023",
+        "company": "HBO",
+        "production": ["HBO", "Sony Pictures Television", "Naughty Dog"],
+        "countries": "United States",
+        "language": "English",
+        "Trailers": ["https://www.youtube.com/watch?v=uLtkt8BonwM"],
+        "download link": "#",
+        "cast": [
+          {"original name": "Pedro Pascal", "role": "Joel"},
+          {"original name": "Bella Ramsey", "role": "Ellie"},
+          {"original name": "Anna Torv", "role": "Tess"},
+          {"original name": "Gabriel Luna", "role": "Tommy"}
+        ],
+        "crew": [
+          {"original name": "Craig Mazin", "role": "Creator"},
+          {"original name": "Neil Druckmann", "role": "Creator"},
+          {"original name": "Craig Mazin", "role": "Executive Producer"}
+        ],
+        "recommended": [3, 4, 6]
+      }
+    ]
+  }
+}

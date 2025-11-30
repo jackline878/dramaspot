@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Details - Celebrity Blog</title>
+    <meta name="description" content="Listen, download, and interact with your favorite music. Like, add to favorites, and explore all details about the track.">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4436674424567426"
+     crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .music-cover {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 1rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+        }
+        .music-actions .btn {
+            min-width: 48px;
+        }
+        .music-meta {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        .music-description {
+            font-size: 1.1rem;
+        }
+        .download-options .btn {
+            margin-bottom: 0.5rem;
+        }
+        .progress-bar {
+            transition: width 0.4s;
+        }
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .comment-box {
+            background: #fff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .tag {
+            background: #e9ecef;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.95rem;
+            margin-right: 0.5rem;
+        }
+        .music-player {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 2rem;
+        }
+        .music-details-list li {
+            margin-bottom: 0.5rem;
+        }
+        .music-stats {
+            font-size: 1.1rem;
+        }
+        .music-stats .stat {
+            margin-right: 2rem;
+        }
+        .music-actions .btn.active {
+            color: #fff;
+            background: #0d6efd;
+        }
+        @media (max-width: 991px) {
+            .music-cover {
+                max-width: 100%;
+                margin-bottom: 2rem;
+            }
+            .music-player {
+                padding: 1rem;
+            }
+        }
+        @media (max-width: 575px) {
+            .music-player {
+                padding: 0.5rem;
+            }
+            .music-actions .btn {
+                min-width: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Celebrity Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/music.html">Music</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videos.html">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Music Details Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <!-- Music Cover -->
+                <div class="col-lg-4 text-center">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Music Cover" class="music-cover mb-3 shadow">
+                    <div class="music-actions d-flex justify-content-center gap-2 mt-3">
+                        <button class="btn btn-outline-primary" id="likeBtn" title="Like"><i class="fa-regular fa-thumbs-up"></i></button>
+                        <button class="btn btn-outline-danger" id="dislikeBtn" title="Dislike"><i class="fa-regular fa-thumbs-down"></i></button>
+                        <button class="btn btn-outline-warning" id="favBtn" title="Add to Favourite"><i class="fa-regular fa-star"></i></button>
+                        <button class="btn btn-outline-success" id="shareBtn" title="Share"><i class="fa-solid fa-share-nodes"></i></button>
+                    </div>
+                    <div class="music-stats mt-4 d-flex justify-content-center">
+                        <span class="stat"><i class="fa-solid fa-eye"></i> <span id="viewsCount">12,345</span></span>
+                        <span class="stat"><i class="fa-solid fa-heart"></i> <span id="likesCount">1,234</span></span>
+                        <span class="stat"><i class="fa-solid fa-star"></i> <span id="favsCount">567</span></span>
+                    </div>
+                </div>
+                <!-- Music Details -->
+                <div class="col-lg-8">
+                    <div class="music-player mb-4">
+                        <h2 class="fw-bold mb-2">Shining Star (Official Audio)</h2>
+                        <div class="music-meta mb-3">
+                            <span>By <a href="#" class="fw-semibold">Jane Doe</a></span> &middot;
+                            <span>Released: <time datetime="2024-05-20">May 20, 2024</time></span> &middot;
+                            <span>Genre: <a href="#" class="text-decoration-none">Pop</a></span>
+                        </div>
+                        <audio id="audioPlayer" controls class="w-100 mb-3">
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-primary" id="playBtn"><i class="fa-solid fa-play"></i> Play</button>
+                            <button class="btn btn-outline-secondary" id="pauseBtn"><i class="fa-solid fa-pause"></i> Pause</button>
+                            <button class="btn btn-outline-info" id="rewindBtn"><i class="fa-solid fa-backward"></i></button>
+                            <button class="btn btn-outline-info" id="forwardBtn"><i class="fa-solid fa-forward"></i></button>
+                            <span id="currentTime" class="ms-3">0:00</span> / <span id="duration">0:00</span>
+                        </div>
+                        <div class="progress mt-3" style="height: 8px;">
+                            <div class="progress-bar bg-primary" id="audioProgress" role="progressbar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="music-description mb-4">
+                        <h5>Description</h5>
+                        <p>
+                            "Shining Star" is the latest single by Jane Doe, blending catchy pop melodies with heartfelt lyrics. The song explores themes of hope, resilience, and self-discovery, making it a perfect anthem for anyone chasing their dreams. Produced by Grammy-winning producer John Smith, this track features lush instrumentation and an unforgettable chorus.
+                        </p>
+                    </div>
+                    <ul class="music-details-list list-unstyled mb-4">
+                        <li><strong>Album:</strong> <span>Dreams Unfold</span></li>
+                        <li><strong>Duration:</strong> <span>3:45</span></li>
+                        <li><strong>Label:</strong> <span>Star Records</span></li>
+                        <li><strong>Producer:</strong> <span>John Smith</span></li>
+                        <li><strong>Writers:</strong> <span>Jane Doe, Alex Brown</span></li>
+                        <li><strong>ISRC:</strong> <span>US-AAA-24-12345</span></li>
+                        <li><strong>Language:</strong> <span>English</span></li>
+                        <li><strong>Tags:</strong>
+                            <span class="tag">Pop</span>
+                            <span class="tag">2024</span>
+                            <span class="tag">Inspiring</span>
+                        </li>
+                    </ul>
+                    <div class="download-options mb-4">
+                        <h5>Download Options</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" download class="btn btn-outline-primary">
+                                <i class="fa-solid fa-download"></i> MP3 (320kbps)
+                            </a>
+                            <a href="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" download class="btn btn-outline-secondary">
+                                <i class="fa-solid fa-download"></i> MP3 (128kbps)
+                            </a>
+                            <a href="https://samplelib.com/mp4/sample-5s.mp4" download class="btn btn-outline-success">
+                                <i class="fa-solid fa-download"></i> MP4 Video (HD)
+                            </a>
+                            <a href="https://samplelib.com/mp4/sample-5s.mp4" download class="btn btn-outline-info">
+                                <i class="fa-solid fa-download"></i> MP4 Video (SD)
+                            </a>
+                            <a href="#" class="btn btn-outline-warning disabled">
+                                <i class="fa-solid fa-download"></i> FLAC (Coming Soon)
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-dark" id="addPlaylistBtn"><i class="fa-solid fa-list"></i> Add to Playlist</button>
+                        <button class="btn btn-outline-primary" id="reportBtn"><i class="fa-solid fa-flag"></i> Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Music Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h4 class="mb-4">Related Music</h4>
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related Song 1">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">Dream Chaser</h6>
+                            <p class="card-text text-muted mb-2">Alex Brown</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary w-100"><i class="fa-solid fa-play"></i> Listen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related Song 2">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">Rise Again</h6>
+                            <p class="card-text text-muted mb-2">Emily Stone</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary w-100"><i class="fa-solid fa-play"></i> Listen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related Song 3">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">Echoes</h6>
+                            <p class="card-text text-muted mb-2">Mike Lee</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary w-100"><i class="fa-solid fa-play"></i> Listen</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=400&q=80" class="card-img-top" alt="Related Song 4">
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">Golden Hour</h6>
+                            <p class="card-text text-muted mb-2">Sara Kim</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary w-100"><i class="fa-solid fa-play"></i> Listen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comments Section -->
+    <section class="py-5">
+        <div class="container">
+            <h4 class="mb-4">Comments <span class="badge bg-primary" id="commentsCount">3</span></h4>
+            <form class="mb-4" id="commentForm">
+                <div class="mb-3">
+                    <textarea class="form-control" id="commentInput" rows="3" placeholder="Write your comment..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Post Comment</button>
+            </form>
+            <div id="commentsList">
+                <div class="comment-box d-flex">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="comment-avatar me-3">
+                    <div>
+                        <div class="fw-semibold">John Smith <span class="text-muted small">2 hours ago</span></div>
+                        <div>Absolutely love this track! The lyrics are so inspiring.</div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-primary me-2"><i class="fa-regular fa-thumbs-up"></i> 12</button>
+                            <button class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-thumbs-down"></i> 1</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-box d-flex">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="comment-avatar me-3">
+                    <div>
+                        <div class="fw-semibold">Emily Rose <span class="text-muted small">1 hour ago</span></div>
+                        <div>This song is on repeat! Can't wait for the music video.</div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-primary me-2"><i class="fa-regular fa-thumbs-up"></i> 8</button>
+                            <button class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-thumbs-down"></i> 0</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-box d-flex">
+                    <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="User" class="comment-avatar me-3">
+                    <div>
+                        <div class="fw-semibold">Mike Lee <span class="text-muted small">30 minutes ago</span></div>
+                        <div>Great production quality. Jane Doe never disappoints!</div>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-primary me-2"><i class="fa-regular fa-thumbs-up"></i> 5</button>
+                            <button class="btn btn-sm btn-outline-secondary"><i class="fa-regular fa-thumbs-down"></i> 0</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <div class="mb-2">
+                <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div>
+                &copy; 2024 Celebrity Blog. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Audio Player Controls
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const progressBar = document.getElementById('audioProgress');
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audio.duration);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+            progressBar.style.width = ((audio.currentTime / audio.duration) * 100) + '%';
+        });
+
+        playBtn.addEventListener('click', () => audio.play());
+        pauseBtn.addEventListener('click', () => audio.pause());
+        rewindBtn.addEventListener('click', () => audio.currentTime = Math.max(0, audio.currentTime - 10));
+        forwardBtn.addEventListener('click', () => audio.currentTime = Math.min(audio.duration, audio.currentTime + 10));
+
+        // Like, Dislike, Favourite, Share
+        let liked = false, disliked = false, fav = false;
+        const likeBtn = document.getElementById('likeBtn');
+        const dislikeBtn = document.getElementById('dislikeBtn');
+        const favBtn = document.getElementById('favBtn');
+        const likesCount = document.getElementById('likesCount');
+        const favsCount = document.getElementById('favsCount');
+        let likes = 1234, favs = 567;
+
+        likeBtn.addEventListener('click', () => {
+            liked = !liked;
+            likeBtn.classList.toggle('active', liked);
+            if (liked) {
+                likes++;
+                if (disliked) {
+                    disliked = false;
+                    dislikeBtn.classList.remove('active');
+                }
+            } else {
+                likes--;
+            }
+            likesCount.textContent = likes;
+        });
+
+        dislikeBtn.addEventListener('click', () => {
+            disliked = !disliked;
+            dislikeBtn.classList.toggle('active', disliked);
+            if (disliked && liked) {
+                liked = false;
+                likeBtn.classList.remove('active');
+                likes--;
+            }
+            likesCount.textContent = likes;
+        });
+
+        favBtn.addEventListener('click', () => {
+            fav = !fav;
+            favBtn.classList.toggle('active', fav);
+            if (fav) {
+                favs++;
+            } else {
+                favs--;
+            }
+            favsCount.textContent = favs;
+        });
+
+        // Share
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Shining Star (Official Audio)',
+                    text: 'Check out this amazing song!',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        });
+
+        // Add to Playlist
+        document.getElementById('addPlaylistBtn').addEventListener('click', () => {
+            alert('Added to your playlist!');
+        });
+
+
+  </script>
+</body>
+</html>

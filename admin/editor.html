@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add / Edit Article — Content Editor</title>
+
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/editor.css">
+</head>
+
+<body>
+
+  <!-- Overlay -->
+  <div id="pleaseWaitOverlay"
+    class="d-none position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex flex-column justify-content-center align-items-center"
+    style="z-index: 1055;">
+    <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="text-white fs-5 fw-semibold">Please wait...</div>
+  </div>
+
+  <!-- Topbar -->
+  <nav class="navbar topbar py-2">
+    <div class="container">
+      <div class="d-flex align-items-center w-100 justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <a class="navbar-brand fw-bold text-dark" href="/">Dramaspots</a>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+          <button id="previewBtn" class="btn btn-outline-secondary btn-sm">Preview</button>
+          <button id="saveBtn" class="btn btn-primary btn-sm">Save</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Editor shell -->
+  <main class="container">
+    <div class="">
+
+      <div class="row">
+        <!-- Article Body -->
+        <article class="col-lg-8 mb-5">
+          <!-- Title area (editable) -->
+          <h1 id="articleTitle" class=" fw-bold mb-3">Click to add title</h1>
+          <div id="articleTags" class="mb-2 d-flex flex-wrap"></div>
+          <div class="d-flex align-items-center mt-3">
+            <picture id="authorPic"></picture>
+            <div>
+              <div id="authorName" class="fw-semibold"></div>
+              <div class="text-muted small">Published: <span id="articleDate"></span> &middot; <span
+                  id="readDuration"></span></div>
+            </div>
+          </div>
+
+          <!-- Controls on top -->
+          <div class="d-flex gap-2 mb-3 d-none">
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-light-outline" id="toggleEditView" title="Toggle edit / view">Toggle edit</button>
+              <button class="btn btn-light-outline" id="clearBlocks" title="Clear all blocks">Clear all</button>
+            </div>
+          </div>
+
+
+          <div class="add-between">
+            <button id="addBlockBtn" class="btn btn-sm" data-add>+ Insert block here</button>
+          </div>
+          <!-- Main article content blocks area -->
+          <div id="blocks" class="blocks" aria-live="polite">
+            <!-- Blocks will be appended here -->
+            <div class="empty-hint" id="emptyHint">No content yet</div>
+          </div>
+
+          <!-- End add button -->
+          <div class="mt-3 text-center">
+            <button id="addAtEnd" class="btn btn-sm btn-outline-secondary d-none"><i class="bi bi-plus-square"></i> Add
+              content at
+              end</button>
+          </div>
+        </article>
+
+
+
+        <!-- Sidebar -->
+        <aside class="col-lg-4">
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating toolbar (formatting / highlight / link / code) -->
+  <div id="toolbar" class="floating-toolbar" style="display:none;">
+    <div class="btn-group" role="group">
+      <button id="boldBtn" class="btn btn-sm btn-light" title="Bold (Ctrl+B)"><i class="bi bi-type-bold"></i></button>
+      <button id="italicBtn" class="btn btn-sm btn-light" title="Italic (Ctrl+I)"><i
+          class="bi bi-type-italic"></i></button>
+      <button id="underlineBtn" class="btn btn-sm btn-light" title="Underline"><i
+          class="bi bi-type-underline"></i></button>
+      <button id="highlightBtn" class="btn btn-sm btn-light" title="Highlight"><i class="bi bi-brush"></i></button>
+      <button id="linkBtn" class="btn btn-sm btn-light" title="Add link"><i class="bi bi-link-45deg"></i></button>
+      <button id="codeWrapBtn" class="btn btn-sm btn-light" title="Wrap selection in code"><i
+          class="bi bi-code-square"></i></button>
+    </div>
+    <div class="vr"></div>
+    <div class="d-flex gap-2">
+      <button id="deleteSelectionBtn" class="btn btn-sm btn-outline-danger" title="Delete block or selection"><i
+          class="bi bi-trash"></i></button>
+      <button id="insertHrBtn" class="btn btn-sm btn-outline-secondary" title="Insert separator">—</button>
+    </div>
+  </div>
+
+  <!-- Modal-like quick helpers (uses prompt(), so no visible inputs) -->
+  <template id="addBetweenTemplate">
+    <div class="add-between">
+      <button class="btn btn-sm" data-add>+ Insert block here</button>
+    </div>
+  </template>
+
+  <!-- Templates for blocks (hidden) -->
+  <template id="templates">
+    <!-- Paragraph / head -->
+    <div data-type="text" class="block">
+      <div class="block-content">
+        <div contenteditable="true" class="p-0 m-0" data-placeholder="Write paragraph...">
+          <p>Click to edit paragraph</p>
+        </div>
+      </div>
+      <div class="block-controls">
+        <button class="btn btn-sm btn-light-outline" data-type="edit"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-light-outline" data-type="settings"><i class="bi bi-gear"></i></button>
+      </div>
+    </div>
+
+    <!-- Head -->
+    <div data-type="head" class="block">
+      <div class="block-content">
+        <div contenteditable="true" class="m-0" data-placeholder="Heading...">
+          <h3>Click to edit heading</h3>
+        </div>
+      </div>
+      <div class="block-controls">
+        <button class="btn btn-sm btn-light-outline" data-type="hstyle"><i class="bi bi-fonts"></i></button>
+      </div>
+    </div>
+
+    <!-- List -->
+    <div data-type="list" class="block">
+      <div class="block-content">
+        <ul contenteditable="true" class="m-0" data-placeholder="List items...">
+          <li>List item 1</li>
+          <li>List item 2</li>
+        </ul>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="liststyle"><i
+            class="bi bi-list-ul"></i></button></div>
+    </div>
+
+    <!-- Quote -->
+    <div data-type="quote" class="block">
+      <div class="block-content">
+        <blockquote contenteditable="true"
+          class="blockquote mt-3 my-3 px-4 py-3 bg-light border-start border-4 border-danger rounded mb-4"
+          data-placeholder="Quote...">
+          <p class="mb-0">Click to edit quote</p>
+          <footer class="blockquote-footer">Edit Attribution</footer>
+        </blockquote>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="cite"><i
+            class="bi bi-quote"></i></button></div>
+    </div>
+
+    <!-- Carousel -->
+    <div data-type="carousel" class="block">
+      <div class="block-content">
+        <div class="carousel" data-carousel>
+          <div class="slide"><img src="https://via.placeholder.com/800x450?text=Slide+1" alt="Slide 1"></div>
+          <div class="slide"><img src="https://via.placeholder.com/800x450?text=Slide+2" alt="Slide 2"></div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="carouselEdit"><i
+            class="bi bi-images"></i></button></div>
+    </div>
+
+    <!-- Image -->
+    <div data-type="image" class="block">
+      <input type="file" id="imageUploadInput" accept="image/*" hidden>
+      <div class="block-content">
+        <figure contenteditable="false" class="m-0">
+          <a href="#" class="img-link" target="_blank"><img src="https://via.placeholder.com/900x500?text=Image"
+              alt="Image"></a>
+          <figcaption contenteditable="true" class="mt-2 muted small">Caption (click to edit)</figcaption>
+        </figure>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="imgEdit"><i
+            class="bi bi-link-45deg"></i></button>
+        <button class="btn btn-sm btn-light-outline" data-type="imgUpload"><i class="bi bi-upload"></i></button>
+      </div>
+    </div>
+
+    <!-- Video -->
+    <div data-type="video" class="block">
+      <input type="file" id="videoUploadInput" accept="video/*" hidden>
+      <div class="block-content">
+        <div contenteditable="false" class="m-0 video-wrap">
+          <div class="card">
+            <video controls class="video-responsive">
+              <source src="your-video.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="videoEdit"><i
+            class="bi bi bi-link-45deg"></i></button>
+        <button class="btn btn-sm btn-light-outline" data-type="vidUpload"><i class="bi bi-upload"></i></button>
+      </div>
+    </div>
+
+    <!-- Audio -->
+    <div data-type="audio" class="block">
+      <div class="block-content">
+        <audio controls src="" style="width:100%"></audio>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="audioEdit"><i
+            class="bi bi-music-note-beamed"></i></button></div>
+    </div>
+
+    <!-- Embed / iframe -->
+    <div data-type="embed" class="block">
+      <div class="block-content">
+        <div class="m-0 embedFrame" contenteditable="false" style="border-radius:8px;overflow:hidden">
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="embedEdit"><i
+            class="bi bi-window"></i></button></div>
+    </div>
+
+    <!-- Raw HTML -->
+    <div data-type="html" class="block">
+      <div class="block-content">
+        <pre contenteditable="true" class="code-block m-0"
+          data-placeholder="Paste raw HTML here">&lt;div&gt;Raw HTML&lt;/div&gt;</pre>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="rawEdit"><i
+            class="bi bi-code"></i></button></div>
+    </div>
+
+    <!-- Table -->
+    <div data-type="table" class="block">
+      <div class="block-content" style="width: 100%;">
+        <table class="editable-table" contenteditable="false"></table>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="tableEdit"><i
+            class="bi bi-table"></i></button></div>
+    </div>
+
+    <!-- Code -->
+    <div data-type="code" class="block">
+      <div class="block-content">
+        <pre contenteditable="true" class="code-block" spellcheck="false">// code here</pre>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="lang"><i
+            class="bi bi-terminal"></i></button></div>
+    </div>
+
+    <!-- Button -->
+    <div data-type="button" class="block">
+      <div class="block-content d-flex align-items-center">
+        <div contenteditable="true" class="me-3">Call to action</div>
+        <div><a href="#" class="btn btn-sm btn-primary" contenteditable="false">Action</a></div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="btnEdit"><i
+            class="bi bi-link-45deg"></i></button></div>
+    </div>
+
+    <!-- drop -->
+    <div data-type="drop-button" class="block">
+      <div class="block-content d-flex align-items-center">
+        <div contenteditable="true">
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#hiddenContent"
+            aria-expanded="false" aria-controls="hiddenContent">
+            See More
+          </button>
+
+          <div class="collapse mt-3" id="hiddenContent">
+            <div class="card card-body">
+              This is the hidden content that smoothly drops down when the button is clicked.
+              You can put <b>text</b>, <i>images</i>, or even more Bootstrap components here.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="btnEdit"><i
+            class="bi bi-link-45deg"></i></button></div>
+    </div>
+
+    <!-- Form (rendered and editable as content, but when saving it's serialized) -->
+    <div data-type="form" class="block">
+      <div class="block-content">
+        <div contenteditable="true">Subscribe to our newsletter — click to edit form markup/text</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="formEdit"><i
+            class="bi bi-card-checklist"></i></button></div>
+    </div>
+
+    <!-- Gallery -->
+    <div data-type="gallery" class="block">
+      <div class="block-content gallery d-flex gap-2 flex-wrap">
+        <figure style="width:calc(50% - 8px)"><img src="https://via.placeholder.com/600x400?text=G1">
+          <figcaption contenteditable="true" class="small muted">Caption</figcaption>
+        </figure>
+        <figure style="width:calc(50% - 8px)"><img src="https://via.placeholder.com/600x400?text=G2">
+          <figcaption contenteditable="true" class="small muted">Caption</figcaption>
+        </figure>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="galleryEdit"><i
+            class="bi bi-collection"></i></button></div>
+    </div>
+
+    <!-- Map -->
+    <div data-type="map" class="block">
+      <div class="block-content">
+        <div contenteditable="false" class="map"
+          style="height:300px;border-radius:8px;background:linear-gradient(90deg,#e8f7ff,#fff);display:flex;align-items:center;justify-content:center">
+          <div class="muted">Map placeholder — click to set coordinates</div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="mapEdit"><i
+            class="bi bi-map"></i></button></div>
+    </div>
+
+    <!-- Poll -->
+
+    <!-- Poll -->
+    <div data-type="poll" class="block">
+      <div class="block-content">
+        <div contenteditable="true" class="poll-question mb-2">Poll question (click to edit)</div>
+        <ul class="poll-options list-unstyled">
+          <li contenteditable="true">Option 1</li>
+          <li contenteditable="true">Option 2</li>
+        </ul>
+        <button class="btn btn-sm btn-outline-primary mt-2" data-add-option>Add option</button>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="pollEdit"><i
+            class="bi bi-bar-chart"></i></button></div>
+    </div>
+
+    <!-- Slider -->
+    <div data-type="slider" class="block">
+      <div class="block-content">
+        <div contenteditable="false" class="slider" style="width:100%"><input type="range" min="0" max="100" value="40"
+            disabled></div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="sliderEdit"><i
+            class="bi bi-sliders"></i></button></div>
+    </div>
+
+    <!-- Ad -->
+    <div data-type="ad" class="block">
+      <div class="block-content announcement">
+        <div style="height: 100px;">Ad will appear here</div>
+      </div>
+      <div class="block-controls">
+
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div data-type="countdown" class="block">
+      <div class="block-content">
+        <div contenteditable="true" data-countdown>Countdown target: 2025-12-31T00:00:00Z</div>
+        <div class="mt-2 small muted" data-countdown-display>Time left will show here</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="countEdit"><i
+            class="bi bi-clock"></i></button></div>
+    </div>
+
+    <!-- FAQ -->
+    <div data-type="faq" class="block">
+      <div class="block-content">
+        <div class="faq-item" contenteditable="true">Q: Click to edit question and answer</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="faqEdit"><i
+            class="bi bi-question-circle"></i></button></div>
+    </div>
+
+    <!-- Testimonial -->
+    <div data-type="testimonial" class="block">
+      <div class="block-content">
+        <blockquote contenteditable="true" class="blockquote">"Fantastic!" — <small
+            contenteditable="true">Someone</small></blockquote>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="testiEdit"><i
+            class="bi bi-chat-left-text"></i></button></div>
+    </div>
+
+    <!-- Timeline -->
+    <div data-type="timeline" class="block">
+      <div class="block-content timeline">
+        <div class="timeline-item" contenteditable="true">Event 1 — date</div>
+        <div class="timeline-item" contenteditable="true">Event 2 — date</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="timelineEdit"><i
+            class="bi bi-clock-history"></i></button></div>
+    </div>
+
+    <!-- Stat -->
+    <div data-type="stat" class="block">
+      <div class="block-content stat-block">
+        <div>
+          <div contenteditable="true" class="h3 m-0">1.2M</div>
+          <div contenteditable="true" class="muted small">Visitors</div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="statEdit"><i
+            class="bi bi-graph-up"></i></button></div>
+    </div>
+
+    <!-- CTA -->
+    <div data-type="cta" class="block">
+      <div class="block-content cta-block">
+        <div contenteditable="true">Ready to get started? Click to customize CTA text.</div>
+        <div><a href="#" class="btn btn-primary">Get started</a></div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="ctaEdit"><i
+            class="bi bi-megaphone"></i></button></div>
+    </div>
+
+    <!-- Announcement -->
+    <div data-type="announcement" class="block">
+      <div class="block-content announcement" contenteditable="true">Announcement text — click to edit</div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="annEdit"><i
+            class="bi bi-bell"></i></button></div>
+    </div>
+
+    <!-- Infobox -->
+    <div data-type="infobox" class="block">
+      <div class="block-content announcement" contenteditable="true">Info box — click to edit</div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="infoEdit"><i
+            class="bi bi-info-circle"></i></button></div>
+    </div>
+  </template>
+
+  <!-- Modal -->
+  <div class="modal fade" id="blockTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Block</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="blockTypeSelect" class="form-label fw-bold">Choose Block Type</label>
+          <select id="blockTypeSelect" class="form-select">
+            <option value="">-- Select block type --</option>
+            <option value="head">Head</option>
+            <option value="text">Text</option>
+            <option value="list">List</option>
+            <option value="quote">Quote</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="drop-button">See more</option>
+            <option value="embed">Embed</option>
+            <option value="table">Table</option>
+            <option value="ad">Ad</option>
+            <!-- <option value="carousel">Carousel</option>
+            <option value="audio">Audio</option>
+            <option value="html">HTML</option>
+            <option value="code">Code</option>
+            <option value="button">Button</option>
+            <option value="form">Form</option>
+            <option value="gallery">Gallery</option>
+            <option value="map">Map</option>
+            <option value="poll">Poll</option>
+            <option value="slider">Slider</option>
+            <option value="countdown">Countdown</option>
+            <option value="faq">FAQ</option>
+            <option value="testimonial">Testimonial</option>
+            <option value="timeline">Timeline</option>
+            <option value="stat">Stat</option>
+            <option value="cta">CTA</option>
+            <option value="announcement">Announcement</option>
+            <option value="infobox">Infobox</option> -->
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" id="confirmAddBlock" class="btn btn-primary">Add Block</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Triggered only via JS, not data-bs-toggle -->
+  <div class="modal fade" id="embedModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Embed</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="embedForm">
+            <div class="mb-3">
+              <label class="form-label">Embed URL</label>
+              <input type="url" class="form-control" id="embedUrl" placeholder="https://example.com/embed" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Caption (optional)</label>
+              <input type="text" class="form-control" id="embedCaption" placeholder="Write a caption">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" id="saveEmbed">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Head Edit Modal -->
+  <div class="modal fade" id="headModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="headForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Heading</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="headLevel" class="form-label">Heading Level</label>
+              <select class="form-select" id="headLevel">
+                <option value="h1">H1</option>
+                <option value="h2" selected>H2</option>
+                <option value="h3">H3</option>
+                <option value="h4">H4</option>
+                <option value="h5">H5</option>
+                <option value="h6">H6</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="saveHead">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/editor.js"></script>
+  <script src="/handle_edit.js"></script>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

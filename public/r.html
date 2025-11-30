@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cab Service - Rider & Driver Registration/Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .main-header {
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        .tab-content {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+            padding: 2rem;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        .input-group-text {
+            background: #e9ecef;
+        }
+        .social-btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .divider span {
+            background: #fff;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .divider:before {
+            content: "";
+            display: block;
+            height: 1px;
+            background: #dee2e6;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            z-index: 0;
+        }
+        .form-check-label {
+            margin-left: 0.5rem;
+        }
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+        .nav-tabs .nav-link.active {
+            background: #007bff;
+            color: #fff;
+        }
+        .nav-tabs .nav-link {
+            color: #007bff;
+        }
+        .form-text {
+            font-size: 0.9rem;
+        }
+        .required {
+            color: #dc3545;
+        }
+        .bg-driver {
+            background: linear-gradient(90deg, #00c6ff 0%, #007bff 100%);
+            color: #fff;
+        }
+        .bg-rider {
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+        }
+        @media (max-width: 767px) {
+            .tab-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold">Cab Service Registration & Login</h1>
+            <p class="lead">Join as a Rider or Driver. Safe, Fast, and Reliable Rides!</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Tabs for Rider/Driver -->
+        <ul class="nav nav-tabs mb-4" id="roleTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="rider-tab" data-bs-toggle="tab" data-bs-target="#rider" type="button" role="tab" aria-controls="rider" aria-selected="true">
+                    Rider
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="driver-tab" data-bs-toggle="tab" data-bs-target="#driver" type="button" role="tab" aria-controls="driver" aria-selected="false">
+                    Driver
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="roleTabsContent">
+            <!-- Rider Tab -->
+            <div class="tab-pane fade show active" id="rider" role="tabpanel" aria-labelledby="rider-tab">
+                <div class="row">
+                    <div class="col-lg-6 form-section">
+                        <h3 class="mb-3">Rider Registration</h3>
+                        <form id="riderRegisterForm" autocomplete="off" novalidate>
+                            <div class="mb-3">
+                                <label for="riderName" class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="riderName" name="riderName" required>
+                                <div class="invalid-feedback">Please enter your full name.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="riderEmail" class="form-label">Email address <span class="required">*</span></label>
+                                <input type="email" class="form-control" id="riderEmail" name="riderEmail" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="riderPhone" class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" class="form-control" id="riderPhone" name="riderPhone" pattern="^\d{10,15}$" required>
+                                <div class="invalid-feedback">Please enter a valid phone number.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="riderPassword" class="form-label">Password <span class="required">*</span></label>
+                                <input type="password" class="form-control" id="riderPassword" name="riderPassword" minlength="6" required>
+                                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="riderConfirmPassword" class="form-label">Confirm Password <span class="required">*</span></label>
+                                <input type="password" class="form-control" id="riderConfirmPassword" name="riderConfirmPassword" minlength="6" required>
+                                <div class="invalid-feedback">Passwords do not match.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="riderProfilePic" class="form-label">Profile Picture</label>
+                                <input class="form-control" type="file" id="riderProfilePic" name="riderProfilePic" accept="image/*">
+                                <div class="form-text">Optional. JPG, PNG, or GIF.</div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="riderTerms" required>
+                                <label class="form-check-label" for="riderTerms">
+                                    I agree to the <a href="#">Terms & Conditions</a>
+                                </label>
+                                <div class="invalid-feedback">You must agree before submitting.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Register as Rider</button>
+                        </form>
+                        <div class="divider"><span>or</span></div>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-google"></i> Register with Google
+                        </button>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-facebook"></i> Register with Facebook
+                        </button>
+                    </div>
+                    <div class="col-lg-6 form-section">
+                        <h3 class="mb-3">Rider Login</h3>
+                        <form id="riderLoginForm" autocomplete="off" novalidate>
+                            <div class="mb-3">
+                                <label for="riderLoginEmail" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="riderLoginEmail" name="riderLoginEmail" required>
+                                <div class="invalid-feedback">Please enter your email.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="riderLoginPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="riderLoginPassword" name="riderLoginPassword" required>
+                                <div class="invalid-feedback">Please enter your password.</div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="riderRememberMe">
+                                <label class="form-check-label" for="riderRememberMe">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Login as Rider</button>
+                            <div class="mt-2">
+                                <a href="#">Forgot password?</a>
+                            </div>
+                        </form>
+                        <div class="divider"><span>or</span></div>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-google"></i> Login with Google
+                        </button>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-facebook"></i> Login with Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Driver Tab -->
+            <div class="tab-pane fade" id="driver" role="tabpanel" aria-labelledby="driver-tab">
+                <div class="row">
+                    <div class="col-lg-6 form-section">
+                        <h3 class="mb-3">Driver Registration</h3>
+                        <form id="driverRegisterForm" autocomplete="off" novalidate>
+                            <div class="mb-3">
+                                <label for="driverName" class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="driverName" name="driverName" required>
+                                <div class="invalid-feedback">Please enter your full name.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverEmail" class="form-label">Email address <span class="required">*</span></label>
+                                <input type="email" class="form-control" id="driverEmail" name="driverEmail" required>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverPhone" class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" class="form-control" id="driverPhone" name="driverPhone" pattern="^\d{10,15}$" required>
+                                <div class="invalid-feedback">Please enter a valid phone number.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverPassword" class="form-label">Password <span class="required">*</span></label>
+                                <input type="password" class="form-control" id="driverPassword" name="driverPassword" minlength="6" required>
+                                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverConfirmPassword" class="form-label">Confirm Password <span class="required">*</span></label>
+                                <input type="password" class="form-control" id="driverConfirmPassword" name="driverConfirmPassword" minlength="6" required>
+                                <div class="invalid-feedback">Passwords do not match.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverProfilePic" class="form-label">Profile Picture</label>
+                                <input class="form-control" type="file" id="driverProfilePic" name="driverProfilePic" accept="image/*">
+                                <div class="form-text">Optional. JPG, PNG, or GIF.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverLicense" class="form-label">Driver's License Number <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="driverLicense" name="driverLicense" required>
+                                <div class="invalid-feedback">Please enter your license number.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverLicensePic" class="form-label">Upload License Image <span class="required">*</span></label>
+                                <input class="form-control" type="file" id="driverLicensePic" name="driverLicensePic" accept="image/*" required>
+                                <div class="invalid-feedback">Please upload your license image.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="vehicleType" class="form-label">Vehicle Type <span class="required">*</span></label>
+                                <select class="form-select" id="vehicleType" name="vehicleType" required>
+                                    <option value="">Select vehicle type</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="hatchback">Hatchback</option>
+                                    <option value="minivan">Minivan</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your vehicle type.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="vehicleNumber" class="form-label">Vehicle Number <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="vehicleNumber" name="vehicleNumber" required>
+                                <div class="invalid-feedback">Please enter your vehicle number.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="vehiclePic" class="form-label">Upload Vehicle Image <span class="required">*</span></label>
+                                <input class="form-control" type="file" id="vehiclePic" name="vehiclePic" accept="image/*" required>
+                                <div class="invalid-feedback">Please upload your vehicle image.</div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="driverTerms" required>
+                                <label class="form-check-label" for="driverTerms">
+                                    I agree to the <a href="#">Terms & Conditions</a>
+                                </label>
+                                <div class="invalid-feedback">You must agree before submitting.</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Register as Driver</button>
+                        </form>
+                        <div class="divider"><span>or</span></div>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-google"></i> Register with Google
+                        </button>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-facebook"></i> Register with Facebook
+                        </button>
+                    </div>
+                    <div class="col-lg-6 form-section">
+                        <h3 class="mb-3">Driver Login</h3>
+                        <form id="driverLoginForm" autocomplete="off" novalidate>
+                            <div class="mb-3">
+                                <label for="driverLoginEmail" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="driverLoginEmail" name="driverLoginEmail" required>
+                                <div class="invalid-feedback">Please enter your email.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="driverLoginPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="driverLoginPassword" name="driverLoginPassword" required>
+                                <div class="invalid-feedback">Please enter your password.</div>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="driverRememberMe">
+                                <label class="form-check-label" for="driverRememberMe">Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Login as Driver</button>
+                            <div class="mt-2">
+                                <a href="#">Forgot password?</a>
+                            </div>
+                        </form>
+                        <div class="divider"><span>or</span></div>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-google"></i> Login with Google
+                        </button>
+                        <button class="btn btn-outline-primary social-btn" type="button">
+                            <i class="bi bi-facebook"></i> Login with Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-4 bg-light text-center">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Cab Service. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom JS for Validation -->
+    <script>
+        // Helper function to validate password match
+        function validatePasswordMatch(formId, passwordId, confirmId) {
+            const form = document.getElementById(formId);
+            const password = document.getElementById(passwordId);
+            const confirm = document.getElementById(confirmId);
+            confirm.addEventListener('input', function() {
+                if (password.value !== confirm.value) {
+                    confirm.setCustomValidity("Passwords do not match");
+                } else {
+                    confirm.setCustomValidity("");
+                }
+            });
+        }
+
+        // Rider Registration Validation
+        (function() {
+            const form = document.getElementById('riderRegisterForm');
+            validatePasswordMatch('riderRegisterForm', 'riderPassword', 'riderConfirmPassword');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+
+        // Driver Registration Validation
+        (function() {
+            const form = document.getElementById('driverRegisterForm');
+            validatePasswordMatch('driverRegisterForm', 'driverPassword', 'driverConfirmPassword');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+
+        // Rider Login Validation
+        (function() {
+            const form = document.getElementById('riderLoginForm');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+
+        // Driver Login Validation
+        (function() {
+            const form = document.getElementById('driverLoginForm');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        })();
+
+        // Show selected profile image preview
+        function showProfilePreview(inputId, imgId) {
+            const input = document.getElementById(inputId);
+            const img = document.getElementById(imgId);
+            input.addEventListener('change', function() {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+        }
+        // Add preview images if needed
+    </script>
+    <!-- Accessibility: Focus on first input of active tab -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var roleTabs = document.getElementById('roleTabs');
+            roleTabs.addEventListener('shown.bs.tab', function (event) {
+                var target = event.target.getAttribute('data-bs-target');
+                if (target === '#rider') {
+                    document.getElementById('riderName').focus();
+                } else if (target === '#driver') {
+                    document.getElementById('driverName').focus();
+                }
+            });
+        });
+    </script>
+    <!-- Example: Add more interactivity as needed -->
+</body>
+</html>

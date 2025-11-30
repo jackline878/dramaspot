@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add / Edit Article — Content Editor</title>
+
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #ff6b6b;
+      --muted: #6c757d;
+      --card-bg: #fff;
+      --editor-bg: #f8f9fa;
+    }
+
+    body {
+      background: linear-gradient(180deg, #fbfbfd 0%, #f2f6fb 100%);
+      min-height: 100vh;
+    }
+
+    /* Page layout */
+    .topbar {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .editor-shell {
+      max-width: 920px;
+      margin: 32px auto;
+      padding: 24px;
+    }
+
+    .article-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 6px 22px rgba(21, 32, 84, 0.06);
+      padding: 28px;
+    }
+
+    /* Blog-like appearance */
+    .article-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      cursor: text;
+    }
+
+    .article-meta {
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    /* Block styling */
+    .blocks {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .block {
+      background: transparent;
+      border-radius: 10px;
+      padding: 10px 12px;
+      transition: box-shadow .15s, transform .12s;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border: 1px dashed transparent;
+    }
+
+    .block:hover {
+      border-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .block.dragging {
+      opacity: 0.65;
+      transform: scale(0.995);
+      border-style: solid;
+      z-index: 20;
+      box-shadow: 0 8px 30px rgba(21, 32, 84, 0.08);
+      background: linear-gradient(180deg, #ffffff, #fbfbff);
+    }
+
+    .drag-handle {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      color: var(--muted);
+      flex: 0 0 36px;
+    }
+
+    .block-content {
+      flex: 1;
+    }
+
+    /* Controls */
+    .block-controls {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      position: absolute;
+      right: 8px;
+      top: 8px;
+    }
+
+    .btn-light-outline {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    /* Add-between button */
+    .add-between {
+      display: flex;
+      justify-content: center;
+      margin: 6px 0;
+    }
+
+    .add-between button {
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fff, #fafafa);
+      border: 1px dashed rgba(0, 0, 0, 0.06);
+      padding: 6px 12px;
+      color: var(--muted);
+      box-shadow: 0 2px 6px rgba(10, 10, 10, 0.02);
+    }
+
+    /* Context toolbar floating */
+    .floating-toolbar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 28px;
+      z-index: 1200;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: 0 10px 30px rgba(11, 22, 70, 0.08);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .mini {
+      font-size: 0.85rem;
+    }
+
+    /* Media */
+    .block img,
+    .carousel img,
+    .gallery img {
+      max-width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      padding-bottom: 6px;
+    }
+
+    .carousel .slide {
+      flex: 0 0 280px;
+      max-width: 280px;
+    }
+
+    /* Table styling */
+    .editable-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .editable-table td,
+    .editable-table th {
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 8px;
+      min-width: 80px;
+    }
+
+    /* Code block */
+    pre.code-block {
+      background: #0f1724;
+      color: #e6eef6;
+      padding: 12px;
+      border-radius: 8px;
+      overflow: auto;
+    }
+
+    /* Misc */
+    .muted {
+      color: var(--muted)
+    }
+
+    .handle-icon {
+      opacity: 0.7
+    }
+
+    .empty-hint {
+      color: #999;
+      font-style: italic;
+      padding: 18px;
+      text-align: center
+    }
+
+    /* CTA / stat / fancy blocks */
+    .stat-block {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #fff, #f7fbff);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-left: 3px solid var(--accent);
+      padding: 10px 12px;
+      background: #fff;
+      border-radius: 8px
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 20px
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(#ff9a9e, #fad0c4);
+      border-radius: 6px
+    }
+
+    .timeline-item {
+      margin-bottom: 16px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.03)
+    }
+
+    /* Announcement */
+    .announcement {
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: linear-gradient(90deg, #fff7e5, #fff);
+      border: 1px solid rgba(0, 0, 0, 0.04)
+    }
+
+    /* CTA */
+    .cta-block {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #fff, #f3f8ff)
+    }
+
+    .cta-block .btn {
+      min-width: 140px
+    }
+
+    /* Helpers */
+    .placeholder {
+      color: #9aa0a6;
+      font-style: italic;
+      padding: 12px
+    }
+
+    /* Small screen */
+    @media (max-width:720px) {
+      .editor-shell {
+        margin: 16px;
+        padding: 14px;
+      }
+
+      .floating-toolbar {
+        left: 12px;
+        transform: none
+      }
+    }
+    .widget{
+      position: relative;
+    }
+
+    .widget .add-between {
+      display: none;
+    }
+
+    .widget:hover .add-between {
+      display: flex;
+      position: absolute;
+      bottom: -30px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Topbar -->
+  <nav class="navbar topbar py-2">
+    <div class="container">
+      <div class="d-flex align-items-center w-100 justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <a class="navbar-brand fw-bold text-dark" href="#">WriteFlow</a>
+          <small class="text-muted">Visual content-first editor</small>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+          <button id="previewBtn" class="btn btn-outline-secondary btn-sm">Preview</button>
+          <button id="saveBtn" class="btn btn-primary btn-sm">Save</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Editor shell -->
+  <main class="editor-shell">
+    <div class="article-card">
+      <!-- Title area (editable) -->
+      <div contenteditable="true" id="articleTitle" class="article-title" aria-label="Article title" spellcheck="true">
+        Click to add title</div>
+      <div class="article-meta muted" id="articleMeta">By <span id="authorName">Anonymous</span> — <span
+          id="articleDate"></span></div>
+
+      <!-- Controls on top -->
+      <div class="d-flex gap-2 mb-3">
+        <div class="btn-group btn-group-sm" role="group">
+          <button class="btn btn-light-outline" id="toggleEditView" title="Toggle edit / view">Toggle edit</button>
+          <button class="btn btn-light-outline" id="clearBlocks" title="Clear all blocks">Clear all</button>
+        </div>
+      </div>
+
+          <div class="add-between">
+      <button id="addBlockBtn" class="btn btn-sm" data-add>+ Insert block here</button>
+    </div>
+      <!-- Main article content blocks area -->
+      <div id="blocks" class="blocks" aria-live="polite">
+        <!-- Blocks will be appended here -->
+        <div class="empty-hint" id="emptyHint">No content yet — click any text or the + buttons between blocks to add
+          content.</div>
+      </div>
+
+      <!-- End add button -->
+      <div class="mt-3 text-center">
+        <button id="addAtEnd" class="btn btn-sm btn-outline-secondary d-none"><i class="bi bi-plus-square"></i> Add content at
+          end</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating toolbar (formatting / highlight / link / code) -->
+  <div id="toolbar" class="floating-toolbar" style="display:none;">
+    <div class="btn-group" role="group">
+      <button id="boldBtn" class="btn btn-sm btn-light" title="Bold (Ctrl+B)"><i class="bi bi-type-bold"></i></button>
+      <button id="italicBtn" class="btn btn-sm btn-light" title="Italic (Ctrl+I)"><i
+          class="bi bi-type-italic"></i></button>
+      <button id="underlineBtn" class="btn btn-sm btn-light" title="Underline"><i
+          class="bi bi-type-underline"></i></button>
+      <button id="highlightBtn" class="btn btn-sm btn-light" title="Highlight"><i class="bi bi-brush"></i></button>
+      <button id="linkBtn" class="btn btn-sm btn-light" title="Add link"><i class="bi bi-link-45deg"></i></button>
+      <button id="codeWrapBtn" class="btn btn-sm btn-light" title="Wrap selection in code"><i
+          class="bi bi-code-square"></i></button>
+    </div>
+    <div class="vr"></div>
+    <div class="d-flex gap-2">
+      <button id="deleteSelectionBtn" class="btn btn-sm btn-outline-danger" title="Delete block or selection"><i
+          class="bi bi-trash"></i></button>
+      <button id="insertHrBtn" class="btn btn-sm btn-outline-secondary" title="Insert separator">—</button>
+    </div>
+  </div>
+
+  <!-- Modal-like quick helpers (uses prompt(), so no visible inputs) -->
+  <template id="addBetweenTemplate">
+    <div class="add-between">
+      <button class="btn btn-sm" data-add>+ Insert block here</button>
+    </div>
+  </template>
+
+  <!-- Templates for blocks (hidden) -->
+  <template id="templates">
+    <!-- Paragraph / head -->
+    <div data-type="text" class="block" draggable="true">
+      <div class="drag-handle" aria-hidden="true"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="true" class="p-0 m-0" data-placeholder="Write paragraph...">Click to edit paragraph</div>
+      </div>
+      <div class="block-controls">
+        <button class="btn btn-sm btn-light-outline" data-type="edit"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-light-outline" data-type="settings"><i class="bi bi-gear"></i></button>
+      </div>
+    </div>
+
+    <!-- Head -->
+    <div data-type="head" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <h3 contenteditable="true" class="m-0" data-placeholder="Heading...">Click to edit heading</h3>
+      </div>
+      <div class="block-controls">
+        <button class="btn btn-sm btn-light-outline" data-type="hstyle"><i class="bi bi-fonts"></i></button>
+      </div>
+    </div>
+
+    <!-- List -->
+    <div data-type="list" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <ul contenteditable="true" class="m-0" data-placeholder="List items...">
+          <li>List item 1</li>
+          <li>List item 2</li>
+        </ul>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="liststyle"><i
+            class="bi bi-list-ul"></i></button></div>
+    </div>
+
+    <!-- Quote -->
+    <div data-type="quote" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <blockquote contenteditable="true" class="blockquote m-0" data-placeholder="Quote...">Click to edit quote
+        </blockquote>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="cite"><i
+            class="bi bi-quote"></i></button></div>
+    </div>
+
+    <!-- Carousel -->
+    <div data-type="carousel" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div class="carousel" data-carousel>
+          <div class="slide"><img src="https://via.placeholder.com/800x450?text=Slide+1" alt="Slide 1"></div>
+          <div class="slide"><img src="https://via.placeholder.com/800x450?text=Slide+2" alt="Slide 2"></div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="carouselEdit"><i
+            class="bi bi-images"></i></button></div>
+    </div>
+
+    <!-- Image -->
+    <div data-type="image" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <figure contenteditable="false" class="m-0">
+          <a href="#" class="img-link" target="_blank"><img src="https://via.placeholder.com/900x500?text=Image"
+              alt="Image"></a>
+          <figcaption contenteditable="true" class="mt-2 muted small">Caption (click to edit)</figcaption>
+        </figure>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="imgEdit"><i
+            class="bi bi-image"></i></button></div>
+    </div>
+
+    <!-- Video -->
+    <div data-type="video" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="false" class="m-0 video-wrap">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen
+            style="width:100%;height:420px;border:0;border-radius:8px"></iframe>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="videoEdit"><i
+            class="bi bi-camera-video"></i></button></div>
+    </div>
+
+    <!-- Audio -->
+    <div data-type="audio" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <audio controls src="" style="width:100%"></audio>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="audioEdit"><i
+            class="bi bi-music-note-beamed"></i></button></div>
+    </div>
+
+    <!-- Embed / iframe -->
+    <div data-type="embed" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div class="m-0 embedFrame" contenteditable="false" style="border-radius:8px;overflow:hidden">
+          <iframe src="https://example.com" style="width:100%;height:420px;border:0"></iframe>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="embedEdit"><i
+            class="bi bi-window"></i></button></div>
+    </div>
+
+    <!-- Raw HTML -->
+    <div data-type="html" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <pre contenteditable="true" class="code-block m-0"
+          data-placeholder="Paste raw HTML here">&lt;div&gt;Raw HTML&lt;/div&gt;</pre>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="rawEdit"><i
+            class="bi bi-code"></i></button></div>
+    </div>
+
+    <!-- Table -->
+    <div data-type="table" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <table class="editable-table" contenteditable="false">
+          <thead>
+            <tr>
+              <th>Header 1</th>
+              <th>Header 2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td contenteditable="true">Cell 1</td>
+              <td contenteditable="true">Cell 2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="tableEdit"><i
+            class="bi bi-table"></i></button></div>
+    </div>
+
+    <!-- Code -->
+    <div data-type="code" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <pre contenteditable="true" class="code-block" spellcheck="false">// code here</pre>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="lang"><i
+            class="bi bi-terminal"></i></button></div>
+    </div>
+
+    <!-- Button -->
+    <div data-type="button" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content d-flex align-items-center">
+        <div contenteditable="true" class="me-3">Call to action</div>
+        <div><a href="#" class="btn btn-sm btn-primary" contenteditable="false">Action</a></div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="btnEdit"><i
+            class="bi bi-link-45deg"></i></button></div>
+    </div>
+
+    <!-- Form (rendered and editable as content, but when saving it's serialized) -->
+    <div data-type="form" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="true">Subscribe to our newsletter — click to edit form markup/text</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="formEdit"><i
+            class="bi bi-card-checklist"></i></button></div>
+    </div>
+
+    <!-- Gallery -->
+    <div data-type="gallery" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content gallery d-flex gap-2 flex-wrap">
+        <figure style="width:calc(50% - 8px)"><img src="https://via.placeholder.com/600x400?text=G1">
+          <figcaption contenteditable="true" class="small muted">Caption</figcaption>
+        </figure>
+        <figure style="width:calc(50% - 8px)"><img src="https://via.placeholder.com/600x400?text=G2">
+          <figcaption contenteditable="true" class="small muted">Caption</figcaption>
+        </figure>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="galleryEdit"><i
+            class="bi bi-collection"></i></button></div>
+    </div>
+
+    <!-- Map -->
+    <div data-type="map" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="false" class="map"
+          style="height:300px;border-radius:8px;background:linear-gradient(90deg,#e8f7ff,#fff);display:flex;align-items:center;justify-content:center">
+          <div class="muted">Map placeholder — click to set coordinates</div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="mapEdit"><i
+            class="bi bi-map"></i></button></div>
+    </div>
+
+    <!-- Poll -->
+
+    <!-- Poll -->
+    <div data-type="poll" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="true" class="poll-question mb-2">Poll question (click to edit)</div>
+        <ul class="poll-options list-unstyled">
+          <li contenteditable="true">Option 1</li>
+          <li contenteditable="true">Option 2</li>
+        </ul>
+        <button class="btn btn-sm btn-outline-primary mt-2" data-add-option>Add option</button>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="pollEdit"><i
+            class="bi bi-bar-chart"></i></button></div>
+    </div>
+
+    <!-- Slider -->
+    <div data-type="slider" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="false" class="slider" style="width:100%"><input type="range" min="0" max="100" value="40"
+            disabled></div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="sliderEdit"><i
+            class="bi bi-sliders"></i></button></div>
+    </div>
+
+    <!-- Ad -->
+    <div data-type="ad" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content announcement">
+        <div contenteditable="true">Ad placeholder — click to edit ad markup/text</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="adEdit"><i
+            class="bi bi-megaphone"></i></button></div>
+    </div>
+
+    <!-- Countdown -->
+    <div data-type="countdown" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div contenteditable="true" data-countdown>Countdown target: 2025-12-31T00:00:00Z</div>
+        <div class="mt-2 small muted" data-countdown-display>Time left will show here</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="countEdit"><i
+            class="bi bi-clock"></i></button></div>
+    </div>
+
+    <!-- FAQ -->
+    <div data-type="faq" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <div class="faq-item" contenteditable="true">Q: Click to edit question and answer</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="faqEdit"><i
+            class="bi bi-question-circle"></i></button></div>
+    </div>
+
+    <!-- Testimonial -->
+    <div data-type="testimonial" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content">
+        <blockquote contenteditable="true" class="blockquote">"Fantastic!" — <small
+            contenteditable="true">Someone</small></blockquote>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="testiEdit"><i
+            class="bi bi-chat-left-text"></i></button></div>
+    </div>
+
+    <!-- Timeline -->
+    <div data-type="timeline" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content timeline">
+        <div class="timeline-item" contenteditable="true">Event 1 — date</div>
+        <div class="timeline-item" contenteditable="true">Event 2 — date</div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="timelineEdit"><i
+            class="bi bi-clock-history"></i></button></div>
+    </div>
+
+    <!-- Stat -->
+    <div data-type="stat" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content stat-block">
+        <div>
+          <div contenteditable="true" class="h3 m-0">1.2M</div>
+          <div contenteditable="true" class="muted small">Visitors</div>
+        </div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="statEdit"><i
+            class="bi bi-graph-up"></i></button></div>
+    </div>
+
+    <!-- CTA -->
+    <div data-type="cta" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content cta-block">
+        <div contenteditable="true">Ready to get started? Click to customize CTA text.</div>
+        <div><a href="#" class="btn btn-primary">Get started</a></div>
+      </div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="ctaEdit"><i
+            class="bi bi-megaphone"></i></button></div>
+    </div>
+
+    <!-- Announcement -->
+    <div data-type="announcement" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content announcement" contenteditable="true">Announcement text — click to edit</div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="annEdit"><i
+            class="bi bi-bell"></i></button></div>
+    </div>
+
+    <!-- Infobox -->
+    <div data-type="infobox" class="block" draggable="true">
+      <div class="drag-handle"><i class="bi bi-grip-vertical handle-icon"></i></div>
+      <div class="block-content announcement" contenteditable="true">Info box — click to edit</div>
+      <div class="block-controls"><button class="btn btn-sm btn-light-outline" data-type="infoEdit"><i
+            class="bi bi-info-circle"></i></button></div>
+    </div>
+  </template>
+
+  <!-- Modal -->
+  <div class="modal fade" id="blockTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Block</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="blockTypeSelect" class="form-label fw-bold">Choose Block Type</label>
+          <select id="blockTypeSelect" class="form-select">
+            <option value="">-- Select block type --</option>
+            <option value="head">Head</option>
+            <option value="text">Text</option>
+            <option value="list">List</option>
+            <!-- <option value="quote">Quote</option>
+            <option value="carousel">Carousel</option>
+            <option value="image">Image</option>
+            <option value="video">Video</option>
+            <option value="audio">Audio</option>
+            <option value="embed">Embed</option>
+            <option value="html">HTML</option>
+            <option value="table">Table</option>
+            <option value="code">Code</option>
+            <option value="button">Button</option>
+            <option value="form">Form</option>
+            <option value="gallery">Gallery</option>
+            <option value="map">Map</option>
+            <option value="poll">Poll</option>
+            <option value="slider">Slider</option>
+            <option value="ad">Ad</option>
+            <option value="countdown">Countdown</option>
+            <option value="faq">FAQ</option>
+            <option value="testimonial">Testimonial</option>
+            <option value="timeline">Timeline</option>
+            <option value="stat">Stat</option>
+            <option value="cta">CTA</option>
+            <option value="announcement">Announcement</option>
+            <option value="infobox">Infobox</option> -->
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" id="confirmAddBlock" class="btn btn-primary">Add Block</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Utility helpers
+    const byId = id => document.getElementById(id);
+    const q = (sel, ctx = document) => ctx.querySelector(sel);
+    const qa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+    letindex = 0; // for generating unique IDs
+
+    // Elements
+    const blocksEl = byId('blocks');
+    const templates = byId('templates');
+    const addAtEnd = byId('addAtEnd');
+    const addBlockBtn = byId('addBlockBtn');
+    const emptyHint = byId('emptyHint');
+    const saveBtn = byId('saveBtn');
+    const previewBtn = byId('previewBtn');
+    const articleTitleEl = byId('articleTitle');
+    const articleDateEl = byId('articleDate');
+    const toolbar = byId('toolbar');
+
+    // State
+    let dragSrcEl = null;
+    let currentSelectionRange = null;
+    let isEditing = true;
+
+    // Initialize date
+    function setDateNow() {
+      const d = new Date();
+      articleDateEl.textContent = d.toLocaleString();
+    }
+    setDateNow();
+
+    // Parse URL params to check for id for editing existing article
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+
+    // Block registry: maps type => factory function
+    const registry = {};
+
+    // Register block types from templates
+    (function registerTemplates() {
+      const children = templates.content.children;
+      for (const node of children) {
+        const type = node.getAttribute('data-type');
+        if (!type) continue;
+        registry[type] = node.cloneNode(true);
+      }
+    })();
+
+    // Helpers to create Add-Between UI
+    function makeAddBetween() {
+      const tpl = document.getElementById('addBetweenTemplate');
+      return tpl.content.firstElementChild.cloneNode(true);
+    }
+function insertAfter(newNode, referenceNode) {
+  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+    // Add a block to the DOM
+    function addBlock(type, options = {}, beforeNode = null) {
+      if (!registry[type]) {
+        console.warn('Unknown type', type);
+        return;
+      }
+
+      const block = registry[type].cloneNode(true);
+      // apply options such as setting srcs, captions, etc.
+      if (options.content) {
+        const editable = block.querySelector('[contenteditable="true"], pre, table, .block-content');
+        if (editable) {
+          if (editable.tagName === 'PRE' || editable.classList.contains('code-block')) {
+            editable.textContent = String(options.content);
+          } else {
+            editable.innerHTML = String(options.content);
+          }
+        }
+      }
+      // apply image src if provided, else leave placeholders
+      if (options.src) {
+        const img = block.querySelector('img');
+        if (img) img.src = options.src;
+        const a = block.querySelector('a.img-link');
+        if (a) {
+          a.href = options.href || options.src;
+        }
+      }
+      // audio / video / iframe src
+      if (options.video) {
+        const iframe = block.querySelector('iframe');
+        if (iframe) iframe.src = options.video;
+      }
+      if (options.map) {
+        const map = block.querySelector('.map');
+        if (map) {
+          map.innerHTML = '<div class="muted">Map: ' + options.map + '</div>';
+          map.setAttribute('data-coords', options.map);
+        }
+      }
+      // add between buttons before block
+      const between = makeAddBetween();
+      // if(beforeNode){
+      //   blocksEl.insertBefore(between, beforeNode);
+      //   blocksEl.insertBefore(block, beforeNode);
+      // } else {
+      // remove empty hint
+      if(emptyHint) emptyHint.style.display = 'none';
+
+      const widget = document.createElement('div');
+      widget.className = 'widget';
+
+      between.querySelector('[data-add]').addEventListener('click', () => openAddMenu(widget));
+
+      widget.appendChild(block);
+      widget.appendChild(between);
+
+      console.log('Inserting before', beforeNode);
+
+      if (beforeNode) {
+        insertAfter(widget, beforeNode);
+      } else {
+        blocksEl.prepend(widget);
+      }
+
+      attachBlockEvents(block);
+      return block;
+    }
+
+    // Attach per-block events: drag handlers, controls, contenteditable focus handling
+    function attachBlockEvents(block) {
+      // drag start / end
+      block.addEventListener('dragstart', (e) => {
+        dragSrcEl = block;
+        block.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', '') } catch (e) { }
+      });
+      block.addEventListener('dragend', () => {
+        block.classList.remove('dragging');
+        dragSrcEl = null;
+      });
+
+      // dragover on block to reorder
+      block.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const target = e.currentTarget;
+        const rect = target.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        const insertBefore = y < rect.height / 2;
+        // show placeholder indicator
+        const existingBetween = target.previousSibling && target.previousSibling.classList && target.previousSibling.classList.contains('add-between') ? target.previousSibling : null;
+        if (insertBefore) {
+          if (existingBetween) {
+            // fine
+          } else {
+            const b = makeAddBetween();
+            b.querySelector('[data-add]').addEventListener('click', () => openAddMenu(target));
+            blocksEl.insertBefore(b, target);
+          }
+        } else {
+          // after: ensure next between exists
+          const nextBetween = target.nextSibling && target.nextSibling.classList && target.nextSibling.classList.contains('add-between') ? target.nextSibling : null;
+          if (!nextBetween) {
+            const b = makeAddBetween();
+            b.querySelector('[data-add]').addEventListener('click', () => openAddMenu(target.nextSibling));
+            blocksEl.insertBefore(b, target.nextSibling);
+          }
+        }
+      });
+
+      // Insert contextual toolbar on text selection
+      block.addEventListener('mouseup', () => {
+        setTimeout(() => {
+          const sel = window.getSelection();
+          if (sel && sel.toString().trim()) {
+            currentSelectionRange = sel.getRangeAt(0).cloneRange();
+            toolbar.style.display = 'flex';
+          } else {
+            currentSelectionRange = null;
+            toolbar.style.display = 'none';
+          }
+        }, 50);
+      });
+
+      // Controls buttons (edit/settings)
+      const controls = block.querySelectorAll('.block-controls [data-type]');
+      controls.forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+          const t = btn.getAttribute('data-type');
+          handleBlockControl(block, t);
+        });
+      });
+
+      // Make editable placeholders nicer
+      const editables = block.querySelectorAll('[contenteditable="true"]');
+      editables.forEach(el => {
+        el.addEventListener('focus', () => {
+          el.classList.add('focused');
+        });
+        el.addEventListener('blur', () => {
+          el.classList.remove('focused');
+        });
+      });
+
+      // allow linking images by clicking them with Ctrl
+      const imgs = block.querySelectorAll('img');
+      imgs.forEach(img => {
+        img.addEventListener('dblclick', (e) => {
+          // double click to add link (prompt)
+          const url = prompt('Enter URL to link this image (leave blank to remove):', img.closest('a') ? img.closest('a').href : '');
+          if (url === null) return;
+          let a = img.closest('a');
+          if (!a) {
+            a = document.createElement('a');
+            a.className = 'img-link';
+            a.target = '_blank';
+            img.parentNode.insertBefore(a, img);
+            a.appendChild(img);
+          }
+          if (url.trim() === '') {
+            // remove link
+            const parent = a.parentNode;
+            parent.insertBefore(img, a);
+            parent.removeChild(a);
+          } else {
+            a.href = url;
+          }
+        });
+      });
+
+      // attach click to whole block to allow editing
+      block.addEventListener('click', (e) => {
+        // do not steal clicks from controls
+        if (e.target.closest('.block-controls')) return;
+        // If it's a media block, allow editing via prompt
+        const type = block.getAttribute('data-type');
+        if (type === 'image') {
+          // click the image to edit via prompt
+          const img = block.querySelector('img');
+          if (img && e.target === img) {
+            const url = prompt('Image URL:', img.src);
+            if (url !== null && url.trim() !== '') img.src = url;
+          }
+        }
+      });
+    }
+
+    // Handle block control buttons
+    function handleBlockControl(block, action) {
+      const type = block.getAttribute('data-type');
+      switch (action) {
+        case 'edit':
+        case 'hstyle':
+        case 'settings':
+          // focus first editable area
+          const ed = block.querySelector('[contenteditable="true"], pre, textarea, input');
+          if (ed) {
+            if (ed.getAttribute('contenteditable') === 'true') {
+              ed.focus();
+              placeCaretAtEnd(ed);
+            } else {
+              ed.focus();
+            }
+          }
+          break;
+
+        // media edits via prompts
+        case 'imgEdit': {
+          const img = block.querySelector('img');
+          const url = prompt('Enter image URL:', img ? img.src : '');
+          if (url !== null && url.trim() !== '') {
+            if (img) img.src = url;
+            else {
+              const newImg = document.createElement('img');
+              newImg.src = url;
+              block.querySelector('.block-content').appendChild(newImg);
+            }
+          }
+          break;
+        }
+        case 'videoEdit': {
+          const iframe = block.querySelector('iframe');
+          const url = prompt('Enter embed URL (full iframe src):', iframe ? iframe.src : 'https://www.youtube.com/embed/');
+          if (url !== null && url.trim() !== '') {
+            if (iframe) iframe.src = url;
+            else {
+              const f = document.createElement('iframe');
+              f.src = url; f.style.width = '100%'; f.style.height = '420px';
+              block.querySelector('.block-content').appendChild(f);
+            }
+          }
+          break;
+        }
+        case 'audioEdit': {
+          const audio = block.querySelector('audio');
+          const url = prompt('Enter audio file URL:', audio ? audio.src : '');
+          if (url !== null) {
+            if (audio) audio.src = url;
+          }
+          break;
+        }
+        case 'embedEdit': {
+          const iframe = block.querySelector('iframe');
+          const url = prompt('Enter embed URL (iframe src):', iframe ? iframe.src : 'https://');
+          if (url !== null && url.trim() !== '') {
+            if (iframe) iframe.src = url;
+            else {
+              const f = document.createElement('iframe');
+              f.src = url; f.style.width = '100%'; f.style.height = '420px';
+              block.querySelector('.block-content').appendChild(f);
+            }
+          }
+          break;
+        }
+        case 'carouselEdit': {
+          // Manage carousel slides via prompt; comma-separated URLs
+          const carousel = block.querySelector('[data-carousel]');
+          const current = Array.from(carousel.querySelectorAll('img')).map(i => i.src).join(',');
+          const urls = prompt('Enter slide image URLs (comma separated):', current);
+          if (urls !== null) {
+            carousel.innerHTML = '';
+            urls.split(',').map(s => s.trim()).filter(Boolean).forEach(u => {
+              const slide = document.createElement('div'); slide.className = 'slide';
+              const img = document.createElement('img'); img.src = u;
+              slide.appendChild(img);
+              carousel.appendChild(slide);
+            });
+          }
+          break;
+        }
+        case 'galleryEdit': {
+          const gallery = block.querySelector('.gallery');
+          const current = Array.from(gallery.querySelectorAll('img')).map(i => i.src).join(',');
+          const urls = prompt('Enter gallery image URLs (comma separated):', current);
+          if (urls !== null) {
+            gallery.innerHTML = '';
+            urls.split(',').map(s => s.trim()).filter(Boolean).forEach(u => {
+              const fig = document.createElement('figure');
+              fig.style.width = 'calc(50% - 8px)';
+              const img = document.createElement('img'); img.src = u;
+              const cap = document.createElement('figcaption'); cap.contentEditable = 'true'; cap.className = 'small muted'; cap.textContent = 'Caption';
+              fig.appendChild(img); fig.appendChild(cap);
+              gallery.appendChild(fig);
+            });
+          }
+          break;
+        }
+        case 'mapEdit': {
+          const coords = prompt('Enter lat,lng or place name:', block.querySelector('.map')?.getAttribute('data-coords') || '');
+          if (coords !== null) {
+            const map = block.querySelector('.map');
+            map.setAttribute('data-coords', coords);
+            map.innerHTML = `<div class="muted">Map set to: ${coords}</div>`;
+          }
+          break;
+        }
+        case 'tableEdit': {
+          // Make table cells editable
+          const t = block.querySelector('table');
+          if (t) {
+            t.querySelectorAll('td,th').forEach(cell => cell.setAttribute('contenteditable', 'true'));
+          }
+          break;
+        }
+        case 'countEdit': {
+          const target = prompt('Set countdown target (ISO datetime):', block.querySelector('[data-countdown]')?.textContent || '');
+          if (target !== null) {
+            block.querySelector('[data-countdown]').textContent = target;
+            updateCountdownBlock(block);
+          }
+          break;
+        }
+        default:
+          console.log('Control action', action, block, type);
+      }
+    }
+
+
+
+    // Insert block menu: shows list of types (we use prompt to choose so no inputs on main UI)
+    function openAddMenu(beforeNode = null) {
+      const modalEl = document.getElementById('blockTypeModal');
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+
+      // Attach event for confirm button
+      const confirmBtn = document.getElementById('confirmAddBlock');
+
+      // Remove old listener if any, to avoid multiple triggers
+      confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+      const newConfirmBtn = document.getElementById('confirmAddBlock');
+
+      newConfirmBtn.addEventListener('click', () => {
+        const select = document.getElementById('blockTypeSelect');
+        const choice = (select.value || '').toLowerCase().trim();
+
+        if (!choice) {
+          alert('Please select a block type.');
+          return;
+        }
+        if (choice === 'cancel') return;
+        if (!registry[choice]) {
+          alert('Unknown type: ' + choice);
+          return;
+        }
+
+        // For media types, ask for url
+        const mediaTypes = ['image', 'video', 'audio', 'embed', 'carousel', 'gallery', 'map', 'ad'];
+        const options = {};
+        if (mediaTypes.includes(choice)) {
+          if (choice === 'carousel' || choice === 'gallery') {
+            const urls = prompt('Enter comma-separated image URLs:');
+            if (urls) options.src = urls.split(',')[0].trim();
+            options.content = urls;
+          } else if (choice === 'image') {
+            const url = prompt('Enter image URL:');
+            if (url) options.src = url;
+          } else if (choice === 'video' || choice === 'embed') {
+            const url = prompt('Enter embed URL (iframe src):', choice === 'video' ? 'https://www.youtube.com/embed/' : 'https://');
+            if (url) options.video = url;
+          } else if (choice === 'audio') {
+            const url = prompt('Enter audio URL:');
+            if (url) options.audio = url;
+          } else if (choice === 'map') {
+            const coords = prompt('Enter coordinates or place name:');
+            if (coords) options.map = coords;
+          } else if (choice === 'ad') {
+            const html = prompt('Paste ad HTML or text:');
+            if (html) options.content = html;
+          }
+        }
+
+        // ✅ Finally add block
+        addBlock(choice, options, beforeNode);
+
+        // Close modal
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        modalInstance.hide();
+      });
+    }
+
+    // Place caret at end helper
+    function placeCaretAtEnd(el) {
+      el.focus();
+      if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      }
+    }
+
+    // Toggle edit mode
+    function setEditing(on) {
+      isEditing = !!on;
+      // toggle contenteditable attributes across page
+      qa('[contenteditable]').forEach(e => {
+        if (e.closest('.block')) {
+          // Keep block editing state as-is (we do not want to disable figure captions)
+          if (on) e.setAttribute('contenteditable', 'true');
+          else e.setAttribute('contenteditable', 'false');
+        }
+      });
+      // page title
+      articleTitleEl.contentEditable = on ? 'true' : 'false';
+      // visual cue
+      if (on) toolbar.style.display = 'flex'; else toolbar.style.display = 'none';
+    }
+
+    // Save article: collect title, date, author, blocks content -> JSON
+    async function collectArticle() {
+      const title = articleTitleEl.textContent.trim() || 'Untitled';
+      const date = articleDateEl.textContent || new Date().toISOString();
+      const author = byId('authorName').textContent || 'Anonymous';
+
+      const blocks = [];
+      // iterate blocks in order; skip add-between divs
+      const children = Array.from(blocksEl.children);
+      for (const node of children) {
+        if (node.classList && node.classList.contains('add-between')) continue;
+        if (!node.classList || !node.classList.contains('block')) continue;
+        const type = node.getAttribute('data-type');
+        const blockData = { type, data: {} };
+
+        // collect different types
+        switch (type) {
+          case 'text':
+            blockData.data.html = node.querySelector('[contenteditable="true"]').innerHTML;
+            break;
+          case 'head':
+            blockData.data.text = node.querySelector('h3')?.innerText;
+            break;
+          case 'list':
+            blockData.data.html = node.querySelector('ul')?.outerHTML;
+            break;
+          case 'quote':
+            blockData.data.html = node.querySelector('blockquote')?.innerHTML;
+            break;
+          case 'carousel':
+            blockData.data.slides = Array.from(node.querySelectorAll('.carousel img')).map(i => i.src);
+            break;
+          case 'image':
+            blockData.data.src = node.querySelector('img')?.src;
+            blockData.data.caption = node.querySelector('figcaption')?.innerText;
+            blockData.data.link = node.querySelector('a')?.href || '';
+            break;
+          case 'video':
+            blockData.data.src = node.querySelector('iframe')?.src;
+            break;
+          case 'audio':
+            blockData.data.src = node.querySelector('audio')?.src;
+            break;
+          case 'embed':
+          case 'html':
+            blockData.data.html = node.querySelector('pre, iframe, .embedFrame')?.outerHTML || node.querySelector('.block-content')?.innerHTML;
+            break;
+          case 'table':
+            blockData.data.html = node.querySelector('table')?.outerHTML;
+            break;
+          case 'code':
+            blockData.data.code = node.querySelector('.code-block')?.textContent;
+            break;
+          case 'button':
+            blockData.data.text = node.querySelector('.btn')?.innerText;
+            blockData.data.href = node.querySelector('.btn')?.href;
+            break;
+          case 'form':
+            blockData.data.html = node.querySelector('.block-content')?.innerHTML;
+            break;
+          case 'gallery':
+            blockData.data.images = Array.from(node.querySelectorAll('.gallery img')).map(i => ({ src: i.src, caption: i.nextElementSibling ? i.nextElementSibling.innerText : '' }));
+            break;
+          case 'map':
+            blockData.data.coords = node.querySelector('.map')?.getAttribute('data-coords') || '';
+            break;
+          case 'poll':
+          case 'slider':
+          case 'ad':
+            blockData.data.html = node.querySelector('.block-content')?.innerHTML;
+            break;
+          case 'countdown':
+            blockData.data.target = node.querySelector('[data-countdown]')?.textContent || '';
+            break;
+          case 'faq':
+            blockData.data.html = node.querySelector('.faq-item')?.innerHTML || '';
+            break;
+          case 'testimonial':
+            blockData.data.html = node.querySelector('blockquote')?.innerHTML || '';
+            break;
+          case 'timeline':
+            blockData.data.items = Array.from(node.querySelectorAll('.timeline-item')).map(i => i.innerText);
+            break;
+          case 'stat':
+            blockData.data.value = node.querySelector('.h3')?.innerText;
+            blockData.data.label = node.querySelector('.muted')?.innerText;
+            break;
+          case 'cta':
+            blockData.data.html = node.querySelector('.cta-block')?.innerHTML;
+            break;
+          case 'announcement':
+            blockData.data.html = node.querySelector('.announcement')?.innerHTML;
+            break;
+          case 'infobox':
+            blockData.data.html = node.querySelector('.announcement')?.innerHTML;
+            break;
+          default:
+            blockData.data.html = node.querySelector('.block-content')?.innerHTML;
+            break;
+        }
+
+        blocks.push(blockData);
+      }
+
+      const article = {
+        id: articleId || 'a-' + Date.now(),
+        title, date, author,
+        blocks
+      };
+      return article;
+    }
+
+    // Save to server or download fallback
+    async function saveArticle() {
+      const article = await collectArticle();
+      // Attempt to PUT to /articles.json (you can change endpoint)
+      const endpoints = [
+        { method: 'PUT', url: '/articles.json' },
+        { method: 'POST', url: '/api/articles' },
+      ];
+      let success = false;
+      for (const ep of endpoints) {
+        try {
+          const res = await fetch(ep.url, {
+            method: ep.method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(article)
+          });
+          if (res.ok) {
+            alert('Saved to server: ' + ep.url);
+            success = true;
+            break;
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+      if (!success) {
+        // fallback: download file
+        const blob = new Blob([JSON.stringify(article, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = (article.id || 'article') + '.json';
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+        alert('Download created as fallback. If you want server integration, implement a POST/PUT endpoint.');
+      }
+    }
+
+    // Render article object to editor
+    function renderArticle(article) {
+      // set title
+      if (article.title) articleTitleEl.innerText = article.title;
+      if (article.author) byId('authorName').innerText = article.author;
+      if (article.date) articleDateEl.innerText = article.date;
+      // clear blocks
+      blocksEl.innerHTML = '';
+      if (!article.blocks || !article.blocks.length) {
+        blocksEl.appendChild(emptyHint);
+        emptyHint.style.display = 'block';
+        return;
+      }
+      for (const b of article.blocks) {
+        const type = b.type;
+        const options = {};
+        if (b.data) {
+          if (b.data.src) options.src = b.data.src;
+          if (b.data.html) options.content = b.data.html;
+          if (b.data.slides) options.content = (b.data.slides || []).join(',');
+          if (b.data.images) options.content = (b.data.images || []).map(x => x.src).join(',');
+          if (b.data.target) options.content = b.data.target;
+          if (b.data.coords) options.map = b.data.coords;
+        }
+        addBlock(type, options);
+        // small delay to let DOM attach events
+      }
+    }
+
+    // Load article by id: attempt to GET /articles.json and search id
+    async function loadArticleById(id) {
+      try {
+        const res = await fetch('/articles.json');
+        if (!res.ok) throw new Error('No articles.json');
+        const data = await res.json();
+        // data could be array or object; try find id
+        let article = null;
+        if (Array.isArray(data)) {
+          article = data.find(a => a.id == id);
+        } else if (data && typeof data === 'object') {
+          // could be map {id:article}
+          if (data[id]) article = data[id];
+          else {
+            // search values
+            for (const k in data) {
+              if (data[k] && data[k].id == id) {
+                article = data[k]; break;
+              }
+            }
+          }
+        }
+        if (article) {
+          renderArticle(article);
+        } else {
+          alert('Article id not found in /articles.json. You may still create a new article.');
+        }
+      } catch (err) {
+        console.warn('Failed to load articles.json', err);
+        alert('Unable to load /articles.json. If you are offline, create article locally.');
+      }
+    }
+
+    // Basic toolbar actions
+    function execCommand(cmd, value = null) {
+      document.execCommand(cmd, false, value);
+    }
+
+    // toolbar buttons
+    byId('boldBtn').addEventListener('click', () => execCommand('bold'));
+    byId('italicBtn').addEventListener('click', () => execCommand('italic'));
+    byId('underlineBtn').addEventListener('click', () => execCommand('underline'));
+    byId('highlightBtn').addEventListener('click', () => {
+      const color = prompt('Highlight color (CSS):', 'yellow');
+      if (!color) return;
+      const span = document.createElement('span');
+      span.style.backgroundColor = color;
+      span.appendChild(currentSelectionRange.cloneContents());
+      // replace selection with span
+      const sel = window.getSelection();
+      if (sel.rangeCount) {
+        sel.deleteFromDocument();
+        sel.getRangeAt(0).insertNode(span);
+      }
+    });
+    byId('linkBtn').addEventListener('click', () => {
+      const url = prompt('Enter URL:', 'https://');
+      if (!url) return;
+      execCommand('createLink', url);
+    });
+    byId('codeWrapBtn').addEventListener('click', () => {
+      const sel = window.getSelection();
+      if (!sel || !sel.toString()) return;
+      const pre = document.createElement('pre');
+      pre.className = 'code-block';
+      pre.textContent = sel.toString();
+      const range = sel.getRangeAt(0);
+      range.deleteContents();
+      range.insertNode(pre);
+    });
+    byId('deleteSelectionBtn').addEventListener('click', () => {
+      const sel = window.getSelection();
+      if (sel && sel.toString()) {
+        execCommand('delete');
+      } else {
+        // if no selection, delete nearest block
+        const active = document.activeElement;
+        const block = active && active.closest ? active.closest('.block') : null;
+        if (block) {
+          const between = block.previousSibling && block.previousSibling.classList && block.previousSibling.classList.contains('add-between') ? block.previousSibling : null;
+          if (between) between.remove();
+          block.remove();
+        }
+      }
+    });
+    byId('insertHrBtn').addEventListener('click', () => {
+      const hr = document.createElement('hr');
+      if (currentSelectionRange) {
+        currentSelectionRange.insertNode(hr);
+      } else {
+        blocksEl.appendChild(hr);
+      }
+    });
+
+    // Add block top / end
+    addBlockBtn.addEventListener('click', () => openAddMenu());
+    //addAtEnd.addEventListener('click', () => openAddMenu(null));
+
+    // Toggle edit mode
+    byId('toggleEditView').addEventListener('click', () => {
+      setEditing(!isEditing);
+      alert('Edit mode ' + (isEditing ? 'on' : 'off'));
+    });
+
+    // Clear blocks
+    byId('clearBlocks').addEventListener('click', () => {
+      if (!confirm('Clear all blocks?')) return;
+      blocksEl.innerHTML = '';
+      blocksEl.appendChild(emptyHint);
+      emptyHint.style.display = 'block';
+    });
+
+    // Save button
+    saveBtn.addEventListener('click', async () => {
+      await saveArticle();
+    });
+
+    // Preview toggle - opens a new window with rendered HTML
+    previewBtn.addEventListener('click', async () => {
+      const article = await collectArticle();
+      const html = renderPreviewHTML(article);
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+    });
+
+    // Render preview HTML
+    function renderPreviewHTML(article) {
+      const head = `
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>${escapeHtml(article.title)}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      `;
+      const body = `
+        <div class="container py-5">
+          <article class="mx-auto" style="max-width:880px">
+            <h1>${escapeHtml(article.title)}</h1>
+            <p class="text-muted">By ${escapeHtml(article.author)} — ${escapeHtml(article.date)}</p>
+            ${article.blocks.map(b => {
+        switch (b.type) {
+          case 'text': return `<div>${b.data.html || ''}</div>`;
+          case 'head': return `<h3>${escapeHtml(b.data.text || '')}</h3>`;
+          case 'image': return `<figure><a href="${escapeHtml(b.data.link || '')}" target="_blank"><img src="${escapeHtml(b.data.src || '')}" style="max-width:100%"></a><figcaption>${escapeHtml(b.data.caption || '')}</figcaption></figure>`;
+          case 'carousel': return `<div class="d-flex gap-2 overflow-auto">${(b.data.slides || []).map(s => `<img src="${escapeHtml(s)}" style="max-width:280px;border-radius:8px">`).join('')}</div>`;
+          default:
+            if (b.data.html) return `<div>${b.data.html}</div>`;
+            return `<div>${escapeHtml(JSON.stringify(b.data))}</div>`;
+        }
+      }).join('')}
+          </article>
+        </div>
+      `;
+      return body;
+    }
+
+    // Escape HTML for preview
+    function escapeHtml(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') { e.preventDefault(); execCommand('bold'); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'i') { e.preventDefault(); execCommand('italic'); }
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveArticle(); }
+      if (e.key === 'Escape') { toolbar.style.display = 'none'; currentSelectionRange = null; }
+    });
+
+    // Drag and drop reorder finalizer
+    blocksEl.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const target = e.target.closest('.block');
+      if (!dragSrcEl) return;
+      if (target && target !== dragSrcEl) {
+        // insert before or after depending on mouse position
+        const rect = target.getBoundingClientRect();
+        const insertBefore = e.clientY - rect.top < rect.height / 2;
+        // remove old between markers
+        const betweenPrev = dragSrcEl.previousSibling && dragSrcEl.previousSibling.classList && dragSrcEl.previousSibling.classList.contains('add-between') ? dragSrcEl.previousSibling : null;
+        const betweenNext = dragSrcEl.nextSibling && dragSrcEl.nextSibling.classList && dragSrcEl.nextSibling.classList.contains('add-between') ? dragSrcEl.nextSibling : null;
+        if (betweenPrev) betweenPrev.remove();
+        if (betweenNext) betweenNext.remove();
+
+        if (insertBefore) {
+          blocksEl.insertBefore(dragSrcEl, target);
+        } else {
+          blocksEl.insertBefore(dragSrcEl, target.nextSibling);
+        }
+        // tidy: ensure there is an add-between after each block
+        tidyBetweenButtons();
+      }
+    });
+
+    function tidyBetweenButtons() {
+      // remove all existing add-betweens and re-insert between every block
+      qa('.add-between', blocksEl).forEach(n => n.remove());
+      const blockNodes = Array.from(blocksEl.querySelectorAll('.block'));
+      if (blockNodes.length === 0) {
+        blocksEl.appendChild(emptyHint);
+        emptyHint.style.display = 'block';
+      } else {
+        emptyHint.style.display = 'none';
+        for (const b of blockNodes) {
+          const between = makeAddBetween();
+          between.querySelector('[data-add]').addEventListener('click', () => openAddMenu(b));
+          blocksEl.insertBefore(between, b);
+        }
+        // move existing blocks into final order: remove duplicates
+        // this function assumes blocks are already in order
+      }
+    }
+
+    // initialize default empty editor with an example paragraph
+    function initEditor() {
+      // if articleId passed -> try load article
+      if (articleId) {
+        loadArticleById(articleId);
+      } else {
+        // initial example content
+        blocksEl.appendChild(emptyHint);
+        emptyHint.style.display = 'block';
+      }
+
+      // global clicks to hide toolbar if clicked outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.floating-toolbar')) {
+          // if click outside toolbar AND selection is empty hide
+          const sel = window.getSelection();
+          if (!sel || !sel.toString()) {
+            toolbar.style.display = 'none';
+          }
+        }
+      });
+
+      // periodic update countdown blocks
+      setInterval(() => {
+        qa('[data-countdown]').forEach(el => {
+          const block = el.closest('.block');
+          updateCountdownBlock(block);
+        });
+      }, 1000);
+    }
+
+    function updateCountdownBlock(block) {
+      try {
+        const target = block.querySelector('[data-countdown]').textContent.trim();
+        if (!target) return;
+        const t = new Date(target);
+        const now = new Date();
+        const diff = t - now;
+        const disp = block.querySelector('[data-countdown-display]');
+        if (!disp) return;
+        if (diff <= 0) {
+          disp.textContent = 'Event passed';
+          return;
+        }
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        disp.textContent = `${d}d ${h}h ${m}m ${s}s`;
+      } catch (e) { }
+    }
+
+    // expose simple API for importing JSON quickly (paste)
+    window.importArticleJSON = function (json) {
+      try {
+        const parsed = typeof json === 'string' ? JSON.parse(json) : json;
+        renderArticle(parsed);
+      } catch (e) {
+        alert('Invalid JSON');
+      }
+    };
+
+    // Initialize editor
+    initEditor();
+
+    // ensure contenteditable isolation for preview / focus
+    setEditing(true);
+
+    // small helper to ensure empty placeholders visually distinct
+    document.addEventListener('focusin', (e) => {
+      const el = e.target;
+      if (el && el.getAttribute && el.getAttribute('contenteditable') === 'true') {
+        el.classList.add('focus-editable');
+      }
+    });
+    document.addEventListener('focusout', (e) => {
+      const el = e.target;
+      if (el && el.getAttribute && el.getAttribute('contenteditable') === 'true') {
+        el.classList.remove('focus-editable');
+      }
+    });
+
+    // Expose function to add block programmatically
+    window.addBlockByType = addBlock;
+
+  </script>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
